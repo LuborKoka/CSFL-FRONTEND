@@ -1,0 +1,60 @@
+@import 'mixin';
+@import '../../node_modules/hamburgers/_sass/hamburgers/hamburgers.scss';
+
+nav {
+    position: sticky;
+    top: 0px;
+    z-index: 10;
+    @include flexColumn();
+    max-height: 100lvh;
+    transition: transform .4s ease-out;
+
+    .navbar {
+        @include flexColumn();
+        justify-content: space-between;
+        height: 100%;
+        //overflow-y: scroll;
+    }
+
+    ul {
+        list-style-type: none;
+    }
+
+    li {
+        font-size: 24;
+        padding: 10px 10px;
+        border-radius: 3px;
+        transition: all .2s;
+
+        &:hover {
+            background-color: #EEE;
+        }
+    }
+}
+
+
+.hamburger-position {
+    position: absolute;
+    top: 10px;
+    right: -60px;
+    display: none;
+}
+
+.nav-active {
+    transform: translateX(0)
+}
+
+@media screen and (max-width: 768px) {
+    .hamburger-position {
+        display: block;
+    }
+
+    nav {
+        transform: translateX(-100%);
+        position: fixed;
+        left: 0px;
+        bottom: 0px;
+        backdrop-filter: blur(5px);
+    }
+}
+
