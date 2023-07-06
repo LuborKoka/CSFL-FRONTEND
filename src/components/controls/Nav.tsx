@@ -1,23 +1,29 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import '../../styles/navbar.css'
 
 export default function Nav(){
     const [isOpen, setIsOpen] = useState(false)
 
-    return(
+    const location = useLocation()
+
+    function closeNavbar() {
+        setIsOpen(false)
+    }
+
+    const jsx = 
         <nav className={`${isOpen ? 'nav-active' : ''}`}>
             <div className='navbar'>
                 <div className="league-options">
                     <ul>
-                        <Link to={'/reports'}>Reports</Link>
+                        <Link onClick={closeNavbar} to={'/reports'}>Reports</Link>
                     </ul>
                 </div>
 
                 <div className="account-option">
                     <ul>
                         <li>Toggle Theme</li>
-                        <li>Nastavenia</li>
+                        <Link onClick={closeNavbar} to={'/settings'}>Nastavenia</Link>
                         <li>Odhlásiť sa</li>
                     </ul>
                 </div>
@@ -31,6 +37,9 @@ export default function Nav(){
                 </button>
             </div>
         </nav>
+
+    return(
+        location.pathname === '/' ? null : jsx
     )
 }
 

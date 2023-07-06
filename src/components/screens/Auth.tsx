@@ -1,7 +1,8 @@
-import axios, { AxiosError } from "axios"
-import { useRef, useState } from "react"
-import { URI } from "../../App"
+import axios, { AxiosError, AxiosResponse } from "axios"
+import { Context, useContext, useRef, useState } from "react"
+import { URI, UserContext, UserTypes } from "../../App"
 import { useNavigate } from 'react-router-dom'
+import jwtDecode from "jwt-decode"
 
 
 
@@ -15,6 +16,8 @@ export default function Auth() {
     const signupName = useRef<HTMLInputElement | null>(null)
     const signupPassword = useRef<HTMLInputElement | null>(null)
     const signupPasswordConfirm = useRef<HTMLInputElement | null>(null)
+
+    const user = useContext(UserContext as Context<UserTypes>)
     
     const navigate = useNavigate()
 
@@ -30,7 +33,11 @@ export default function Auth() {
                 password: loginPassword.current!.value
             }
         })
-        .then(r => navigate('/reports'))
+        .then((r: AxiosResponse) => {
+            const data = jwtDecode(r.data.token) as {username: string, id: string}
+            user.setUser(data)
+            navigate('/reports')
+        })
         .catch((e: AxiosError) => console.log(e))
         .finally(() => setIsPending(false))
     }
@@ -47,7 +54,11 @@ export default function Auth() {
                 passwordConfirm: signupPasswordConfirm.current!.value
             }
         })
-        .then(r => navigate('/reports'))
+        .then(r => {
+            const data = jwtDecode(r.data.token) as {username: string, id: string}
+            user.setUser(data)
+            navigate('/reports')
+        })
         .catch((e: AxiosError) => console.log(e))
         .finally(() => setIsPending(false))
     }
@@ -64,7 +75,7 @@ export default function Auth() {
 
     const signup = 
         <div>
-            <form>
+            <form onSubmit={handleSignUp}>
                 <input ref={signupName} type="text" placeholder="Prihlasovacie meno" />
                 <input ref={signupPassword} type="password" placeholder="Heslo" />
                 <input ref={signupPasswordConfirm} type="password" placeholder="Zopakuj heslo" />
