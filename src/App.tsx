@@ -5,7 +5,7 @@ import Reports from './components/screens/Reports';
 import Nav from './components/controls/Nav';
 import Settings from './components/screens/Settings';
 
-export const URI = 'http://192.168.100.22:8000'
+export const URI = 'http://192.168.100.22:8000/api'
 
 type User = {
   username: string,
