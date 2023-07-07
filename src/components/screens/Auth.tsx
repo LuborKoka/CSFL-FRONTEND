@@ -66,8 +66,8 @@ export default function Auth() {
     const signin = 
         <div>
             <form onSubmit={handleLogin}>
-                <input ref={loginName} placeholder="Prihlasovacie meno" type="text" />
-                <input ref={loginPassword} placeholder="Heslo" type="password" />
+                <input required ref={loginName} placeholder="Prihlasovacie meno" type="text" />
+                <input required ref={loginPassword} placeholder="Heslo" type="password" />
                 <button disabled={isPending} type="submit">Prihlásiť sa</button>
             </form>
             <p>Nemáš ešte účet? <span onClick={() => setIsLogin(!isLogin)}>Zaregistruj sa</span></p>
@@ -76,9 +76,9 @@ export default function Auth() {
     const signup = 
         <div>
             <form onSubmit={handleSignUp}>
-                <input ref={signupName} type="text" placeholder="Prihlasovacie meno" />
-                <input ref={signupPassword} type="password" placeholder="Heslo" />
-                <input ref={signupPasswordConfirm} type="password" placeholder="Zopakuj heslo" />
+                <input required ref={signupName} type="text" placeholder="Prihlasovacie meno" />
+                <input required ref={signupPassword} type="password" placeholder="Heslo" />
+                <input required ref={signupPasswordConfirm} type="password" placeholder="Zopakuj heslo" />
                 <button type="submit" disabled={isPending}>Registrovať sa</button>
             </form>
             <p>Už máš účet? <span onClick={() => setIsLogin(!isLogin)}>Prihlás sa</span></p>
