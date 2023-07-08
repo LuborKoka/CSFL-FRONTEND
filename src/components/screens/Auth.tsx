@@ -16,6 +16,7 @@ export default function Auth() {
     const signupName = useRef<HTMLInputElement | null>(null)
     const signupPassword = useRef<HTMLInputElement | null>(null)
     const signupPasswordConfirm = useRef<HTMLInputElement | null>(null)
+    const raceName = useRef<HTMLInputElement | null>(null)
 
     const user = useContext(UserContext as Context<UserTypes>)
     
@@ -51,7 +52,8 @@ export default function Auth() {
             params: {
                 username: signupName.current!.value,
                 password: signupPassword.current!.value,
-                passwordConfirm: signupPasswordConfirm.current!.value
+                passwordConfirm: signupPasswordConfirm.current!.value,
+                raceName: raceName.current!.value
             }
         })
         .then(r => {
@@ -79,6 +81,7 @@ export default function Auth() {
                 <input required ref={signupName} type="text" placeholder="Prihlasovacie meno" />
                 <input required ref={signupPassword} type="password" placeholder="Heslo" />
                 <input required ref={signupPasswordConfirm} type="password" placeholder="Zopakuj heslo" />
+                <input required ref={raceName} type="text" placeholder="Pod akým menom budeš pretekať?" />
                 <button type="submit" disabled={isPending}>Registrovať sa</button>
             </form>
             <p>Už máš účet? <span onClick={() => setIsLogin(!isLogin)}>Prihlás sa</span></p>
