@@ -17,10 +17,11 @@ export default function Nav(){
                 <div className="league-options">
                     <ul>
                         <Link onClick={closeNavbar} to={'/reports'}>Reports</Link>
+                        <Link onClick={closeNavbar} to='/admin'>Admin Settings</Link>
                     </ul>
                 </div>
 
-                <div className="account-option">
+                <div className="account-options">
                     <ul>
                         <li>Toggle Theme</li>
                         <Link onClick={closeNavbar} to={'/settings'}>Nastavenia</Link>

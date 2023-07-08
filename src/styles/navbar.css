@@ -863,6 +863,8 @@ nav .navbar {
 }
 nav ul {
   list-style-type: none;
+  display: flex;
+  flex-direction: column;
 }
 nav li {
   font-size: 24;
