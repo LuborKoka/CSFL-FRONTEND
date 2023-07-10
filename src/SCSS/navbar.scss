@@ -1,7 +1,7 @@
 @import 'mixin';
 @import '../../node_modules/hamburgers/_sass/hamburgers/hamburgers.scss';
 
-nav {
+.main-navigation {
     position: sticky;
     top: 0px;
     z-index: 10;
@@ -41,21 +41,23 @@ nav {
     display: none;
 }
 
-.nav-active {
-    transform: translateX(0)
-}
+
 
 @media screen and (max-width: 768px) {
     .hamburger-position {
         display: block;
     }
 
-    nav {
+    .main-navigation {
         transform: translateX(-100%);
         position: fixed;
         left: 0px;
         bottom: 0px;
         backdrop-filter: blur(5px);
+    }
+
+    .nav-active {
+        transform: translateX(0)
     }
 }
 

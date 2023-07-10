@@ -1,9 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import '../../styles/navbar.css'
+import { SeasonType } from '../../App'
 
-export default function Nav(){
+type Props = {
+    seasons: SeasonType[]
+}
+
+export default function Nav({ seasons }: Props){
     const [isOpen, setIsOpen] = useState(false)
+    const [routes, setRoutes] = useState<JSX.Element[]>([])
 
     const location = useLocation()
 
@@ -11,13 +17,23 @@ export default function Nav(){
         setIsOpen(false)
     }
 
+    useEffect(()=> {
+        if ( !seasons ) return
+        setRoutes(
+            seasons.map(s => {
+                return <Link onClick={closeNavbar} to={`/seasons/${s.id}`} key={s.id}>{s.name}</Link>
+            })
+        )
+    }, [seasons])
+
     const jsx = 
-        <nav className={`${isOpen ? 'nav-active' : ''}`}>
+        <nav className={`main-navigation ${isOpen ? 'nav-active' : ''}`}>
             <div className='navbar'>
                 <div className="league-options">
                     <ul>
                         <Link onClick={closeNavbar} to={'/reports'}>Reports</Link>
                         <Link onClick={closeNavbar} to='/admin'>Admin Settings</Link>
+                        {routes}
                     </ul>
                 </div>
 

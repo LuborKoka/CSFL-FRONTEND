@@ -1,12 +1,16 @@
 import axios, { AxiosError, AxiosResponse } from "axios"
 import { Context, useContext, useRef, useState } from "react"
-import { URI, UserContext, UserTypes } from "../../App"
+import { SeasonType, URI, UserContext, UserTypes } from "../../App"
 import { useNavigate } from 'react-router-dom'
 import jwtDecode from "jwt-decode"
+import { RouteProps, Route } from "react-router-dom"
+import Season from "./Season"
 
+type Props = {
+    setSeasons: React.Dispatch<React.SetStateAction<SeasonType[]>>
+}
 
-
-export default function Auth() {
+export default function Auth({ setSeasons }: Props) {
     const [isLogin, setIsLogin] = useState(true)
     const [isPending, setIsPending] = useState(false)
 
@@ -35,8 +39,10 @@ export default function Auth() {
             }
         })
         .then((r: AxiosResponse) => {
+            const seasons = r.data.seasons as SeasonType[]
             const data = jwtDecode(r.data.token) as {username: string, id: string}
             user.setUser(data)
+            setSeasons(seasons)
             navigate('/reports')
         })
         .catch((e: AxiosError) => console.log(e))
@@ -57,8 +63,10 @@ export default function Auth() {
             }
         })
         .then(r => {
+            const seasons = r.data.seasons as SeasonType[]
             const data = jwtDecode(r.data.token) as {username: string, id: string}
             user.setUser(data)
+            setSeasons(seasons)
             navigate('/reports')
         })
         .catch((e: AxiosError) => console.log(e))

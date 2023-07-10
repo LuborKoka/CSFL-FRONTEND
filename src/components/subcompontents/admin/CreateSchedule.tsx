@@ -1,4 +1,4 @@
-import axios, { Axios, AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import React, { useEffect, useState, useRef } from "react";
 import { URI } from "../../../App";
 import CreateRace from "./CreateRace";
@@ -55,10 +55,9 @@ export default function CreateSchedule() {
 
         setIsPendingSchedule(true)
 
-        axios.post(`${URI}/admins/schedule/`, {
+        axios.post(`${URI}/admins/schedule/${seasonID}/`, {
             params: {
-                races: races.current,
-                seasonID: seasonID
+                races: races.current
             }
         })
         .then((r: AxiosResponse) => {

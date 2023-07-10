@@ -846,7 +846,7 @@
   transform: rotate(-90deg);
 }
 
-nav {
+.main-navigation {
   position: sticky;
   top: 0px;
   z-index: 10;
@@ -855,24 +855,24 @@ nav {
   max-height: 100lvh;
   transition: transform 0.4s ease-out;
 }
-nav .navbar {
+.main-navigation .navbar {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
 }
-nav ul {
+.main-navigation ul {
   list-style-type: none;
   display: flex;
   flex-direction: column;
 }
-nav li {
+.main-navigation li {
   font-size: 24;
   padding: 10px 10px;
   border-radius: 3px;
   transition: all 0.2s;
 }
-nav li:hover {
+.main-navigation li:hover {
   background-color: #EEE;
 }
 
@@ -883,20 +883,19 @@ nav li:hover {
   display: none;
 }
 
-.nav-active {
-  transform: translateX(0);
-}
-
 @media screen and (max-width: 768px) {
   .hamburger-position {
     display: block;
   }
-  nav {
+  .main-navigation {
     transform: translateX(-100%);
     position: fixed;
     left: 0px;
     bottom: 0px;
     backdrop-filter: blur(5px);
+  }
+  .nav-active {
+    transform: translateX(0);
   }
 }
 
