@@ -8,6 +8,9 @@ import AdminUI from './components/screens/AdminUI';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Season from './components/screens/Season';
 import RaceResults from './components/subcompontents/user/RaceResults';
+import AdminSeasons from './components/subcompontents/admin/AdminSeasons';
+import EditSeason from './components/subcompontents/admin/EditSeason';
+import EditRace from './components/subcompontents/admin/EditRace';
 
 export const URI = 'http://192.168.100.22:8000/api'
 
@@ -51,6 +54,8 @@ function App() {
             </Route>
 
             <Route path='/admin' element={<AdminUI />} />
+            <Route path='/admin/season/:seasonID' element={<EditSeason />} />
+            <Route path='/admin/season/:seasonID/race/:raceID' element={<EditRace />} />
           </Routes>
         </Router>   
       </QueryClientProvider>
