@@ -180,11 +180,14 @@ function SetRaceResults({ raceID }: ResultsProps) {
         const drivers = results.current.results.otherDrivers
         // regex na kontrolovanie, ci je cas v spravnom formate ([0-5]?[0-9]):([0-5]?[0-9])([.,][0-9]{1,3})? 
 
+        const others = ( index === -1 ) ? drivers : results.current.results.otherDrivers.splice(index, 1)
+
+        console.log(results.current.results.leader, others)
         axios.post(`${URI}/admins/edit-race/${raceID}/results/`, {
             params: {
                 results: {
                     leader: results.current.results.leader,
-                    otherDrivers: ( index === -1 ) ? drivers : results.current.results.otherDrivers.splice(index, 1)
+                    otherDrivers: others
                 }
             }
         })
