@@ -1,5 +1,6 @@
 import React from "react";
 import '../../../styles/race.css';
+import { Link } from "react-router-dom";
 
 type Props = {
     raceID: string,
@@ -15,6 +16,7 @@ export default function Race({ raceID, name, raceName, date, setMini }: Props) {
         <div className="race-box" onClick={() => setMini(p => !p)}>
             <h2>{raceName}</h2>
             <p>{date}</p>
+            <Link to={`race/${raceID}`}>View</Link>
         </div>
     )
 }
