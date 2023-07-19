@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, RouteProps } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Auth from './components/screens/Auth';
 import Reports from './components/screens/Reports';
 import Nav from './components/controls/Nav';
@@ -12,6 +12,10 @@ import EditSeason from './components/subcompontents/admin/EditSeason';
 import EditRace from './components/subcompontents/admin/EditRace';
 import RaceDetails from './components/screens/RaceDetails';
 import Standings from './components/subcompontents/user/Standings';
+import SeasonNav from './components/controls/SeasonNav';
+import Welcome from './components/screens/Welcome';
+import RaceNav from './components/controls/RaceNav';
+import AddReport from './components/subcompontents/user/AddReport';
 
 export const URI = 'http://192.168.100.22:8000/api'
 
@@ -45,13 +49,24 @@ function App() {
           <Routes>
             <Route path='/' element={<Auth />} />
 
+            <Route path='/welcome' element={<Welcome />} />
             <Route path='/reports' element={<Reports />} />
             <Route path='/settings' element={<Settings />} />
-            <Route path='/seasons/:seasonID' element={<Season />} />
-            <Route path='/seasons/:seasonID/race/:raceID' element={<RaceDetails />} />
-            <Route path='/seasons/:seasonID/report' element={<Reports />} />
-            <Route path='/seasons/:seasonID/results' element={<RaceResults />} />
-            <Route path='/seasons/:seasonID/standings' element={<Standings />} />
+            <Route path='/seasons' element={<SeasonNav />} >
+              <Route path=':seasonID' element={<Season />} />
+              <Route path=':seasonID/standings' element={<Standings />} />
+              <Route path=':seasonID/race' element={<RaceNav />}>
+                <Route path=':raceID' element={<RaceDetails />} />
+                <Route path=':raceID/reports' element={<Reports />} />
+                <Route path=':raceID/results' element={<RaceResults />} />
+                <Route path=':raceID/reports/new' element={<AddReport />} />
+              </Route>
+              {/*<Route path=':seasonID/race/:raceID' element={<RaceDetails />} />
+              <Route path=':seasonID/race/:raceID/reports' element={<Reports />} />
+  <Route path=':seasonID/race/:raceID/results' element={<RaceResults />} />*/}
+            </Route>
+            
+           
 
             <Route path='/admin' element={<AdminUI />} />
             <Route path='/admin/season/:seasonID' element={<EditSeason />} />
