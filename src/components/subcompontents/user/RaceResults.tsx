@@ -31,6 +31,7 @@ export default function RaceResults() {
                 </thead>
                 <tbody>
                 {
+                    //SELECT NOW() < race.date AS race_took_place a mam vyriesene tie nuly
                     query?.data?.results.map(d => {
                         return(
                             <tr key={d.driverID}>
@@ -38,7 +39,7 @@ export default function RaceResults() {
                                 <td>{d.driverName}</td>
                                 <td>{d.teamName}</td>
                                 <td>{d.rank === 1 ? formatTime(d.time) : `+${formatTime(d.time - leaderTime)}`}</td>
-                                <td>{assignPoints(d.rank)}</td>
+                                <td>{assignPoints(d.rank, d.hasFastestLap)}</td>
                             </tr>
                         )
                     })
@@ -55,7 +56,8 @@ type Driver = {
     driverName: string,
     teamName: string,
     rank: number,
-    time: number
+    time: number,
+    hasFastestLap: boolean
 }
 
 type Data = {
@@ -63,7 +65,7 @@ type Data = {
 }
 
 async function fetchResults(id: string | undefined) {
-    const res = await axios.get<Data>(`${URI}/race/${id}/results/`)
+    const res = await axios.get<Data>(`${URI}/races/${id}/results/`)
     return res.data
 }
 
@@ -90,28 +92,28 @@ function formatTime(input: number): string {
     return timeString
   }
   
-  function assignPoints(rank: number) {
+  function assignPoints(rank: number, hasFL: boolean) {
     switch(rank) {
         case 1:
-            return 25
+            return 25 + Number(hasFL)
         case 2:
-            return 18
+            return 18 + Number(hasFL)
         case 3:
-            return 15
+            return 15 + Number(hasFL)
         case 4: 
-            return 12
+            return 12 + Number(hasFL)
         case 5:
-            return 10
+            return 10 + Number(hasFL)
         case 6:
-            return 8
+            return 8 + Number(hasFL)
         case 7:
-            return 6
+            return 6 + Number(hasFL)
         case 8:
-            return 4
+            return 4 + Number(hasFL)
         case 9:
-            return 2
+            return 2 + Number(hasFL)
         case 10:
-            return 1
+            return 1 + Number(hasFL)
         default:
             return 0
     }
