@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { URI } from "../../App";
 import { useQuery } from '@tanstack/react-query'
 import Race from "../subcompontents/user/Race";
-import RaceDetails from "./RaceDetails";
+
 import { useParams } from "react-router-dom";
 
 type Props = {
@@ -24,13 +24,15 @@ export default function Season() {
 
     const [isMinimized, setIsMinimized] = useState(false)
 
-    const { data } = useQuery([`season-schedule-${seasonID}`], () => fetchData(seasonID))
+    const query = useQuery([`season-schedule-${seasonID}`], () => fetchData(seasonID))
+
+
 
     return(
         <div className={`season-container `}>
             <div className={`season-navigation `}>   {/*isMinimized ? 'season-minimized' : ''*/}
                 {
-                    data?.races.map(r => {
+                    query?.data?.races.map(r => {
                         return <Race setMini={setIsMinimized} key={r.raceID} raceID={r.raceID} raceName={r.raceName} name={r.name} date={r.date} />
                     })
                 }
