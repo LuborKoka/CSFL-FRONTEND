@@ -23,10 +23,8 @@ export default function EditRace() {
                 teamID: teamID,
                 drivers: [...drivers]
             })
-            console.log(raceDrivers.current)
             return
         }
-        console.log(raceDrivers.current)
         team.drivers = [...drivers]
     }
 
@@ -74,7 +72,7 @@ export default function EditRace() {
 //potom na editovanie existujuceho driver lineup pre preteky (aj sezonu) spravit is_set column v db a podla neho vratit komponent pre 
 // vytvorenie noveho alebo update existujuceho zlozenia, tak to bude najjedoduchsie a asi aj najprehladnejsie nakodit
 
-//doplnit odoslanie dvojich na backend
+//doplnit odoslanie dvojic na backend
 type DriversSelectProps = (Team & {reserves: Data["reserves"]} & {setDrivers: (teamID: string, drivers: string[]) => void} ) 
 
 function DriversSelect({ teamID, teamName, drivers, reserves, setDrivers }: DriversSelectProps ) {
@@ -149,6 +147,7 @@ function SetRaceResults({ raceID }: ResultsProps) {
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>, id: string) {
         //treba este vyriesit kontrolu, ci to je leader
+        //vyriesene
         if ( matchesTimeFormat(e.target.value) ) {
             results.current.results.leader = {
                 id: id,
@@ -177,17 +176,15 @@ function SetRaceResults({ raceID }: ResultsProps) {
 
         const leader = results.current.results.leader!.id
         const index = results.current.results.otherDrivers.findIndex(d => d.id === leader)
-        const drivers = results.current.results.otherDrivers
         // regex na kontrolovanie, ci je cas v spravnom formate ([0-5]?[0-9]):([0-5]?[0-9])([.,][0-9]{1,3})? 
 
-        const others = ( index === -1 ) ? drivers : results.current.results.otherDrivers.splice(index, 1)
+        if (index !== -1) results.current.results.otherDrivers.splice(index, 1)
 
-        console.log(results.current.results.leader, others)
         axios.post(`${URI}/admins/edit-race/${raceID}/results/`, {
             params: {
                 results: {
                     leader: results.current.results.leader,
-                    otherDrivers: others
+                    otherDrivers: results.current.results.otherDrivers
                 }
             }
         })

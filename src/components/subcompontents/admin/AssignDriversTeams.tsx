@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import { URI } from '../../../App';
 import Select, { MultiValue } from 'react-select'
-import { sign } from 'crypto';
 
 type Data = {
     teams: {

@@ -9,6 +9,7 @@ export default function AdminUI() {
         <div className="admin-ui-container">
            {/*} <CreateSchedule />*/ }
            <AdminSeasons />
+           <CreateSchedule />
             
         </div>
     )
