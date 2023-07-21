@@ -1,0 +1,13 @@
+.verdict-container {
+  position: fixed;
+  top: 0;
+  left: 100%;
+  transition: transform 0.5s;
+  z-index: 1;
+}
+
+.verdict-container-active {
+  transform: translateX(-100%);
+}
+
+/*# sourceMappingURL=verdict.css.map */

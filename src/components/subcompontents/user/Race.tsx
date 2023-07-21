@@ -9,10 +9,9 @@ type Props = {
     name: string,
     raceName: string,
     date: string,
-    setMini: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export default function Race({ raceID, name, raceName, date, setMini }: Props) {
+export default function Race({ raceID, name, raceName, date }: Props) {
     const setContext = (useOutletContext() as RaceContext)[1]
     
     function setRace() {
@@ -22,10 +21,26 @@ export default function Race({ raceID, name, raceName, date, setMini }: Props) {
     }
 
     return(
-        <div className="race-box" onClick={() => setMini(p => !p)}>
+        <Link onClick={setRace} className="card" to={`race/${raceID}`}>
             <h2>{raceName}</h2>
-            <p>{date}</p>
-            <div onClick={setRace}><Link to={`race/${raceID}`}>View</Link></div>
-        </div>
+            <img src='https://cdn-wp.thesportsrush.com/2023/03/9090e1d3-untitled-design-3.jpg?w=1200&q=60' alt='xd' width='200px' height='100px' />
+            <p>{convertTimeStamp(date)}</p>
+        </Link>
     )
+}
+
+
+function convertTimeStamp(timestamp: string) {
+    const date = new Date(timestamp)
+
+    const months = [
+    "január", "február", "marec", "apríl", "máj", "jún",
+    "júl", "august", "september", "október", "november", "december"
+    ]
+
+    // Construct the date string
+    const dateString = `${date.getDate()}. ${months[date.getMonth()]} ${date.getFullYear()}
+    ${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`
+    
+    return dateString
 }

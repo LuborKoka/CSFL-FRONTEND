@@ -17,7 +17,7 @@ export default function RaceResults() {
     }, [query])
 
     return(
-        <div>
+        <>
             Race Results
             <table>
                 <thead>
@@ -47,7 +47,7 @@ export default function RaceResults() {
                 </tbody>   
                 
             </table>
-        </div>
+        </>
     )
 }
 

@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #001010;
 }
 
 code {
@@ -21,6 +22,9 @@ code {
 nav ~ div {
   flex-grow: 1;
   flex-basis: 0;
+  color: #EFEFEF;
+  position: static;
+  top: 0;
 }
 
 

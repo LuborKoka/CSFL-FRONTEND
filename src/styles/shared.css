@@ -1,0 +1,112 @@
+.labeled-input {
+  position: relative;
+  width: clamp(300px, 80%, 450px);
+}
+.labeled-input label {
+  position: absolute;
+  left: 18px;
+  top: 0.5rem;
+  pointer-events: none;
+  font-size: 20px;
+  background-color: #001010;
+  transition: all 0.3s;
+}
+.labeled-input input:focus + label, .labeled-input input:valid + label {
+  font-size: 16px;
+  transform: translateY(-120%);
+}
+
+.form-input {
+  background-color: transparent;
+  padding: 10px 20px;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  width: 100%;
+  transition: box-shadow 0.3s;
+  font-size: 20px;
+  color: #EFEFEF;
+  position: relative;
+}
+.form-input:hover, .form-input:focus, .form-input:valid {
+  box-shadow: 0 0 10px rgba(239, 239, 239, 0.4);
+}
+
+.clickable-button {
+  position: relative;
+  outline: none;
+  background-color: transparent;
+  border: none;
+  color: rgba(239, 239, 239, 0.9);
+  cursor: pointer;
+  font-size: 20px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  transition: border 0.2s;
+}
+
+.button-disabled {
+  cursor: not-allowed;
+  background-color: #EFEFEF;
+  color: #001010;
+}
+
+.section {
+  padding: 2rem 3rem;
+  color: #EFEFEF;
+  overflow-y: auto;
+  min-height: 80vh;
+}
+
+.section-heading {
+  padding-bottom: 0.5rem;
+  margin-bottom: 3rem;
+  position: relative;
+}
+.section-heading::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 0.6px;
+  background-image: linear-gradient(to right, #001010, #EFEFEF, #EFEFEF, #001010);
+}
+
+.icon-delete {
+  position: absolute;
+  color: #EFEFEF;
+  cursor: pointer;
+  font-size: 18px;
+  transition: color 0.2s;
+}
+.icon-delete:hover {
+  color: #CC1E23;
+}
+
+.center-right {
+  right: 1rem;
+  top: calc(50% - 9px);
+  z-index: 1;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (hover: none) {
+  .icon-delete {
+    color: #CC1E23;
+  }
+}
+@media (hover: hover) {
+  .clickable-button:hover {
+    border: 1px solid #EFEFEF;
+    transition: border 0.5s;
+  }
+}
+
+/*# sourceMappingURL=shared.css.map */

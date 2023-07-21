@@ -3,9 +3,7 @@ import { Context, useContext, useRef, useState } from "react"
 import { URI, UserContext, UserTypes } from "../../App"
 import { useNavigate } from 'react-router-dom'
 import jwtDecode from "jwt-decode"
-import { RouteProps, Route } from "react-router-dom"
-import Season from "./Season"
-
+import '../../styles/auth.css'
 
 export default function Auth() {
     const [isLogin, setIsLogin] = useState(true)
@@ -23,6 +21,8 @@ export default function Auth() {
     
     const navigate = useNavigate()
 
+    //https://youtu.be/Wu0WTCLVvAk
+
 
     function handleLogin(e: React.FormEvent) {
         e.preventDefault()
@@ -38,13 +38,15 @@ export default function Auth() {
         .then((r: AxiosResponse) => {
             const data = jwtDecode(r.data.token) as {username: string, id: string}
             user.setUser(data)
-            navigate('/reports')
+            navigate('/welcome')
         })
         .catch((e: AxiosError) => console.log(e))
         .finally(() => setIsPending(false))
     }
 
     function handleSignUp(e: React.FormEvent) {
+
+        //  !!bacha, aby novy raceName nepojebal uz existujuci link driver-user!!
         e.preventDefault()
 
         setIsPending(true)
@@ -60,35 +62,60 @@ export default function Auth() {
         .then(r => {
             const data = jwtDecode(r.data.token) as {username: string, id: string}
             user.setUser(data)
-            navigate('/reports')
+            navigate('/welcome')
         })
         .catch((e: AxiosError) => console.log(e))
         .finally(() => setIsPending(false))
     }
 
     const signin = 
-        <div>
-            <form onSubmit={handleLogin}>
-                <input required ref={loginName} placeholder="Prihlasovacie meno" type="text" />
-                <input required ref={loginPassword} placeholder="Heslo" type="password" />
-                <button disabled={isPending} type="submit">Prihlásiť sa</button>
+        <>  
+            <form name="Login Form" onSubmit={handleLogin}>
+                <div className='labeled-input'>
+                    <input name='username' className='form-input' required ref={loginName} type="text" />
+                    <label htmlFor='username'>Prihlasovacie meno</label>
+                </div>
+                
+                <div className='labeled-input'>
+                    <input name='password' className='form-input' required ref={loginPassword} type="password" />
+                    <label htmlFor='password'>Heslo</label>
+                </div>
+                
+                <button className={`clickable-button ${isPending ? 'button-disabled' : ''}`} disabled={isPending} type="submit">Prihlásiť sa</button>
             </form>
-            <p>Nemáš ešte účet? <span onClick={() => setIsLogin(!isLogin)}>Zaregistruj sa</span></p>
-        </div>
+            <p className='form-swap'>Nemáš ešte účet? <span onClick={() => setIsLogin(!isLogin)}>Zaregistruj sa</span></p>
+        </>
 
     const signup = 
-        <div>
-            <form onSubmit={handleSignUp}>
-                <input required ref={signupName} type="text" placeholder="Prihlasovacie meno" />
-                <input required ref={signupPassword} type="password" placeholder="Heslo" />
-                <input required ref={signupPasswordConfirm} type="password" placeholder="Zopakuj heslo" />
-                <input required ref={raceName} type="text" placeholder="Pod akým menom budeš pretekať?" />
-                <button type="submit" disabled={isPending}>Registrovať sa</button>
+        <>
+            <form name="Sign Up Form" onSubmit={handleSignUp}>
+                <div className='labeled-input'>
+                    <input name='username' className='form-input' required ref={signupName} type="text" />
+                    <label htmlFor='username'>Prihlasovacie meno</label>
+                </div>
+                <div className='labeled-input'>
+                    <input name='password' className='form-input' required ref={signupPassword} type="password" />
+                    <label htmlFor='password'>Heslo</label>
+                </div>
+                <div className='labeled-input'>
+                    <input name='confirm-password' className='form-input' required ref={signupPasswordConfirm} type="password" />
+                    <label htmlFor='confirm-password'>Zopakuj heslo</label>
+                </div>
+                <div className='labeled-input'>
+                    <input name='race-name' className='form-input' required ref={raceName} type="text" />
+                    <label htmlFor='race-name'>Pod akým menom budeš pretekať</label>
+                </div>
+                <button className={`clickable-button ${isPending ? 'button-disabled' : ''}`} type="submit" disabled={isPending}>Registrovať sa</button>
             </form>
-            <p>Už máš účet? <span onClick={() => setIsLogin(!isLogin)}>Prihlás sa</span></p>
-        </div>
+            <p className='form-swap'>Už máš účet? <span onClick={() => setIsLogin(!isLogin)}>Prihlás sa</span></p>
+        </>
 
     return(
-        isLogin ? signin : signup
+        <div className='auth-form'>
+            <h1>Vitaj V ČSFL</h1>
+            {
+                isLogin ? signin : signup
+            }
+        </div>
     )
 }

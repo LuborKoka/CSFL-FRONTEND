@@ -9,7 +9,7 @@ export default function Welcome() {
     //a ktore uz su legacy
 
     return(
-        <div>
+        <div className='section'>
             <h1>WELCOME TO CSFL WEBSITE KURVA</h1>
         </div>
     )

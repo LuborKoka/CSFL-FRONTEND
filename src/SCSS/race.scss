@@ -1,26 +1,34 @@
 @import 'mixin.scss';
 
 
-.race-box {
-    display: inline-block;
-    padding: 20px;
-    border: 1px solid yellowgreen;
-}
-
-.season-container {
+/*.race-section {
     display: flex;
-}
 
-.season-minimized {
-    max-width: 300px;
-}
-
-.race-navigation {
-    flex-grow: 1;
-    flex-basis: 0;
-}
+}*/
 
 
-.race-details-container {
-    width: 100%;
+.race-container {
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+        width: clamp(3px, 1vw, 8px)
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba($white, 0.7); 
+        border-radius: 20px;
+        border: 4px solid transparent;
+        transition: background-color .2s;
+        &:hover {
+            background-color: rgba($white, 1);
+        }
+    }
+
+    &::-webkit-scrollbar-button {
+        display: none;
+    }
 }

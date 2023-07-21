@@ -3,7 +3,7 @@ import { URI, UserContext, UserTypes } from '../../../App'
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import { useOutletContext } from 'react-router-dom'
 import { RaceContext } from '../../controls/SeasonNav'
-import '../../../styles/reportResponse.css'
+import '../../../styles/reports.css'
 
 type Props = {
     isAddingResponse: boolean,

@@ -1,0 +1,75 @@
+.season-container {
+  color: #EFEFEF;
+  position: relative;
+  max-height: 100lvh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 1fr auto;
+}
+.season-container .race-navigation {
+  grid-column: 2;
+  grid-row: 1/span 2;
+}
+
+.season-with-race-cards {
+  display: block;
+  position: relative;
+  color: #EFEFEF;
+}
+
+.card {
+  display: inline-block;
+  color: #EFEFEF;
+  text-decoration: none;
+  position: relative;
+  padding: 1rem 2rem;
+  text-align: center;
+}
+.card::before {
+  content: "";
+  width: 100%;
+  height: 101%;
+  border-left: 1px solid #EFEFEF;
+  border-right: 1px solid #EFEFEF;
+  background-color: transparent;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  transform: scaleY(40%);
+  opacity: 0;
+  transition: all 0.4s;
+}
+.card::after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  border-top: 1px solid #EFEFEF;
+  border-bottom: 1px solid #EFEFEF;
+  background-color: transparent;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  transform: scaleX(40%);
+  opacity: 0;
+}
+.card:hover::before {
+  opacity: 0.6;
+  transform: scaleY(100%);
+}
+.card:hover::after {
+  opacity: 0.6;
+  transform: scaleX(100%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .card::after, .card::before {
+    transition: all 0.4s;
+  }
+}
+@media screen and (max-width: 600px) {
+  .season-container {
+    display: block;
+  }
+}
+
+/*# sourceMappingURL=seasons.css.map */

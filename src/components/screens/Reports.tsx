@@ -21,7 +21,7 @@ export default function Reports() {
     const query = useQuery([`race_${raceID}_reports`], () => fetchReports(raceID))
     return(
         <div>
-            <h1>Reporty</h1>
+            <h1 className='section-heading'>Reporty</h1>
             {
                 query.data?.reports.map(r =>/* toten setter musi ist dovnutra komponentu, tam uz mam aj tak kontext na reportID, ktory treba nastavit */ 
                     <Report key={r.reportID} {...r} setIsAddingResponse={setIsAddingResponse} setIsAddingVerdict={setIsAddingVerdict} />

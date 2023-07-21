@@ -1,0 +1,14 @@
+@import 'mixin.scss';
+
+
+.verdict-container {
+    position: fixed;
+    top: 0;
+    left: 100%;
+    transition: transform .5s;
+    z-index: 1;
+}
+
+.verdict-container-active {
+    transform: translateX(-100%);
+}

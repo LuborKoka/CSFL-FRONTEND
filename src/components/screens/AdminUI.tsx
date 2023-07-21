@@ -6,7 +6,7 @@ import AdminSeasons from "../subcompontents/admin/AdminSeasons";
 export default function AdminUI() {
 
     return(
-        <div className="admin-ui-container">
+        <div className="section">
            {/*} <CreateSchedule />*/ }
            <AdminSeasons />
            <CreateSchedule />

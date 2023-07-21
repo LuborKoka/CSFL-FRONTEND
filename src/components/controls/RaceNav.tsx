@@ -1,23 +1,31 @@
 import { NavLink, Outlet, useOutletContext, useParams } from "react-router-dom"
-import '../../styles/raceNavigation.css'
 
 
 
 export default function RaceNav() {
-    const { raceID } = useParams()
+    const { raceID, seasonID } = useParams()
 
     const context = useOutletContext()
 
     return(
-        <div className='section'>
-            <Outlet context={context} />
+        /*<div className='race-section'>*/
+        <>
+            <div className='race-container'>
+                <div className='section'>
+                    <Outlet context={context} />
+                </div>
+            </div>
             <div className='race-navigation'>
                 {/*ten prvy link moze ist asi do pici, to bude v tej breadcrumbs navigacii*/}
-                <NavLink to={`${raceID}`}>Prehľad</NavLink>
-                <NavLink to={`${raceID}/results`}>Výsledky</NavLink>
-                <NavLink to={`${raceID}/reports`}>Reporty</NavLink>
-                <NavLink to={`${raceID}/reports/new`}>Pridať report</NavLink>
+                <ul>
+                    <NavLink className='clickable-button' to={`${raceID}`}>Prehľad</NavLink>
+                    <NavLink className='clickable-button' to={`${raceID}/results`}>Výsledky</NavLink>
+                    <NavLink className='clickable-button' to={`${raceID}/reports`}>Reporty</NavLink>
+                    <NavLink className='clickable-button' to={`/seasons/${seasonID}/standings`}>Tabuľka</NavLink>
+                    <NavLink className='clickable-button' to={`${raceID}/reports/new`}>Pridať report</NavLink>
+                </ul>
             </div>
-        </div>
+        </>
+        /*</div>*/
     )
 }

@@ -1,0 +1,35 @@
+@import 'mixin.scss';
+
+.auth-form {
+  @include flexColumn();
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  color: $white;
+
+  form {
+    @include flexColumn();
+    row-gap: 3em;
+    width: clamp(400px, 30vw, 600px);
+    align-items: center;
+  }
+}
+
+
+.form-swap {
+  font-size: 18px;
+
+  span {
+    position: relative;
+    cursor: pointer;
+    &::after {
+      position: absolute;
+      content: '';
+      width: calc(100% + 4px);
+      height: 1px;
+      background-color: $white;
+      bottom: 0;
+      left: -2px;
+    }
+  }
+}

@@ -37,7 +37,7 @@ export default function Settings() {
     
 
     return(
-        <div>
+        <div className='section'>
             <form onSubmit={handlePasswordChange}>
                 <input ref={oldPassword} placeholder="Staré heslo" type="password" />
                 <input ref={newPassword} placeholder="Nové heslo" type="password" />

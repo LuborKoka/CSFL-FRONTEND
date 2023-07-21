@@ -16,8 +16,11 @@ import SeasonNav from './components/controls/SeasonNav';
 import Welcome from './components/screens/Welcome';
 import RaceNav from './components/controls/RaceNav';
 import AddReport from './components/subcompontents/user/AddReport';
+import './styles/shared.css'
 
 export const URI = 'http://192.168.100.22:8000/api'
+
+export const randomURIkey = generateRandomString(10)
 
 type User = {
   username: string,
@@ -68,9 +71,9 @@ function App() {
             
            
 
-            <Route path='/admin' element={<AdminUI />} />
-            <Route path='/admin/season/:seasonID' element={<EditSeason />} />
-            <Route path='/admin/season/:seasonID/race/:raceID' element={<EditRace />} />
+            <Route path={`/${randomURIkey}/admin`} element={<AdminUI />} />
+            <Route path={`/${randomURIkey}/admin/season/:seasonID`} element={<EditSeason />} />
+            <Route path={`/${randomURIkey}/admin/season/:seasonID/race/:raceID`} element={<EditRace />} />
           </Routes>
         </Router>   
       </QueryClientProvider>
@@ -80,3 +83,13 @@ function App() {
 
 export default App;
 
+
+
+export function generateRandomString(length: number) {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+}

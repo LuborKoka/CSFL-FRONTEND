@@ -10,12 +10,12 @@ export default function RaceDetails() {
     
 //toto css je totalne dojebane, tie kontajnery hlavne
     return(
-        <div className='race-details-container'>
-            <nav className='race-navigation'>
-            <NavLink to='reports'>Report</NavLink> 
+        <div className=''>
+            {/*<nav className='race-navigation'>
+                <NavLink to='reports'>Report</NavLink> 
                 <NavLink to='results'>Výsledky</NavLink>
                 <NavLink to={`/seasons/${seasonID}/standings`}>Tabuľka</NavLink>
-            </nav>
+    </nav>*/}
             <div>
                 <RaceResults />
             </div>

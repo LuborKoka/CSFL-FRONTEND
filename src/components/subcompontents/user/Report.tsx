@@ -25,7 +25,7 @@ export default function Report({ verdict, penalties, reportID, videos, content, 
     }
 
     return(
-        <div>
+        <div style={{borderRadius: '20px', backgroundColor: '#001020'}}>
             <h1>Report od {from.name}</h1>
             <h2>Vytvorene: {createdAt}</h2>
             <pre>{content}</pre>
