@@ -91,12 +91,6 @@
   z-index: 1;
 }
 
-.center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 @media (hover: none) {
   .icon-delete {
     color: #CC1E23;

@@ -96,6 +96,15 @@
     grid-template-columns: 50% 50%;
     column-gap: 3rem;
     padding: 0 1rem 2rem 1rem;
+
+    div {
+        position: relative;
+    }
+}
+
+.center {
+    width: 100%;
+    @include center();
 }
 
 
@@ -103,7 +112,7 @@
     display: flex;
     column-gap: 10px;
     align-items: center;
-    margin-top: 2rem;
+    //margin-top: 2rem;
 
     input {
         box-shadow: 0 0 10px rgba($white, .4);
@@ -111,8 +120,21 @@
 }
 
 #custom-input {
-    margin-top: 2rem;
+    font-size: clamp(10px, 1rem + 0.3vw, 16px);
+    white-space: nowrap;
+    span {
+        width: clamp(200px, 90vw, calc(80% + 20px));
+    }
 }
+
+
+.attachments-container {
+    width: 100%;
+    & > :last-child {
+        margin-bottom: 2rem;
+    }
+}
+
 
 .svg-button {
     display: flex;
@@ -168,5 +190,15 @@
 @media screen and (max-width: 480px) {
     .two-columns {
         display: block;
+        padding: 0 0 2rem 0;
+
+        & > :first-child {
+            margin-bottom: 2rem;
+        }
+
+        #custom-input {
+            width: 100%;
+            text-align: center;
+        }
     }
 }

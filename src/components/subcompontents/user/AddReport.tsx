@@ -53,7 +53,6 @@ export default function AddReport() {
         const link = video.current.value
 
         if ( validateURL(link) ) {
-            report.current.video.push(video.current.value)
             setLinks(p => [...p, {url: link, id: generateRandomString(12)}])
             video.current.value = ''
         }   
@@ -113,7 +112,7 @@ export default function AddReport() {
         <div id='addReport'>
             <h1 className='section-heading'>Nový Report</h1>
             <div className='labeled-input' id='race-name'>
-                <input name='raceName' className='form-input' type="text" readOnly value={race.raceName} />
+                <input name='raceName' className='form-input' type="text" readOnly value={`${query.data?.raceName}`} />
                 <label htmlFor='raceName'>Preteky</label>
             </div>
             <Select options={driversFromQuery(query.data, user.user?.id)} isMulti onChange={handleDriversChange} styles={selectStyles} />
@@ -128,24 +127,24 @@ export default function AddReport() {
             </h2>
             
             <div className='two-columns'>
-                <div  className='center' style={{margin: '2rem 0', flexDirection: 'column', rowGap: '1rem'}}>
-                    <div style={{position: 'relative', width: '100%'}}>
+                <div >
+                    <div className="attachments-container">
                         {
                             files.map(f => <AddedVideo name={f.file.name} id={f.id} deleteVideo={deleteVideo} />)
                         }
                     </div>
                     
-                    <div>
-                        <label className='clickable-button' id='custom-input'>
-                            <input type="file" multiple disabled={isPending} style={{display: 'none'}}
-                            accept="image/jpeg, image/png, video/mp4, video/x-matroska, video/webm"  onChange={handleFileInput} />
-                            <span>Vyber video alebo obrázok</span>
-                        </label>
+                    <div className='center'>
+                    <label className='clickable-button' id='custom-input'>
+                        <input type="file" multiple disabled={isPending} style={{display: 'none'}}
+                        accept="image/jpeg, image/png, video/mp4, video/x-matroska, video/webm"  onChange={handleFileInput} />
+                        <span>Vyber video alebo obrázok</span>
+                    </label>
                     </div>
                 </div>
                     
                 <div>
-                    <div>
+                    <div className="attachments-container">
                         {
                             links.map(l => <AddedLink url={l.url} id={l.id} deleteVideo={deleteLink} />)
                         }
@@ -172,7 +171,7 @@ export default function AddReport() {
 
 
 async function fetchDrivers(id: string | undefined) {
-    const res = await axios.get<{drivers: Driver[]}>(`${URI}/races/${id}/drivers/`)
+    const res = await axios.get<{drivers: Driver[], raceName: string}>(`${URI}/races/${id}/drivers/`)
     return res.data
 }
 
@@ -183,9 +182,12 @@ function driversFromQuery(data: {drivers: Driver[]} | undefined, id: string | un
         return {value: d.id, label: d.name}
     })
 
+
+    //d.value je driver_id, takze tuto zatial picu najde
     const index = drivers.findIndex(d => d?.value === id)
 
-    drivers.splice(index, 1)
+    //aby sa nedalo reportnut sameho seba
+    if ( index !== -1) drivers.splice(index, 1)
 
     return drivers
 }
@@ -210,7 +212,7 @@ type LinkProps = {
 
 function AddedLink({ url, id, deleteVideo}: LinkProps) {
     return(
-        <div className='form-input'>
+        <div className='form-input' style={{width: '100%', paddingRight: '2.5rem'}}>
             <Link style={{color: WHITE, fontSize: '16px'}} target="_blank" to={url}>{url}</Link>
             <FontAwesomeIcon icon={faTrashAlt} onClick={() => deleteVideo(id)}  className="icon-delete center-right" />
         </div>
@@ -226,7 +228,7 @@ type VideoProps = {
 function AddedVideo({ name, id, deleteVideo}: VideoProps) {
 
     return(
-        <div className='form-input' style={{width: '100%'}}>
+        <div className='form-input' style={{width: '100%', paddingRight: '1.5rem'}}>
             <span style={{color: WHITE, fontSize: '16px'}}>{name}</span>
             <FontAwesomeIcon icon={faTrashAlt} onClick={() => deleteVideo(id)} className='icon-delete center-right' />
         </div>

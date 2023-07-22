@@ -104,10 +104,6 @@
 }
 
 
-.center {
-    @include center()
-}
-
 @media (hover: none) {
     .icon-delete {
         color: $red;

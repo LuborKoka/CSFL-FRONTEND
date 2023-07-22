@@ -76,19 +76,39 @@
   column-gap: 3rem;
   padding: 0 1rem 2rem 1rem;
 }
+.two-columns div {
+  position: relative;
+}
+
+.center {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .video-submit {
   display: flex;
   column-gap: 10px;
   align-items: center;
-  margin-top: 2rem;
 }
 .video-submit input {
   box-shadow: 0 0 10px rgba(239, 239, 239, 0.4);
 }
 
 #custom-input {
-  margin-top: 2rem;
+  font-size: clamp(10px, 1rem + 0.3vw, 16px);
+  white-space: nowrap;
+}
+#custom-input span {
+  width: clamp(200px, 90vw, 80% + 20px);
+}
+
+.attachments-container {
+  width: 100%;
+}
+.attachments-container > :last-child {
+  margin-bottom: 2rem;
 }
 
 .svg-button {
@@ -133,6 +153,14 @@
 @media screen and (max-width: 480px) {
   .two-columns {
     display: block;
+    padding: 0 0 2rem 0;
+  }
+  .two-columns > :first-child {
+    margin-bottom: 2rem;
+  }
+  .two-columns #custom-input {
+    width: 100%;
+    text-align: center;
   }
 }
 
