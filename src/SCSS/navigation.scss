@@ -6,7 +6,7 @@
     top: 0px;
     z-index: 10;
     @include flexColumn();
-    height: 100dvh;
+    height: 100vh;
     transition: transform .4s ease-out;
     padding: 2.5rem 1rem;
     max-width: clamp(200px, calc(100vw - 60px), 350px);
@@ -171,6 +171,7 @@
 @media screen and (min-width: 1001px) {
     .main-navigation {
         box-shadow: 0 2px 15px rgba($white, .3);
+
     }
 }
 
@@ -182,6 +183,7 @@
     }
 
     .main-navigation {
+        height: 100%;
         transform: translateX(-100%);
         position: fixed;
         left: 0px;

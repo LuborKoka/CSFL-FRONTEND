@@ -3,6 +3,9 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { URI } from '../../../App';
+import { faClock } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { WHITE } from '../../../constants';
 
 export default function RaceResults() {
     const [leaderTime, setLeaderTime] = useState(0)
@@ -17,19 +20,19 @@ export default function RaceResults() {
     }, [query])
 
     return(
-        <>
-            Race Results
-            <table>
-                <thead>
+        <div style={{display: 'grid'}}>
+            <h2 className='section-heading fade-in-out-border'>Výsledky pretekov</h2>
+            <table className='table'>
+                <thead className='table-header'>
                     <tr>
                         <th></th>
-                        <th>Pilot</th>
-                        <th>Team</th>
+                        <th style={{textAlign: 'left'}}>Pilot</th>
+                        <th style={{textAlign: 'left'}}>Team</th>
                         <th>Čas</th>
                         <th>Body</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id='race-results'>
                 {
                     //SELECT NOW() < race.date AS race_took_place a mam vyriesene tie nuly
                     query?.data?.results.map(d => {
@@ -39,7 +42,12 @@ export default function RaceResults() {
                                 <td>{d.driverName}</td>
                                 <td>{d.teamName}</td>
                                 <td>{d.rank === 1 ? formatTime(d.time) : `+${formatTime(d.time - leaderTime)}`}</td>
-                                <td>{assignPoints(d.rank, d.hasFastestLap)}</td>
+                                <td style={{whiteSpace: 'nowrap'}}>
+                                    {assignPoints(d.rank, d.hasFastestLap)}
+                                    {d.hasFastestLap ? <FontAwesomeIcon 
+                                    style={{color: 'purple', marginLeft: '5px', backgroundColor: WHITE, borderRadius: '50%'}} icon={faClock} /> 
+                                    : null}
+                                </td>
                             </tr>
                         )
                     })
@@ -47,7 +55,7 @@ export default function RaceResults() {
                 </tbody>   
                 
             </table>
-        </>
+        </div>
     )
 }
 

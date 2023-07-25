@@ -6,6 +6,8 @@ import { useParams } from "react-router-dom"
 import Report from "../subcompontents/user/Report"
 import ReportResponse from "../subcompontents/user/ReportResponse"
 import Verdict from "../subcompontents/FIA/FIAVerdict"
+import '../../styles/newReport.css'
+import '../../styles/report.css'
 
 
 export default function Reports() {
@@ -13,31 +15,23 @@ export default function Reports() {
     //opacity to 0 and scale up. Add in a skew and a translation in a direction for extra flair. Looks like the element 
     //disappears in a puff of smoke. I'm sure you can think of situations where this would be appropriate and satisfying. 
     //The reverse is also pretty impressive. https://youtu.be/y8-F5-2EIcg
-    const [isAddingResponse, setIsAddingResponse] = useState(false)
+    const [responseData, setResponseData] = useState({isActive: false, rank: 0, from: '', targets: [{name: '', id: ''}]})
     const [isAddingVerdict, setIsAddingVerdict] = useState(false)
 
     const { raceID } = useParams()
 
     const query = useQuery([`race_${raceID}_reports`], () => fetchReports(raceID))
+
+    console.log(query.data)
     return(
         <div>
-            <h1 className='section-heading'>Reporty</h1>
+            <h1 className='section-heading fade-in-out-border'>Reporty</h1>
             {
-                query.data?.reports.map(r =>/* toten setter musi ist dovnutra komponentu, tam uz mam aj tak kontext na reportID, ktory treba nastavit */ 
-                    <Report key={r.reportID} {...r} setIsAddingResponse={setIsAddingResponse} setIsAddingVerdict={setIsAddingVerdict} />
+                query.data?.reports.slice().reverse().map(r =>/* toten setter musi ist dovnutra komponentu, tam uz mam aj tak kontext na reportID, ktory treba nastavit */ 
+                    <Report key={r.reportID} {...r} setResponseData={setResponseData} setIsAddingVerdict={setIsAddingVerdict} />
                 )
             }
-            reports
-            <div style={{height: '45vh'}}>content</div>
-            <div style={{height: '45vh'}}>content</div>
-            <div style={{height: '45vh'}}>content</div>
-            <div style={{height: '45vh'}}>content</div>
-            <div style={{height: '45vh'}}>content</div>
-            <div style={{height: '45vh'}}>content</div>
-            <div style={{height: '45vh'}}>content</div>
-            <div style={{height: '45vh'}}>content</div>
-            <ReportResponse isAddingResponse={isAddingResponse} setIsAddingResponse={setIsAddingResponse} />
-            <Verdict isAddingVerdict={isAddingVerdict} setIsAddingVerdict={setIsAddingVerdict} />
+            <ReportResponse responseData={responseData} setResponseData={setResponseData} />
         </div>
     )
 }
@@ -83,7 +77,8 @@ export type ReportType = {
         driverName: string,
         time: number,
         penaltyPoints: number
-    }[]
+    }[],
+    rank: number
 }
 
 type Data = {

@@ -1,1 +1,1 @@
-{"version":3,"sourceRoot":"","sources":["../SCSS/race.scss"],"names":[],"mappings":"AAGA;AAAA;;AAAA;AAMA;EACI;;AAEA;EACI;;AAGJ;EACI;;AAGJ;EACI;EACA;EACA;EACA;;AACA;EACI;;AAIR;EACI","file":"race.css"}
+{"version":3,"sourceRoot":"","sources":["../SCSS/race.scss"],"names":[],"mappings":"AAEA;EACI;;AAEA;EACI;;AAGJ;EACI;;AAGJ;EACI;EACA;EACA;EACA;;AACA;EACI;;AAIR;EACI;;;AAKR;EACI;;AACA;EACI;;AAGJ;EACI;;;AAKJ;EACI;;AAGJ;EACI;;AAGJ;EACI;;AAIA;EACI;EACA;;AAGJ;EACI;;AAGJ;EACI;;AAGJ;EACI;EACA;;;AAMZ;EACI;;;AAGJ;EACI;;;AAKJ;EACI;EACA","file":"race.css"}

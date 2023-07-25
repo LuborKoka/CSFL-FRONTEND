@@ -1,7 +1,3 @@
-/*.race-section {
-    display: flex;
-
-}*/
 .race-container {
   overflow-y: auto;
 }
@@ -22,6 +18,53 @@
 }
 .race-container::-webkit-scrollbar-button {
   display: none;
+}
+
+.table {
+  border-collapse: collapse;
+}
+.table tr td {
+  padding: 0.5rem 0;
+}
+.table tbody > tr:nth-child(2n+1) {
+  background-color: #002020;
+}
+
+#race-results > tr:first-child {
+  color: gold;
+}
+#race-results > tr:nth-child(2) {
+  color: silver;
+}
+#race-results > tr:nth-child(3) {
+  color: coral;
+}
+#race-results tr > td:last-child {
+  text-align: left;
+  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+}
+#race-results tr > td:first-child {
+  padding: 0 0.5rem;
+}
+#race-results tr > td:nth-child(2) {
+  padding-right: 0.5rem;
+}
+#race-results tr > td:nth-last-child(2) {
+  text-align: right;
+  padding-left: 5px;
+}
+
+.purple {
+  color: purple;
+}
+
+.upper-index {
+  transform: scale(60%) translateY(50%);
+}
+
+.flag-box {
+  width: 40px;
+  height: 25px;
 }
 
 /*# sourceMappingURL=race.css.map */

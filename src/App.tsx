@@ -17,6 +17,7 @@ import Welcome from './components/screens/Welcome';
 import RaceNav from './components/controls/RaceNav';
 import AddReport from './components/subcompontents/user/AddReport';
 import './styles/shared.css'
+import './styles/confirmation.css'
 
 export const URI = 'http://192.168.100.22:8000/api'
 

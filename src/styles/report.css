@@ -1,0 +1,53 @@
+.report-card {
+  position: relative;
+  padding: 2rem 0 3rem;
+}
+
+.report-card pre, .report-response pre {
+  box-shadow: 0 0 10px rgba(239, 239, 239, 0.4);
+  min-height: 7.5rem;
+  padding: 1rem;
+  font-size: 16px;
+}
+.report-card pre + label, .report-response pre + label {
+  transform: scale(0.8) translateY(-2rem);
+  left: 0.5rem;
+  font-weight: bold;
+}
+
+.reported-player {
+  position: relative;
+}
+.reported-player svg {
+  color: #CC1E23;
+}
+
+.header-with-time {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.single-row {
+  display: flex;
+  align-items: center;
+}
+
+.response-count {
+  position: absolute;
+  transform: scale(0.8);
+  left: 4px;
+  bottom: 0;
+  color: #001010;
+  font-weight: bold;
+}
+
+.penalty-driver-layout {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  grid-template-rows: 1.2em;
+  padding-bottom: 0.5rem;
+}
+
+/*# sourceMappingURL=report.css.map */

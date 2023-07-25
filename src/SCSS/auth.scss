@@ -12,6 +12,10 @@
     row-gap: 3em;
     width: clamp(400px, 30vw, 600px);
     align-items: center;
+
+    .labeled-input {
+      width: 80%
+    }
   }
 }
 

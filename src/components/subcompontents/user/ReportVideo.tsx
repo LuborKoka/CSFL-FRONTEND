@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react"
 import { URI } from "../../../App"
 
 type Online = {
@@ -15,17 +16,38 @@ type Props = {
 
 
 export default function ReportVideo(props: Props) {
+    const [height, setHeight] = useState('0')
+
+    const container = useRef<HTMLDivElement>(null)
+
+    //treba nejako ojebat
+    //ojebane
+    useEffect(() => {
+        if ( container.current === null || container === null ) return
+        const handleResize = () => {
+            if ( container.current === null || container === null ) return
+            const width = container.current.offsetWidth
+            const newHeight = (315/560) * width
+            setHeight(`${newHeight}px`)
+        }
+
+        handleResize()
+        window.addEventListener('resize', handleResize)
+
+        return () => window.removeEventListener('resize', handleResize)
+    }, [container, props])
+
 
     if ( !props.isOnline ) return(
-        <div style={{maxWidth: '1100px'}}>
-            <video width='100%' controls src={`${URI}/videos/report/${props.url}/`} />
+        <div >
+            <video width='100%' height='100%' controls src={`${URI}/videos/report/${props.url}/`} />
         </div>
     )
 
 
     if ( props.embed ) return(
-        <div>
-            <iframe title='Report' width="560" height="315" src={props.url}  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+        <div ref={container}>
+            <iframe  style={{outline: 'none', border: 'none'}} height={height} width='100%' title='Report' src={props.url}  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
         </div>
     )
 

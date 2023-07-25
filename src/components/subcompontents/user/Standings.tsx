@@ -12,14 +12,19 @@ export default function Standings() {
     const query = useQuery([`season_standings_${seasonID}`], () => fetchStandings(seasonID))
 
     return(
-        <div>
-            <h1>Tabuľka priebežného poradia jazdov</h1>
-            <table>
+        <div className='section'>
+            <h2 className="section-heading fade-in-out-border">Tabuľka priebežného poradia jazdov</h2>
+            <table className="table">
                 <thead>
                     <tr>
                         <th></th><th>Meno</th>
                         {
-                            query.data?.races.map((r, i) => <th key={r.id}><img style={imageStyle} alt='' src={`${URI}/images/tracks/${r.trackID}/`} /></th>)
+                            query.data?.races.map((r, i) => 
+                            <th key={r.id} >
+                                <div className='flag-box'>
+                                    <img alt='' style={{objectFit: 'cover', width: '100%', height: '100%'}}   src={`${URI}/images/tracks/${r.trackID}/`} />                                   
+                                </div>
+                            </th>)
                         }
                         <th>Body</th>
                     </tr>
@@ -42,8 +47,8 @@ export default function Standings() {
                 
             </table>
 
-            <h1>Tabuľka priebežného poradia konštruktérov</h1>
-            <table>
+            <h2 className='section-heading fade-in-out-border'>Tabuľka priebežného poradia konštruktérov</h2>
+            <table className="table">
                 <thead>
                     <tr>
                         <th></th><th>Tím</th><th>Body</th>
@@ -69,10 +74,6 @@ export default function Standings() {
 
         </div>
     )
-}
-
-const imageStyle = {
-    width: '40px'
 }
 
 type Race = {
@@ -110,3 +111,5 @@ async function fetchStandings(id: string | undefined) {
     const response = await axios.get<Data>(`${URI}/seasons/${id}/standings/`)
     return response.data
 }
+
+

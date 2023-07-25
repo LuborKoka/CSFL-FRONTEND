@@ -1,0 +1,28 @@
+.confirmation {
+  position: fixed;
+  inset: 0;
+  z-index: 11;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.animate-confirmation {
+  color: green;
+  font-size: clamp(120px, 20vw, 300px);
+  animation: expand-disappear 2s;
+  animation-delay: 1s;
+}
+
+@keyframes expand-disappear {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/*# sourceMappingURL=confirmation.css.map */

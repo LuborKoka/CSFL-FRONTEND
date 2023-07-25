@@ -20,19 +20,9 @@
         margin-bottom: 2rem;
         position: relative;
         padding-bottom: 1rem;
-        
-        &::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            height: .6px;
-            background-image: linear-gradient(to right, $darkblue, $white, $white, $darkblue);
-        }
     }
 
-    #race-name {
+    .perma-active {
         width: 100%;
         margin-bottom: 2rem;
 
@@ -46,29 +36,16 @@
             opacity: .8;
             cursor: not-allowed;
         }
-    }
-
-    .two-columns::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        height: .6px;
-        background-image: linear-gradient(to right, $darkblue, $white, $white, $darkblue);
-    }
-    
+    }    
 }
 
 
 
 
-#inchident {
-    width: 100%;
+.inchident {
     margin: 2rem 0;
-    position: relative;
 
-    textarea {
+    textarea, pre {
         background-color: transparent;
         outline: none;
         border: none;
@@ -78,12 +55,13 @@
         box-shadow: 0 0 10px rgba($white, .4);
         min-height: 5rem;
         padding: 1rem;
+        max-width: 100%;
 
     }
 
     label {
         top: .75rem;
-        left: 0;
+        left: 0 !important;
         transform: scale(.8) translateY(-120%);
 
     }
@@ -93,9 +71,9 @@
 .two-columns {
     position: relative;
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: repeat(2, calc(50% - 1.5rem));
     column-gap: 3rem;
-    padding: 0 1rem 2rem 1rem;
+    padding-bottom: 2rem;
 
     div {
         position: relative;
@@ -112,7 +90,6 @@
     display: flex;
     column-gap: 10px;
     align-items: center;
-    //margin-top: 2rem;
 
     input {
         box-shadow: 0 0 10px rgba($white, .4);
@@ -190,7 +167,7 @@
 @media screen and (max-width: 480px) {
     .two-columns {
         display: block;
-        padding: 0 0 2rem 0;
+        padding: 0 1rem 2rem;
 
         & > :first-child {
             margin-bottom: 2rem;

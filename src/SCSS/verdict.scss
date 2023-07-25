@@ -1,14 +1,44 @@
 @import 'mixin.scss';
 
+.report-verdict-header {
+    display: grid;
+    grid-template-columns: 50px 1fr 50px;
+    position: relative;
+    height: 50px;
+    align-items: center;
+
+    .clickable-button {
+        padding: 0;
+        height: 80%;
+        width: 80%;
+    }
+}
+
+
+
+.verdict-driver-item {
+    @include flexColumn();
+    gap: 2rem;
+    padding-bottom: 16px;
+    span {
+        font-size: 1.2rem;
+    }   
+}
+
+.verdict-drivers-container {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+}
 
 .verdict-container {
-    position: fixed;
-    top: 0;
-    left: 100%;
-    transition: transform .5s;
-    z-index: 1;
+    padding: 1rem 20px 0;
+    overflow: hidden;
 }
 
-.verdict-container-active {
-    transform: translateX(-100%);
+.expand-verdict-container {
+    transition: max-height .4s;
+    overflow-y: hidden;
 }
+
+

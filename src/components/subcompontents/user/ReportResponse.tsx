@@ -1,50 +1,71 @@
 import React, { Context, useContext, useRef, useState } from 'react'
-import { URI, UserContext, UserTypes } from '../../../App'
+import { URI, UserContext, UserTypes, generateRandomString } from '../../../App'
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import { useOutletContext } from 'react-router-dom'
 import { RaceContext } from '../../controls/SeasonNav'
-import '../../../styles/reports.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPaperclip, faRightLong, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons'
+import { faRectangleXmark } from '@fortawesome/free-regular-svg-icons'
+import {ReactComponent as PaperPlane} from '../../../images/sipka.svg'
+import { AddedLink, AddedVideo } from './AddReport'
 
 type Props = {
-    isAddingResponse: boolean,
-    setIsAddingResponse: React.Dispatch<React.SetStateAction<boolean>>
+    responseData: {
+        isActive: boolean,
+        rank: number,
+        from: string,
+        targets: {name: string, id: string}[]
+    },
+    setResponseData: React.Dispatch<React.SetStateAction<{isActive: boolean,rank: number, from: string, targets: {name: string, id: string}[]}>>
 }
 
-export default function ReportResponse({ isAddingResponse, setIsAddingResponse }: Props) {
+export default function ReportResponse({ responseData, setResponseData }: Props) {
     const content = useRef<HTMLTextAreaElement>(null)
     const video = useRef<HTMLInputElement>(null)
 
+    const [files, setFiles] = useState<{id: string, file: File}[]>([])
+    const [links, setLinks] = useState<{url: string, id: string}[]>([])
 
-    const [onlineVideos, setOnlineVideos] = useState<string[]>([])
-    const [offlineVideos, setOfflineVideos] = useState<File[]>([])
     const [isPending, setIsPending] = useState(false)
 
     const user = useContext(UserContext as Context<UserTypes>)
 
     const [race, setRace] = useOutletContext<RaceContext>()
 
+    function closeWindow() {
+        setResponseData(p => {return {...p, isActive: false}})
+    }
+
+    function deleteLink(id: string) {
+        setLinks(p => p.filter(l => l.id !== id))
+    }
+
+    function deleteVideo(id: string) {
+        setFiles(p => p.filter(f => f.id !== id))
+    }
+
 
     function handleFileInput(e: React.ChangeEvent<HTMLInputElement>) {
-        if ( e.target.files?.length === 0 ) return
-
         const files = Array.prototype.slice.call(e.target.files) as File[]
-        if ( files === null ) return
 
-        setOfflineVideos(p => [...p, ...files])
+        if ( files === null ) return      
+
+        setFiles(p => [...p, ...files.map(f => {return {id: generateRandomString(12), file: f}})]) 
     }
 
     function handleVideoInput(e: React.FormEvent) {
         e.preventDefault()
-
         if ( video.current === null ) return
 
-        if ( validateURL(video.current.value) ) {
-            setOnlineVideos(p => [...p, video.current!.value])
+        const link = video.current.value
+
+        if ( validateURL(link) ) {
+            setLinks(p => [...p, {url: link, id: generateRandomString(12)}])
             video.current.value = ''
-        }
+        }   
     }
 
-    function submitReportResponse(e: React.FormEvent) {
+    function submitReportResponse(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault()
 
         setIsPending(true)
@@ -52,11 +73,13 @@ export default function ReportResponse({ isAddingResponse, setIsAddingResponse }
         const report = {
             from_driver: user.user?.id,
             inchident: content.current!.value,
-            video: onlineVideos
+            video: links.map(l => l.url)
         }
 
         const form = new FormData()
-        offlineVideos.forEach(f => form.append(`${f.name}`, f))
+        files.forEach(f => {
+            form.append(`${f.file.name}`, f.file)
+        })
         form.append('data', JSON.stringify(report))
 
         axios.post(`${URI}/report/${race.reportID}/response/`, form, {
@@ -65,7 +88,7 @@ export default function ReportResponse({ isAddingResponse, setIsAddingResponse }
             }
         })
         .then((r: AxiosResponse) => {
-
+            setResponseData(p => {return {...p, isActive: false}})
         })
         .catch((e: AxiosError) => {
 
@@ -73,20 +96,89 @@ export default function ReportResponse({ isAddingResponse, setIsAddingResponse }
         .finally(() => setIsPending(false))
     }
 
-    return(
-        <div className={`report-response-container ${isAddingResponse ? 'report-response-active' : ''}`}>
-            <form onSubmit={submitReportResponse}>
-                <textarea ref={content} placeholder="tvoja odpoveď" />
-                <input multiple type='file' onChange={handleFileInput} />
-                <button disabled={isPending} type='submit'>Odoslať</button>
-            </form>
-            <form onSubmit={handleVideoInput}>
-                <input ref={video} type='url' placeholder='Link na video' />
-                <button type='submit'>Uložiť video</button>
-            </form>
+    const form = 
+    <div className='pop-up-bg' onClick={closeWindow} >
+        <div className='pop-up-content' onClick={(e) => e.stopPropagation()}>
+            <div>
+                <div className='sticky-heading'>
+                    <h2 className='header-with-time section-heading fade-in-out-border'>
+                        {`Odpovedať na report #${responseData.rank}`}
+                        <FontAwesomeIcon onClick={closeWindow} className='close-icon' icon={faRectangleXmark} />    
+                    </h2>
+                </div>
 
-            <button onClick={() => setIsAddingResponse(false)}>Close</button>
+                <span className='single-row' style={{columnGap: '15px'}}>
+                    {responseData.from}
+                    <FontAwesomeIcon style={{transform: 'translateY(10%)'}} icon={faRightLong} />
+                    {
+                        responseData.targets.map( (t, i) => //zvazit este nejaky marker pre nahlasenych
+                            <span key={`reported_player${i}`} className='reported-player'><FontAwesomeIcon icon={faTriangleExclamation} /> {t.name}</span>
+                        )
+                    }
+                </span> 
+                <br/>
+
+
+                <div className='inchident labeled-input'>
+                    <textarea name='inchident' ref={content}/>
+                    <label htmlFor='inchident' style={{left: '.5rem'}}>Tvoja odpoveď</label>
+                </div>
+
+                <h2 className='fade-in-out-border section-heading'>
+                    <FontAwesomeIcon icon={faPaperclip} /> Prílohy
+                </h2>
+                <br/>
+
+
+                <div className='two-columns '>
+                    <div >
+                        <div className="attachments-container">
+                            {
+                                files.map(f => {
+                                    return <AddedVideo name={f.file.name} id={f.id} deleteVideo={deleteVideo} key={f.id} />
+                                })
+                            }
+                        </div>
+                        
+                        <div className='center'>
+                        <label className='clickable-button' id='custom-input'>
+                            <input type="file" multiple disabled={isPending} style={{display: 'none'}}
+                            accept="image/jpeg, image/png, video/mp4, video/x-matroska, video/webm"  onChange={handleFileInput} />
+                            <span>Vyber video alebo obrázok</span>
+                        </label>
+                        </div>
+                    </div>
+                        
+                    <div>
+                        <div className="attachments-container">
+                            {
+                                links.map(l => {
+                                    return <AddedLink url={l.url} id={l.id} deleteVideo={deleteLink} key={l.id} />
+                                })
+                            }
+                        </div>
+
+                        <form className='video-submit' onSubmit={handleVideoInput}>
+                            <div className='labeled-input'>
+                                <input className='form-input' required ref={video} name='video' type="url"/>
+                                <label htmlFor='video'>Pridaj link na video</label>
+                            </div>
+                            <button className="svg-button" type="submit"><PaperPlane /></button>
+                        </form>
+                    </div>
+                        
+                </div>                       
+
+
+            </div>
+            <div className='submit-button-container'>
+                    <button className='clickable-button' onClick={submitReportResponse}>Odpovedať</button>
+                </div>
         </div>
+    </div>
+
+    return(
+        responseData.isActive ? form : null
     )
 }
 

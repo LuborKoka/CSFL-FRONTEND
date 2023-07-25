@@ -24,15 +24,15 @@
   height: 0.6px;
   background-image: linear-gradient(to right, #001010, #EFEFEF, #EFEFEF, #001010);
 }
-#addReport #race-name {
+#addReport .perma-active {
   width: 100%;
   margin-bottom: 2rem;
 }
-#addReport #race-name label {
+#addReport .perma-active label {
   font-size: 16px;
   transform: translateY(-120%);
 }
-#addReport #race-name .form-input {
+#addReport .perma-active .form-input {
   box-shadow: 0 0 10px rgba(239, 239, 239, 0.4);
   opacity: 0.8;
   cursor: not-allowed;
@@ -164,4 +164,4 @@
   }
 }
 
-/*# sourceMappingURL=reports.css.map */
+/*# sourceMappingURL=newReport.css.map */

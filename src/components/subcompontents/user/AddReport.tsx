@@ -2,13 +2,14 @@ import React, { useState, useRef, useContext, Context } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { URI, UserContext, UserTypes, generateRandomString } from "../../../App";
 import Select, { MultiValue, StylesConfig, ActionMeta } from 'react-select';
-import { Link, useOutletContext, useParams } from "react-router-dom";
+import { Link, useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { RaceContext } from "../../controls/SeasonNav";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperclip, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { DARKBLUE, RED, WHITE } from "../../../constants";
 import { ReactComponent as PaperPlane }from '../../../images/sipka.svg'
+import Confirmation from "./Confirmation";
 
 type Race = {
     name: string,
@@ -24,10 +25,14 @@ export default function AddReport() {
     const [isPending, setIsPending] = useState(false)
     const [files, setFiles] = useState<{id: string, file: File}[]>([])
     const [links, setLinks] = useState<{url: string, id: string}[]>([])
+    const [isConfirmation, setIsConfirmation] = useState(false)
 
-    const { raceID } = useParams()
+
+    const { raceID, seasonID } = useParams()
 
     const query = useQuery([`report_${raceID}_driver_options`], () => fetchDrivers(raceID))
+    const queryClient = useQueryClient()
+    const navigate = useNavigate()
     
     
     const report = useRef<{targets: string[], inchident: string, from_driver: string, video: string[]}>({inchident: '', targets: [], from_driver: '', video: []})
@@ -76,6 +81,16 @@ export default function AddReport() {
         report.current = {...report.current, inchident: e.target.value}
     }
 
+
+    async function showConfirmation() {
+        setIsConfirmation(true)
+        await new Promise(r => setTimeout(r, 3000))
+
+        setIsConfirmation(false)
+        navigate(`/seasons/${seasonID}/race/${raceID}/reports`)
+    }
+
+    
     function handleReportSubmit(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault()
 
@@ -100,7 +115,8 @@ export default function AddReport() {
             }
         })
         .then((r: AxiosResponse) => {
-            console.log(r)
+            queryClient.invalidateQueries([`race_${raceID}_reports`])
+            showConfirmation()
         })
         .catch((e: AxiosError) => {
             console.log(e)
@@ -109,62 +125,75 @@ export default function AddReport() {
     }
     
     return(
-        <div id='addReport'>
-            <h1 className='section-heading'>Nový Report</h1>
-            <div className='labeled-input' id='race-name'>
-                <input name='raceName' className='form-input' type="text" readOnly value={`${query.data?.raceName}`} />
-                <label htmlFor='raceName'>Preteky</label>
-            </div>
-            <Select options={driversFromQuery(query.data, user.user?.id)} isMulti onChange={handleDriversChange} styles={selectStyles} />
-
-            <div className='labeled-input' id='inchident' >
-                <textarea name='inchident' ref={reportDesc} onChange={handleDescChange} spellCheck={false} />
-                <label htmlFor='inchident'>Popis inchidentu</label>
-            </div>
-
-            <h2>
-                <FontAwesomeIcon icon={faPaperclip}/> Prílohy 
-            </h2>
-            
-            <div className='two-columns'>
-                <div >
-                    <div className="attachments-container">
-                        {
-                            files.map(f => <AddedVideo name={f.file.name} id={f.id} deleteVideo={deleteVideo} />)
-                        }
-                    </div>
-                    
-                    <div className='center'>
-                    <label className='clickable-button' id='custom-input'>
-                        <input type="file" multiple disabled={isPending} style={{display: 'none'}}
-                        accept="image/jpeg, image/png, video/mp4, video/x-matroska, video/webm"  onChange={handleFileInput} />
-                        <span>Vyber video alebo obrázok</span>
-                    </label>
-                    </div>
+        <>
+            <div id='addReport'>
+                <h1 className='section-heading fade-in-out-border'>Nový Report</h1>
+                <div className='labeled-input perma-active'>
+                    <input name='raceName' className='form-input' type="text" readOnly value={`${query.data?.raceName}`} />
+                    <label htmlFor='raceName'>Preteky</label>
                 </div>
-                    
-                <div>
-                    <div className="attachments-container">
-                        {
-                            links.map(l => <AddedLink url={l.url} id={l.id} deleteVideo={deleteLink} />)
-                        }
-                    </div>
+                <div className="labeled-input perma-active" /*style={{position: 'relative'}}*/>
+                    <Select name="reported-drivers" options={driversFromQuery(query.data, user.user?.id)} isMulti onChange={handleDriversChange} styles={selectStyles} />
+                    <label htmlFor="reported-driver">Nahlásení hráči</label>
+                </div>
 
-                    <form className='video-submit' onSubmit={handleVideoInput}>
-                        <div className='labeled-input'>
-                            <input className='form-input' required ref={video} name='video' type="url"/>
-                            <label htmlFor='video'>Pridaj link na video</label>
+                <div className='inchident labeled-input ' >
+                    <textarea name='inchident' ref={reportDesc} onChange={handleDescChange} spellCheck={false} />
+                    <label htmlFor='inchident'>Popis inchidentu</label>
+                </div>
+
+                <h2 className='fade-in-out-border'>
+                    <FontAwesomeIcon icon={faPaperclip}/> Prílohy 
+                </h2>
+                
+                <div className='two-columns fade-in-out-border'>
+                    <div >
+                        <div className="attachments-container">
+                            {
+                                files.map(f => {
+                                    return <AddedVideo name={f.file.name} id={f.id} deleteVideo={deleteVideo} key={f.id} />
+                                })
+                            }
                         </div>
-                        <button className="svg-button" type="submit"><PaperPlane /></button>
-                    </form>
+                        
+                        <div className='center'>
+                        <label className='clickable-button' id='custom-input'>
+                            <input type="file" multiple disabled={isPending} style={{display: 'none'}}
+                            accept="image/jpeg, image/png, video/mp4, video/x-matroska, video/webm"  onChange={handleFileInput} />
+                            <span>Vyber video alebo obrázok</span>
+                        </label>
+                        </div>
+                    </div>
+                        
+                    <div>
+                        <div className="attachments-container">
+                            {
+                                links.map(l => {
+                                    return <AddedLink url={l.url} id={l.id} deleteVideo={deleteLink} key={l.id} />
+                                })
+                            }
+                        </div>
+
+                        <form className='video-submit' onSubmit={handleVideoInput}>
+                            <div className='labeled-input'>
+                                <input className='form-input' required ref={video} name='video' type="url"/>
+                                <label htmlFor='video'>Pridaj link na video</label>
+                            </div>
+                            <button className="svg-button" type="submit"><PaperPlane /></button>
+                        </form>
+                    </div>
+                        
                 </div>
-                    
+
+                <div className='submit-button-container'>
+                    <button className={`clickable-button ${isPending ? 'button-disabled' : ''}`} type="submit" onClick={handleReportSubmit} disabled={isPending}>Odoslať report</button>
+                </div>
             </div>
 
-            <div className='submit-button-container'>
-                <button className='clickable-button' type="submit" onClick={handleReportSubmit} disabled={isPending}>Odoslať report</button>
-            </div>
-        </div>
+            {
+                isConfirmation ? <Confirmation /> : null
+            }
+        </>
     )
 }
 
@@ -210,7 +239,7 @@ type LinkProps = {
     deleteVideo: (id: string) => void
 }
 
-function AddedLink({ url, id, deleteVideo}: LinkProps) {
+export function AddedLink({ url, id, deleteVideo}: LinkProps) {
     return(
         <div className='form-input' style={{width: '100%', paddingRight: '2.5rem'}}>
             <Link style={{color: WHITE, fontSize: '16px'}} target="_blank" to={url}>{url}</Link>
@@ -225,8 +254,7 @@ type VideoProps = {
     deleteVideo: (id: string) => void
 }
 
-function AddedVideo({ name, id, deleteVideo}: VideoProps) {
-
+export function AddedVideo({ name, id, deleteVideo}: VideoProps) {
     return(
         <div className='form-input' style={{width: '100%', paddingRight: '1.5rem'}}>
             <span style={{color: WHITE, fontSize: '16px'}}>{name}</span>

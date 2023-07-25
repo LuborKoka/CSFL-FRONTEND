@@ -1,0 +1,61 @@
+@import 'mixin.scss';
+
+.report-card {
+    position: relative;
+    //border-radius: 20px;
+    padding: 2rem 0 3rem;
+}
+
+.report-card, .report-response {
+    pre {
+        box-shadow: 0 0 10px rgba($white, .4);
+        min-height: 7.5rem;
+        padding: 1rem;
+        font-size: 16px;
+ 
+         + label {
+             transform: scale(.8) translateY(-2rem);
+             left: .5rem;
+             font-weight: bold;
+         }
+     }
+}
+
+
+.reported-player {
+    position: relative;
+    svg {
+        color: $red;
+    }
+}
+
+
+.header-with-time {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.single-row {
+    display: flex;
+    align-items: center;
+}
+
+
+.response-count {
+    position: absolute;
+    transform: scale(.8);
+    left: 4px;
+    bottom: 0;
+    color: $darkblue;
+    font-weight: bold;
+}
+
+
+.penalty-driver-layout {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    grid-template-rows: 1.2em;
+    padding-bottom: .5rem;
+}

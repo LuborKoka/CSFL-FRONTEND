@@ -13,6 +13,9 @@
   width: clamp(400px, 30vw, 600px);
   align-items: center;
 }
+.auth-form form .labeled-input {
+  width: 80%;
+}
 
 .form-swap {
   font-size: 18px;
