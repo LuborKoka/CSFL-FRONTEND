@@ -48,7 +48,7 @@ export default function ReportVerdict({ verdict, penalties, setOpen, rank, from,
                 <br/>
 
                 <div className="inchident labeled-input">
-                    <pre>{verdict}</pre>
+                    <p className='text-content'>{verdict}</p>
                     <label>Rozhodnutie FIA</label>
                 </div>
                 

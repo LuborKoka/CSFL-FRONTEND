@@ -56,7 +56,7 @@ export default function Report({ rank, verdict, penalties, reportID, videos, con
                 }
             </span>
             <div className='labeled-input' style={{marginTop: '3rem'}}>
-                <pre>{content}</pre>
+                <p className='text-content'>{content}</p>
                 <label>Inchident</label>
             </div>
 
@@ -71,7 +71,7 @@ export default function Report({ rank, verdict, penalties, reportID, videos, con
                 }
 
                 {
-                    videos.local.map((v, i) => <ReportVideo isOnline={false} key={`${reportID}_local${i}`} url={v} />)
+                    videos.local.map((v, i) => <ReportVideo isOnline={false} key={`${reportID}_local${i}`} {...v} />)
                 }
             </div>
 
@@ -155,7 +155,7 @@ function Response({ driverID, driverName, id, videos, content, createdAt }: Repo
             </div>
             <br/>
             <div className='labeled-input'>
-                <pre>{content}</pre>
+                <p className='text-content'>{content}</p>
                 <label>Inchident</label>
             </div>
 
@@ -166,7 +166,7 @@ function Response({ driverID, driverName, id, videos, content, createdAt }: Repo
             }
 
             {
-                videos.local.map((v, i) => <ReportVideo isOnline={false} key={`${id}_local${i}`} url={v} />)
+                videos.local.map((v, i) => <ReportVideo isOnline={false} key={`${id}_local${i}`} {...v} />)
             }
         </div>
     )
@@ -175,7 +175,7 @@ function Response({ driverID, driverName, id, videos, content, createdAt }: Repo
 
 
 
-function timestampToDateTime(timestamp: string) {
+export function timestampToDateTime(timestamp: string) {
     const date = new Date(timestamp)
 
     return `${date.toLocaleString()}`

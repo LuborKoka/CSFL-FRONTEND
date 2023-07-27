@@ -1,0 +1,50 @@
+.new-race {
+  margin-top: 1.5rem;
+  padding: 1rem 0.5rem 2rem 0.5rem;
+  /*align-items: center;
+  display: flex;
+  justify-content: space-evenly;*/
+  position: relative;
+}
+
+.input-date {
+  color: #EFEFEF;
+  background-color: #001010;
+  box-shadow: 0 0 10px rgba(239, 239, 239, 0.4);
+  border: none;
+  width: 100%;
+  padding: 5px 10px;
+  height: 100%;
+}
+.input-date::-webkit-calendar-picker-indicator {
+  color: #EFEFEF;
+}
+
+.date-time-picker {
+  position: relative;
+}
+.date-time-picker svg {
+  position: absolute;
+  font-size: 20px;
+  right: 10px;
+  top: 12.5px;
+  pointer-events: none;
+}
+
+.editable-container {
+  position: relative;
+  padding: 1.5rem 0;
+}
+
+@media screen and (max-width: 900px) {
+  .new-race {
+    flex-direction: column;
+  }
+}
+@media screen and (min-width: 1001px) and (max-width: 1280px) {
+  .new-race {
+    flex-direction: column;
+  }
+}
+
+/*# sourceMappingURL=admin.css.map */

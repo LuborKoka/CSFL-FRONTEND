@@ -5,24 +5,25 @@ import { RaceContext } from "../../controls/SeasonNav";
 
 
 type Props = {
-    raceID: string,
-    name: string,
+    id: string,
     raceName: string,
     date: string,
+    trackID: string,
+    isSprint: boolean
 }
 
-export default function Race({ raceID, name, raceName, date }: Props) {
+export default function Race({ id, isSprint, raceName, date }: Props) {
     const setContext = (useOutletContext() as RaceContext)[1]
     
     function setRace() {
         setContext(p => {
-            return {...p, raceName: raceName}
+            return {...p, raceName: `${isSprint ? 'Sprint: ' : ''}${raceName}`}
         })
     }
 
     return(
-        <Link onClick={setRace} className="card" to={`race/${raceID}`}>
-            <h2>{raceName}</h2>
+        <Link onClick={setRace} className="card" to={`race/${id}`}>
+            <h2>{`${isSprint ? 'Sprint: ' : ''}${raceName}`}</h2>
             <img src='https://cdn-wp.thesportsrush.com/2023/03/9090e1d3-untitled-design-3.jpg?w=1200&q=60' alt='xd' width='200px' height='100px' />
             <p>{convertTimeStamp(date)}</p>
         </Link>

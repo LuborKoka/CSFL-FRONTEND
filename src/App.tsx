@@ -9,7 +9,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Season from './components/screens/Season';
 import RaceResults from './components/subcompontents/user/RaceResults';
 import EditSeason from './components/subcompontents/admin/EditSeason';
-import EditRace from './components/subcompontents/admin/EditRace';
+import EditRace from './components/subcompontents/admin/edit race related/EditRace';
 import RaceDetails from './components/screens/RaceDetails';
 import Standings from './components/subcompontents/user/Standings';
 import SeasonNav from './components/controls/SeasonNav';
@@ -18,6 +18,11 @@ import RaceNav from './components/controls/RaceNav';
 import AddReport from './components/subcompontents/user/AddReport';
 import './styles/shared.css'
 import './styles/confirmation.css'
+import AdminNav from './components/controls/AdminNav';
+import CreateSeason from './components/subcompontents/admin/edit season related/CreateSeason';
+import CreateSchedule from './components/subcompontents/admin/edit season related/Schedule';
+import AssignDriversTeams from './components/subcompontents/admin/edit season related/AssignDriversTeams';
+import AddReserves from './components/subcompontents/admin/edit season related/AddReserves';
 
 export const URI = 'http://192.168.100.22:8000/api'
 
@@ -70,11 +75,20 @@ function App() {
   <Route path=':seasonID/race/:raceID/results' element={<RaceResults />} />*/}
             </Route>
             
-           
+            <Route path={`/${randomURIkey}/admin`} element={<AdminNav />}>
+              <Route index element={<AdminUI />} />
+              <Route path='new-season' element={<CreateSeason />} />
+              <Route path='season/:seasonID' element={<EditSeason />} />
+              <Route path='season/:seasonID/drivers' element={<AssignDriversTeams />} />
+              <Route path='season/:seasonID/schedule' element={<CreateSchedule />} />
+              <Route path='season/:seasonID/reserves' element={<AddReserves />} />
+              
+              <Route path='season/:seasonID/race/:raceID' element={<EditRace />} />
+            </Route>
 
-            <Route path={`/${randomURIkey}/admin`} element={<AdminUI />} />
+           {/* <Route path={`/${randomURIkey}/admin`} element={<AdminUI />} />
             <Route path={`/${randomURIkey}/admin/season/:seasonID`} element={<EditSeason />} />
-            <Route path={`/${randomURIkey}/admin/season/:seasonID/race/:raceID`} element={<EditRace />} />
+<Route path={`/${randomURIkey}/admin/season/:seasonID/race/:raceID`} element={<EditRace />} />*/}
           </Routes>
         </Router>   
       </QueryClientProvider>

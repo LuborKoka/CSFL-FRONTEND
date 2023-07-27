@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRectangleXmark } from "@fortawesome/free-regular-svg-icons"
 import { faCaretDown, faRightLong, faSquareCheck, faTriangleExclamation, faLightbulb } from "@fortawesome/free-solid-svg-icons";
+import useConfirmation from "../../../hooks/useConfirmation";
 
 type Props = {
     setIsAddingVerdict: React.Dispatch<React.SetStateAction<boolean>>
@@ -34,10 +35,11 @@ export default function Verdict({ setIsAddingVerdict }: Props) {
                 </div>
 
                 <div className='user-tip'>
-                    <FontAwesomeIcon icon={faLightbulb} style={{color: 'yellow', fontSize: '30px'}}/>
-                    <span>Keď už raz odošleš rozhodnutie reportu, nebude sa dať zmeniť</span>
-                    <FontAwesomeIcon icon={faLightbulb} style={{color: 'yellow', fontSize: '30px'}}/>
+                    <FontAwesomeIcon icon={faLightbulb} />
+                    <span>Keď už raz odošleš rozhodnutie reportu, nebude sa dať zmeniť<br/>Keď potrebuješ odstrániť penalizáciu (napríklad za traťové limity), naklikaj tam záporné hodnoty.</span>
+                    <FontAwesomeIcon icon={faLightbulb} />
                 </div>
+                <br/>
 
                 {
                     query.data?.reports.map(r => 
@@ -67,13 +69,14 @@ type RSProps = {
 
 function ReportSection({ rank, from, targets, reportID }: RSProps) {
     const [isExpanded, setIsExpanded] = useState(false)
-    const [isPending, setIsPending] = useState(false)
     const [isSubmitted, setIsSubmitted] = useState(false)
     const [height, setHeight] = useState('0px')
 
     const container = useRef<HTMLDivElement>(null)
     const penalties = useRef<{time: number, penaltyPoints: number, driverID: string}[]>([])
     const content = useRef<HTMLTextAreaElement>(null)
+
+    const [confirmation, showConfirmation] = useConfirmation()
 
     function setPenalty(time: number, points: number, driverID: string) {
         const pen = penalties.current.find(p => p.driverID === driverID)
@@ -94,6 +97,11 @@ function ReportSection({ rank, from, targets, reportID }: RSProps) {
         setIsExpanded(p => !p)
     }
 
+    function confirm() {
+        setIsExpanded(false)
+        setIsSubmitted(true)
+    }
+
     function submit(e: React.FormEvent) {
         e.preventDefault()
 
@@ -106,13 +114,9 @@ function ReportSection({ rank, from, targets, reportID }: RSProps) {
             }
         })
         .then((r: AxiosResponse) => {
-            setIsExpanded(false)
-            setIsSubmitted(true)
+            showConfirmation(confirm)
         })
         .catch(e => {
-
-        })
-        .finally(() => {
 
         })
     }
@@ -167,12 +171,14 @@ function ReportSection({ rank, from, targets, reportID }: RSProps) {
 
                         {
                             targets.map(t => 
+                                t.driverID === 'hra' ? null :
                                 <Penalty driverID={t.driverID} driverName={t.driverName} key={t.driverID} setPenalty={setPenalty} />    
                             )
                         }
 
                     </div>
-
+                    
+                    { /* isSubmitted namiesto is pending, aby sa nedalo znova odoslat report, !nemazat! */}
                     <div className='submit-button-container'>
                         <button className={`clickable-button ${isSubmitted ? 'button-disabled' : ''}`} onClick={submit} disabled={isSubmitted} >
                             Odoslať
@@ -180,6 +186,8 @@ function ReportSection({ rank, from, targets, reportID }: RSProps) {
                     </div>
                 </div>                
             </div>
+
+            { confirmation }
         </div>
     )
 }

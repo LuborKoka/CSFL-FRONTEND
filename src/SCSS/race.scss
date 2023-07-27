@@ -1,6 +1,6 @@
 @import 'mixin.scss';
 
-.race-container {
+.section-container {
     overflow-y: auto;
 
     &::-webkit-scrollbar {
@@ -29,6 +29,11 @@
 
 .table {
     border-collapse: collapse;
+
+    thead {
+        margin-bottom: 5px;
+    }
+
     tr td {
         padding: .5rem 0;
     }
@@ -37,6 +42,131 @@
         background-color: #002020;
     }
 }
+
+
+.standings-table {
+    tbody tr {
+        text-align: center;
+
+        & > td:first-child, & > td:last-child {
+            padding: .5rem;
+        }
+
+        & > td:nth-child(2) {
+            text-align: left;
+        }
+    }
+
+    .switcher-visible {
+        overflow-x: hidden;
+        width: 40px;
+    }
+}
+
+.team-standings-table {
+    thead th {
+        text-align: left;
+        min-width: 50px;
+    }
+
+    tbody tr {
+        & > td:first-child {
+            padding-left: 10px;
+        }
+
+        & > td:nth-child(2) {
+            padding-right: 10px;
+        }
+    }
+}
+
+.switcher-container {
+    display: flex;
+    width: 80px;
+    transition: transform 1s ease-in-out;
+
+    div {
+        width: 40px;
+        transition: opacity 1s ease-in;
+        font-weight: bold;
+    }
+}
+
+.switch-container {
+    max-width: 200px;
+    column-gap: 10px;
+    span {
+        font-weight: bold;
+    }
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 57px;
+    height: 17px;
+}
+  
+.switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: $darkblue;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 17px;
+    width: 17px;
+    left: 0;
+    bottom: 0;
+    background-color: $white;
+    -webkit-transition: 1s ease-in-out;
+    transition: 1s ease-in-out;
+}
+
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(40px);
+    -ms-transform: translateX(40px);
+    transform: translateX(40px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.switcher-container-rank {
+    transform: translateX(-40px);
+}
+
+.switcher-item {
+    &-active {
+        opacity: 1
+    }
+
+    &-inactive {
+        opacity: 0;
+    }
+}
+
+
+
 
 #race-results {
     & > tr:first-child  {
@@ -84,6 +214,7 @@
 
 
 .flag-box {
-    width: 40px;
-    height: 25px;
+    width: 35px;
+    height: 22.5px;
+    margin: 0 2.5px;
 }

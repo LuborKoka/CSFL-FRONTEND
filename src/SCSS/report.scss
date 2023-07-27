@@ -6,20 +6,18 @@
     padding: 2rem 0 3rem;
 }
 
-.report-card, .report-response {
-    pre {
-        box-shadow: 0 0 10px rgba($white, .4);
-        min-height: 7.5rem;
-        padding: 1rem;
-        font-size: 16px;
- 
-         + label {
-             transform: scale(.8) translateY(-2rem);
-             left: .5rem;
-             font-weight: bold;
-         }
+.text-content {
+    box-shadow: 0 0 10px rgba($white, .4);
+    min-height: 7.5rem;
+    padding: 1rem;
+    font-size: 16px;
+
+     + label {
+         transform: scale(.8) translateY(-2rem);
+         left: .5rem;
+         font-weight: bold;
      }
-}
+ }
 
 
 .reported-player {

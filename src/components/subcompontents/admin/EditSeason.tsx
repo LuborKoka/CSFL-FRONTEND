@@ -1,16 +1,19 @@
 import axios from 'axios'
 import React from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useOutletContext, useParams } from 'react-router-dom'
 import { URI } from '../../../App'
 import { useQuery } from '@tanstack/react-query'
-import { Race } from './CreateSchedule'
-import AssignDriversTeams from './AssignDriversTeams'
+import { Race } from './edit season related/Schedule'
+import AssignDriversTeams from './edit season related/AssignDriversTeams'
+import { AdminOutletContext, OutletSeason } from '../../controls/AdminNav'
 
 type RaceProps = {
-    raceID: string,
+    id: string,
     date: string,
-    name: string,
-    raceName: string
+    raceName: string,
+    isSprint: boolean,
+    trackID: string,
+    setSeason: React.Dispatch<React.SetStateAction<OutletSeason>>
 }
 
 type Data = {
@@ -21,18 +24,16 @@ type Data = {
 export default function EditSeason() {
     const { seasonID } = useParams()
 
+    const setSeason = (useOutletContext() as AdminOutletContext)[1]
+
     const query = useQuery([`admin-season-schedule_${seasonID}`], () => fetchSeasonSchedule(seasonID))
     
 
     return(
         <div>
-            <h1>season name</h1>
-
-            <AssignDriversTeams seasonID={seasonID!} />
-
             {
                 query.data?.races.map(r => {
-                    return <RaceBox {...r} key={r.raceID} />
+                    return <RaceBox {...r} key={r.id} setSeason={setSeason} />
                 })
             }
             
@@ -40,20 +41,30 @@ export default function EditSeason() {
     )
 }
 
-function RaceBox({ name, raceID, raceName, date}: RaceProps) {
+function RaceBox({ id, raceName, date, isSprint, setSeason}: RaceProps) {
 
     return(
-        <div style={{padding: '20px', display: 'inline-block'}}>
-            <h5>{raceName}</h5>
+        <div style={{padding: '20px', display: 'inline-block'}} onClick={() => setSeason(p => {return {...p, raceName: raceName}})}>
+            <h5>{`${isSprint ? 'Sprint: ' : ''}${raceName}`}</h5>
             <h5>{date}</h5>
 
-            <Link to={`race/${raceID}`}>Edit</Link>
+            <Link to={`race/${id}`}>Edit</Link>
         </div>
     )
 }
 
 
-async function fetchSeasonSchedule(id: string | undefined) {
-    const response = await axios.get<Data>(`${URI}/season-schedule/${id}/`)
-    return response.data
+async function fetchSeasonSchedule(seasonID: string | undefined) {
+    type Data = {
+        races: {
+            id: string,
+            raceName: string,
+            date: string,
+            trackID: string,
+            isSprint: boolean
+        }[]
+    }
+    const res = await axios.get<Data>(`${URI}/schedule/${seasonID}/`)
+    return res.data
 }
+

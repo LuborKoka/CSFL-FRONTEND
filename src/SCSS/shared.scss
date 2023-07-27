@@ -1,6 +1,5 @@
 @import 'mixin.scss';
 
-
 .labeled-input {
     position: relative;
     width: 100%;
@@ -38,6 +37,11 @@
     }
 }
 
+.disabled-input {
+    cursor: not-allowed !important;
+    opacity: .8;
+    box-shadow: 0 0 10px rgba($white, .4);
+}
 
 .clickable-button {
     position: relative;
@@ -52,6 +56,7 @@
     border: 1px solid transparent;
     transition: border .2s;
 }
+
 
 .button-disabled {
     cursor: not-allowed;
@@ -68,10 +73,12 @@
 }
 
 .section {
-    padding: 2rem clamp(12px, 5vw, 3rem);
+    padding: 2rem clamp(12px, 5vw, 3rem) 10rem;
     color: $white;
-    overflow-y: auto;
+    overflow: hidden;
     min-height: 80vh;
+    position: relative;
+    max-width: 100%;
 }
 
 .section-heading {
@@ -105,7 +112,6 @@
     display: grid;
     gap: 1rem;
     grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
-    overflow-x: auto;
 }
 
 .pop-up-bg {
@@ -167,6 +173,19 @@
     top: 1rem;
     z-index: 1;
     color: yellow;
+    
+    span {
+        text-align: center;
+    }
+
+    svg {
+        font-size: 30px;
+        color: yellow;
+    }
+
+    span {
+        padding: 0 1rem;
+    }
 }
 
 .icon-delete {
@@ -188,12 +207,29 @@
     z-index: 1;
 }
 
+.top-right {
+    position: absolute;
+    right: 1rem;
+    top: -1rem;
+    z-index: 1;
+}
+
 .close-icon {
     transition: color .2s;
     cursor: pointer;
 
     &:hover {
         color: $red;
+    }
+}
+
+
+.change-icon {
+    transition: color .2s;
+    cursor: pointer;
+
+    &:hover {
+        color: rgb(0, 215, 57)
     }
 }
 

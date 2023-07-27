@@ -32,6 +32,12 @@
   box-shadow: 0 0 10px rgba(239, 239, 239, 0.4);
 }
 
+.disabled-input {
+  cursor: not-allowed !important;
+  opacity: 0.8;
+  box-shadow: 0 0 10px rgba(239, 239, 239, 0.4);
+}
+
 .clickable-button {
   position: relative;
   outline: none;
@@ -61,10 +67,12 @@
 }
 
 .section {
-  padding: 2rem clamp(12px, 5vw, 3rem);
+  padding: 2rem clamp(12px, 5vw, 3rem) 10rem;
   color: #EFEFEF;
-  overflow-y: auto;
+  overflow: hidden;
   min-height: 80vh;
+  position: relative;
+  max-width: 100%;
 }
 
 .section-heading {
@@ -94,7 +102,6 @@
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
-  overflow-x: auto;
 }
 
 .pop-up-bg {
@@ -152,6 +159,16 @@
   z-index: 1;
   color: yellow;
 }
+.user-tip span {
+  text-align: center;
+}
+.user-tip svg {
+  font-size: 30px;
+  color: yellow;
+}
+.user-tip span {
+  padding: 0 1rem;
+}
 
 .icon-delete {
   position: absolute;
@@ -170,12 +187,27 @@
   z-index: 1;
 }
 
+.top-right {
+  position: absolute;
+  right: 1rem;
+  top: -1rem;
+  z-index: 1;
+}
+
 .close-icon {
   transition: color 0.2s;
   cursor: pointer;
 }
 .close-icon:hover {
   color: #CC1E23;
+}
+
+.change-icon {
+  transition: color 0.2s;
+  cursor: pointer;
+}
+.change-icon:hover {
+  color: rgb(0, 215, 57);
 }
 
 @media (hover: none) {

@@ -4,7 +4,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios'
 import { useOutletContext } from 'react-router-dom'
 import { RaceContext } from '../../controls/SeasonNav'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPaperclip, faRightLong, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons'
+import { faPaperclip, faRightLong, faTriangleExclamation, faLightbulb } from '@fortawesome/free-solid-svg-icons'
 import { faRectangleXmark } from '@fortawesome/free-regular-svg-icons'
 import {ReactComponent as PaperPlane} from '../../../images/sipka.svg'
 import { AddedLink, AddedVideo } from './AddReport'
@@ -127,8 +127,13 @@ export default function ReportResponse({ responseData, setResponseData }: Props)
                 <h2 className='fade-in-out-border section-heading'>
                     <FontAwesomeIcon icon={faPaperclip} /> Prílohy
                 </h2>
+                
+                <div className='user-tip'>
+                    <FontAwesomeIcon icon={faLightbulb} />
+                    <span>Na videá odporúčam použiť online platformy (youtube, streamable etc.). Všetkým (aj sebe) tým ušetríš kus dát.</span>
+                    <FontAwesomeIcon icon={faLightbulb} />
+                </div>
                 <br/>
-
 
                 <div className='two-columns '>
                     <div >

@@ -6,10 +6,10 @@ import { Link, useNavigate, useOutletContext, useParams } from "react-router-dom
 import { RaceContext } from "../../controls/SeasonNav";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperclip, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faLightbulb, faPaperclip, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { DARKBLUE, RED, WHITE } from "../../../constants";
 import { ReactComponent as PaperPlane }from '../../../images/sipka.svg'
-import Confirmation from "./Confirmation";
+import useConfirmation from "../../../hooks/useConfirmation";
 
 type Race = {
     name: string,
@@ -42,6 +42,8 @@ export default function AddReport() {
     const user = useContext(UserContext as Context<UserTypes>)
 
     const race = (useOutletContext() as RaceContext)[0]
+
+    const [confirmation, showConfirmation] = useConfirmation()
 
     function handleFileInput(e: React.ChangeEvent<HTMLInputElement>) {
         const files = Array.prototype.slice.call(e.target.files) as File[]
@@ -80,16 +82,6 @@ export default function AddReport() {
     function handleDescChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
         report.current = {...report.current, inchident: e.target.value}
     }
-
-
-    async function showConfirmation() {
-        setIsConfirmation(true)
-        await new Promise(r => setTimeout(r, 3000))
-
-        setIsConfirmation(false)
-        navigate(`/seasons/${seasonID}/race/${raceID}/reports`)
-    }
-
     
     function handleReportSubmit(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault()
@@ -116,7 +108,7 @@ export default function AddReport() {
         })
         .then((r: AxiosResponse) => {
             queryClient.invalidateQueries([`race_${raceID}_reports`])
-            showConfirmation()
+            showConfirmation(() => navigate(`/seasons/${seasonID}/race/${raceID}/reports`))
         })
         .catch((e: AxiosError) => {
             console.log(e)
@@ -133,7 +125,7 @@ export default function AddReport() {
                     <label htmlFor='raceName'>Preteky</label>
                 </div>
                 <div className="labeled-input perma-active" /*style={{position: 'relative'}}*/>
-                    <Select name="reported-drivers" options={driversFromQuery(query.data, user.user?.id)} isMulti onChange={handleDriversChange} styles={selectStyles} />
+                    <Select name="reported-drivers" options={[{value: 'hra', label: 'Hra'}, ...driversFromQuery(query.data, user.user?.id)]} isMulti onChange={handleDriversChange} styles={selectMultiValueStyles()} />
                     <label htmlFor="reported-driver">Nahlásení hráči</label>
                 </div>
 
@@ -145,6 +137,13 @@ export default function AddReport() {
                 <h2 className='fade-in-out-border'>
                     <FontAwesomeIcon icon={faPaperclip}/> Prílohy 
                 </h2>
+
+                <div className='user-tip' style={{zIndex: '0'}}>
+                    <FontAwesomeIcon icon={faLightbulb} />
+                    <span>Na videá odporúčam použiť online platformy (youtube, streamable etc.). Všetkým (aj sebe) tým ušetríš kus dát.</span>
+                    <FontAwesomeIcon icon={faLightbulb} />
+                </div>
+                <br/>
                 
                 <div className='two-columns fade-in-out-border'>
                     <div >
@@ -190,9 +189,7 @@ export default function AddReport() {
                 </div>
             </div>
 
-            {
-                isConfirmation ? <Confirmation /> : null
-            }
+            { confirmation }
         </>
     )
 }
@@ -267,108 +264,113 @@ export function AddedVideo({ name, id, deleteVideo}: VideoProps) {
 
 type OptionType = { value: string, label: string };
 
-const selectStyles: StylesConfig<OptionType, true> = {
-    control: (styles) => {
-        return {
-            ...styles,
-            cursor: 'text',
-            backgroundColor: 'transparent',
-            border: 'none',
-            boxShadow: `0px 0px 8px rgba(239, 239, 239, 0.4)`,
-            padding: '3px 10px',
-            fontSize: '20px'
-        }
-    },
-    placeholder: styles => {
-        return {
-            ...styles,
-            color: WHITE,
-            opacity: '.7'
-        }
-    },
-    input: styles => {
-        return {
-            ...styles,
-            color: WHITE
-        }
-    },
-    option: (styles) => {
-        return {
-            ...styles,
-            backgroundColor: WHITE,
-            color: DARKBLUE,
-            transition: 'all .2s',
-            cursor: 'pointer',
-            ':hover': {
+export function selectMultiValueStyles(color = 'rgba(239, 239, 239, .4') {
+    const underLineColor = color === 'rgba(239, 239, 239, .4' ? WHITE : color
+
+    const selectMultiValueStyles: StylesConfig<OptionType, true> = {
+        control: (styles) => {
+            return {
+                ...styles,
+                cursor: 'text',
+                backgroundColor: 'transparent',
+                border: 'none',
+                boxShadow: `0px 0px 10px 5px ${color}`,
+                padding: '3px 10px',
+                fontSize: '20px'
+            }
+        },
+        placeholder: styles => {
+            return {
+                ...styles,
                 color: WHITE,
-                backgroundColor: DARKBLUE
+                opacity: '.7'
             }
-        }
-    },
-    multiValue: styles => {
-        return {
-            ...styles,
-            backgroundColor: 'transparent',
-            color: WHITE,
-            
-        }
-    },
-    multiValueLabel: styles => {
-        return {
-            ...styles,
-            color: WHITE,
-            position: 'relative',
-            '::after': {
-                content: '""',
-                position: 'absolute',
-                width: '100%',
-                height: '.6px',
-                backgroundImage: `linear-gradient(to right, transparent, ${WHITE}, ${WHITE}, transparent)`,
-                opacity: .65,
-                bottom: 0,
-                left: 0
+        },
+        input: styles => {
+            return {
+                ...styles,
+                color: WHITE
             }
-        }
-    },
-    multiValueRemove: (styles) => {
-        return {
-            ...styles,
-            cursor: 'pointer',
-            backgroundColor: 'transparent',
-            color: RED,
-            transition: 'all .2s',
-            border: '1px solid transparent',
-            transform: 'scaleY(.9)',
-            ':hover': {
-                borderColor: RED
+        },
+        option: (styles) => {
+            return {
+                ...styles,
+                backgroundColor: WHITE,
+                color: DARKBLUE,
+                transition: 'all .2s',
+                cursor: 'pointer',
+                ':hover': {
+                    color: WHITE,
+                    backgroundColor: DARKBLUE
+                }
             }
-        }
-    },
-    dropdownIndicator: (styles) => {
-        return {
-            ...styles,
-            cursor: 'pointer',
-            color: WHITE,
-            opacity: .8,
-            ':hover': {
-                opacity: 1
+        },
+        multiValue: styles => {
+            return {
+                ...styles,
+                backgroundColor: 'transparent',
+                color: WHITE,
+                
             }
-        };
-    },
-    clearIndicator: (styles) => {
-        return {
-            ...styles,
-            cursor: 'pointer',
-            backgroundColor: 'transparent',
-            color: RED,
-            transition: 'all .2s',
-            borderRadius: '3px',
-            transform: 'scale(.8)',
-            border: '1.5px solid transparent',
-            ':hover': {
-                borderColor: RED
+        },
+        multiValueLabel: styles => {
+            return {
+                ...styles,
+                color: underLineColor,
+                position: 'relative',
+                '::after': {
+                    content: '""',
+                    position: 'absolute',
+                    width: '100%',
+                    height: '.6px',
+                    backgroundImage: `linear-gradient(to right, transparent, ${underLineColor}, ${underLineColor}, transparent)`,
+                    opacity: .65,
+                    bottom: 0,
+                    left: 0
+                }
             }
-        }
-    },
-    // Add other property handlers as necessary...
-};
+        },
+        multiValueRemove: (styles) => {
+            return {
+                ...styles,
+                cursor: 'pointer',
+                backgroundColor: 'transparent',
+                color: RED,
+                transition: 'all .2s',
+                border: '1px solid transparent',
+                transform: 'scaleY(.9)',
+                ':hover': {
+                    borderColor: RED
+                }
+            }
+        },
+        dropdownIndicator: (styles) => {
+            return {
+                ...styles,
+                cursor: 'pointer',
+                color: WHITE,
+                opacity: .8,
+                ':hover': {
+                    opacity: 1
+                }
+            };
+        },
+        clearIndicator: (styles) => {
+            return {
+                ...styles,
+                cursor: 'pointer',
+                backgroundColor: 'transparent',
+                color: RED,
+                transition: 'all .2s',
+                borderRadius: '3px',
+                transform: 'scale(.8)',
+                border: '1.5px solid transparent',
+                ':hover': {
+                    borderColor: RED
+                }
+            }
+        },
+        // Add other property handlers as necessary...
+    };
+    return selectMultiValueStyles
+}

@@ -10,8 +10,8 @@
 .animate-confirmation {
   color: green;
   font-size: clamp(120px, 20vw, 300px);
-  animation: expand-disappear 2s;
-  animation-delay: 1s;
+  animation: expand-disappear 1.5s;
+  animation-delay: 0.5s;
 }
 
 @keyframes expand-disappear {

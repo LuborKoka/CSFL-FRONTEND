@@ -3,13 +3,13 @@
   padding: 2rem 0 3rem;
 }
 
-.report-card pre, .report-response pre {
+.text-content {
   box-shadow: 0 0 10px rgba(239, 239, 239, 0.4);
   min-height: 7.5rem;
   padding: 1rem;
   font-size: 16px;
 }
-.report-card pre + label, .report-response pre + label {
+.text-content + label {
   transform: scale(0.8) translateY(-2rem);
   left: 0.5rem;
   font-weight: bold;

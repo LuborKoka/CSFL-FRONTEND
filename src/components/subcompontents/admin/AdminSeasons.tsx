@@ -1,40 +1,50 @@
-import axios, { AxiosResponse } from 'axios';
-import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { URI, randomURIkey } from '../../../App';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useOutletContext } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { AdminOutletContext, OutletSeason } from '../../controls/AdminNav';
 
 
 export default function AdminSeasons() {
-    const [routes, setRoutes] = useState<JSX.Element[]>([])
+    const query = useQuery([`list-of-seasons`], fetchSeasons)
 
-    useEffect(() => {
-        axios.get(`${URI}/seasons/`)
-        .then((r: AxiosResponse) => {
-            console.log(r.data)
-            setRoutes(
-                (r.data.seasons as {id: string, name: string}[]).map(s => {
-                    return <SeasonLink key={s.id} {...s} />
-                })
-            )
-        })
-    }, [])
+    const setSeason = (useOutletContext() as AdminOutletContext)[1]
 
     return(
         <div id='seasons'>
-            {routes}
+            {
+                query.data?.seasons.map(s => 
+                    <SeasonLink key={s.id} {...s} setSeason={setSeason} />    
+                )
+            }
         </div>
     )
 }
 
 type LinkProps = {
     id: string,
-    name: string
+    name: string,
+    setSeason: React.Dispatch<React.SetStateAction<OutletSeason>>
 }
 
-function SeasonLink({ id, name}: LinkProps) {
+function SeasonLink({ id, name, setSeason }: LinkProps) {
     return(
-        <div style={{display: 'inline-block', padding: '20px'}}>
+        <div style={{display: 'inline-block', padding: '20px'}} onClick={() => setSeason(p => {return {...p, seasonName: name}})}>
             <NavLink to={`/${randomURIkey}/admin/season/${id}`}>{name}</NavLink>
         </div>
     )
+}
+
+
+
+
+async function fetchSeasons() {
+    type Data = {
+        seasons: {
+            id: string,
+            name: string
+        }[]
+    }
+    const res = await axios.get<Data>(`${URI}/seasons/`)
+    return res.data
 }

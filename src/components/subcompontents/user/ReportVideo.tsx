@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { URI } from "../../../App"
+import { Link } from "react-router-dom"
 
 type Online = {
     isOnline: true,
@@ -7,7 +8,8 @@ type Online = {
 }
 
 type Offline = {
-    isOnline: false
+    isOnline: false,
+    isImage: boolean
 }
 
 type Props = {
@@ -38,11 +40,21 @@ export default function ReportVideo(props: Props) {
     }, [container, props])
 
 
-    if ( !props.isOnline ) return(
-        <div >
-            <video width='100%' height='100%' controls src={`${URI}/videos/report/${props.url}/`} />
-        </div>
-    )
+    if ( !props.isOnline ) {
+        return props.isImage ?
+            <div>
+                <img src={`${URI}/media/${props.url}/`} alt="File Not Found" width='100%' height='100%' style={{objectFit: 'contain'}}/>
+            </div>
+            :
+            <div >
+                <video width='100%' height='100%' controls src={`${URI}/media/${props.url}/`} />
+            </div>
+        
+    }
+    
+    
+    
+    
 
 
     if ( props.embed ) return(
@@ -53,11 +65,7 @@ export default function ReportVideo(props: Props) {
 
     //toto potrebujem este dokoncit, nejak vedla zobrazit ten link ako <a href={url} target='_blank'></a> alebo take nieco
     return(
-        <div>
-            <h1>
-                couldn't embed video
-            </h1>
-        </div>
+        <Link to={props.url} className="link">{props.url}</Link>
     )
 }
 

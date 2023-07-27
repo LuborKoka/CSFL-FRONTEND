@@ -18,18 +18,18 @@ export default function RaceNav() {
 
     return(
         <>
-            <div className='race-container'>
+            <div className='section-container'>
                 <div className='section'>
                     <Outlet context={context} />
                 </div>
             </div>
-            <div className='race-navigation'>
+            <div className='section-navigation'>
                 {/*ten prvy link moze ist asi do pici, to bude v tej breadcrumbs navigacii*/}
                 <ul>
                     <NavLink className='clickable-button' to={`${raceID}`}>Prehľad</NavLink>
                     <NavLink className='clickable-button' to={`${raceID}/results`}>Výsledky</NavLink>
-                    <NavLink className='clickable-button' to={`${raceID}/reports`}>Reporty</NavLink>
                     <NavLink className='clickable-button' to={`/seasons/${seasonID}/standings`}>Tabuľka</NavLink>
+                    <NavLink className='clickable-button' to={`${raceID}/reports`}>Reporty</NavLink>
                     <NavLink className='clickable-button' to={`${raceID}/reports/new`}>Pridať report</NavLink>
                     <button onClick={openFiaForm} className='clickable-button single-row'><FIA style={{height: '20px'}} /></button>
                 </ul>

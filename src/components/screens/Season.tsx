@@ -5,25 +5,19 @@ import { useQuery } from '@tanstack/react-query'
 import Race from "../subcompontents/user/Race";
 import '../../styles/seasons.css'
 
-import { useParams } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
+import { RaceContext } from "../controls/SeasonNav";
 
 type Props = {
     seasonID: string
 }
 
-type Data = {
-    races: {
-        raceID: string,
-        date: string,
-        name: string,
-        raceName: string
-    }[]
-}
-
 export default function Season() {
     const { seasonID } = useParams()
 
-    const query = useQuery([`season-schedule-${seasonID}`], () => fetchData(seasonID))
+    const setSeason = (useOutletContext() as RaceContext)[1]
+
+    const query = useQuery([`scheduled-races-${seasonID}`], () => fetchData(seasonID, setSeason))
 
 
 
@@ -31,7 +25,7 @@ export default function Season() {
         <div className='section'>
             {
                 query?.data?.races.map(r => {
-                    return <Race key={r.raceID} raceID={r.raceID} raceName={r.raceName} name={r.name} date={r.date} />
+                    return <Race key={r.id} {...r} />
                 })
             }
         </div>
@@ -41,7 +35,18 @@ export default function Season() {
 
 
 
-async function fetchData(seasonID: string | undefined): Promise<Data> {
-    const res = await axios.get(`${URI}/season-schedule/${seasonID}/`)
+async function fetchData(seasonID: string | undefined, setState: React.Dispatch<React.SetStateAction<{raceName: string, seasonName: string, reportID: string}>>) {
+    type Data = {
+        seasonName: string,
+        races: {
+            id: string,
+            raceName: string,
+            date: string,
+            trackID: string,
+            isSprint: boolean
+        }[]
+    }
+    const res = await axios.get<Data>(`${URI}/schedule/${seasonID}/`)
+    setState(p => {return {...p, seasonName: res.data.seasonName}})
     return res.data
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import CreateSchedule from "../subcompontents/admin/CreateSchedule";
+import CreateSchedule from "../subcompontents/admin/edit season related/Schedule";
 import AdminSeasons from "../subcompontents/admin/AdminSeasons";
 
 
@@ -9,7 +9,6 @@ export default function AdminUI() {
         <div className="section">
            {/*} <CreateSchedule />*/ }
            <AdminSeasons />
-           <CreateSchedule />
             
         </div>
     )

@@ -1,7 +1,7 @@
 @import 'mixin.scss';
 
 
-.season-container {
+.content-container {
     color: $white;
     position: relative;
     max-height: 100lvh; 
@@ -9,7 +9,7 @@
     grid-template-rows: auto 1fr;
     grid-template-columns: 1fr auto;
 
-    .race-navigation {
+    .section-navigation {
         grid-column: 2;
         grid-row: 1 / span 2;
     }
@@ -86,7 +86,14 @@
 
 // tento layout pri zmene treba upravit aj v navigaton.scss
 @media screen and (max-width: 600px) {
-    .season-container {
+    .content-container {
         display: block;
+    }
+}
+
+
+@media screen and (max-width: 1000px) {
+    .header-navigation {
+        padding-left: 65px;
     }
 }

@@ -41,9 +41,11 @@ export default function RaceResults() {
                                 <td>{d.rank}.</td>
                                 <td>{d.driverName}</td>
                                 <td>{d.teamName}</td>
-                                <td>{d.rank === 1 ? formatTime(d.time) : `+${formatTime(d.time - leaderTime)}`}</td>
+                                <td>
+                                    {d.time === null ? 'DNF' : d.rank === 1 ? formatTime(d.time) : `+${formatTime(d.time - leaderTime)}`}
+                                </td>
                                 <td style={{whiteSpace: 'nowrap'}}>
-                                    {assignPoints(d.rank, d.hasFastestLap)}
+                                    {assignPoints(d.rank, d.hasFastestLap, d.isSprint)}
                                     {d.hasFastestLap ? <FontAwesomeIcon 
                                     style={{color: 'purple', marginLeft: '5px', backgroundColor: WHITE, borderRadius: '50%'}} icon={faClock} /> 
                                     : null}
@@ -65,7 +67,8 @@ type Driver = {
     teamName: string,
     rank: number,
     time: number,
-    hasFastestLap: boolean
+    hasFastestLap: boolean,
+    isSprint: boolean
 }
 
 type Data = {
@@ -100,28 +103,28 @@ function formatTime(input: number): string {
     return timeString
   }
   
-  function assignPoints(rank: number, hasFL: boolean) {
+  function assignPoints(rank: number, hasFL: boolean, isSprint: boolean) {
     switch(rank) {
         case 1:
-            return 25 + Number(hasFL)
+            return isSprint ? 8 : 25 + Number(hasFL)
         case 2:
-            return 18 + Number(hasFL)
+            return isSprint ? 7 : 18 + Number(hasFL)
         case 3:
-            return 15 + Number(hasFL)
+            return isSprint ? 6 : 15 + Number(hasFL)
         case 4: 
-            return 12 + Number(hasFL)
+            return isSprint ? 5 : 12 + Number(hasFL)
         case 5:
-            return 10 + Number(hasFL)
+            return isSprint ? 4 : 10 + Number(hasFL)
         case 6:
-            return 8 + Number(hasFL)
+            return isSprint ? 3 : 8 + Number(hasFL)
         case 7:
-            return 6 + Number(hasFL)
+            return isSprint ? 2 : 6 + Number(hasFL)
         case 8:
-            return 4 + Number(hasFL)
+            return isSprint ? 1 : 4 + Number(hasFL)
         case 9:
-            return 2 + Number(hasFL)
+            return isSprint ? 0 : 2 + Number(hasFL)
         case 10:
-            return 1 + Number(hasFL)
+            return isSprint ? 0 : 1 + Number(hasFL)
         default:
             return 0
     }

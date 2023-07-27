@@ -39,7 +39,10 @@ export default function Reports() {
 export type ReportResponseProps = {
     id: string,
     videos: {
-        local: string[],
+        local: {
+            isImage: boolean,
+            url: string
+        }[],
         online: {
             url: string,
             embed: boolean
@@ -63,7 +66,10 @@ export type ReportType = {
             url: string,
             embed: boolean
         }[],
-        local: string[]
+        local: {
+            isImage: boolean,
+            url: string
+        }[]
     },
     targets: {
         id: string,
