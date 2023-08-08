@@ -22,7 +22,7 @@
 
             
         &::-webkit-scrollbar {
-            height: clamp(3px, 1vw, 8px)
+            height: 3px;
         }
 
         &::-webkit-scrollbar-track {
@@ -150,6 +150,28 @@
 }
 
 
+.bottom-tabs {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 9;
+    display: none;
+    background-color: $darkblue;
+    justify-content: space-evenly;
+    padding: 5px 0;
+
+    &-link {
+        display: grid;
+        place-content: center center;
+        color: $white;
+        text-decoration: none;
+
+        & > div:first-child {
+            display: flex;
+            justify-content: center;
+        }
+    }
+}
+
 
 /**
     SEASON NAVIGATION
@@ -187,6 +209,10 @@
 @media screen and (max-width: 600px) {
     .section-navigation {
         display: none;
+    }
+
+    .bottom-tabs {
+        display: flex;
     }
 }
 

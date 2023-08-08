@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useContext, Context } from 'react'
 import axios from 'axios'
-import { URI } from '../../../../App'
+import { URI, UserContext, UserTypes, insertTokenIntoHeader } from '../../../../App'
 import { useQuery } from '@tanstack/react-query'
 import Select, { SingleValue } from 'react-select'
 import { selectSingleValueStyles } from '../edit season related/CreateRace'
@@ -16,7 +16,8 @@ type Results = {
         } | null,
         otherDrivers: {
             id: string,
-            time: string
+            time: string,
+            plusLaps: number
         }[]
     },
     fastestLap: string
@@ -31,7 +32,9 @@ type ResultsProps = {
 export default function SetRaceResults({ raceID }: ResultsProps) {
     const [isPending, setIsPending] = useState(false)
 
-    const query = useQuery([`edit-race-results-${raceID}`], () => fetchRaceResults(raceID))
+    const { user } = useContext(UserContext as Context<UserTypes>)
+
+    const query = useQuery([`edit-race-results-${raceID}`], () => fetchRaceResults(raceID, user?.token))
 
     const results = useRef<Results>({results: {leader: null, otherDrivers: []}, fastestLap: ''})
 
@@ -41,6 +44,20 @@ export default function SetRaceResults({ raceID }: ResultsProps) {
         if ( v === null ) return
 
         results.current.fastestLap = v.value
+    }
+
+    function handlePlusLapsChange(e: React.ChangeEvent<HTMLInputElement>, id: string) {
+        const driver = results.current.results.otherDrivers.find(d => d.id === id)
+        if ( driver === undefined ) {
+            results.current.results.otherDrivers.push({
+                id: id,
+                time: '',
+                plusLaps: e.target.valueAsNumber
+            })
+            return
+        }
+
+        driver.plusLaps = e.target.valueAsNumber
     }
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>, id: string) {
@@ -59,7 +76,8 @@ export default function SetRaceResults({ raceID }: ResultsProps) {
         if ( driver === undefined ) {
             results.current.results.otherDrivers.push({
                 id: id,
-                time: e.target.value.replace(',', '.')
+                time: e.target.value.replace(',', '.'),
+                plusLaps: 0
             })
             return
         }
@@ -86,6 +104,10 @@ export default function SetRaceResults({ raceID }: ResultsProps) {
                     fastestLap: results.current.fastestLap
                 }
             }
+        }, {
+            headers: {
+                Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
+            }
         })
         .then((r) => {
             showConfirmation()
@@ -110,12 +132,16 @@ export default function SetRaceResults({ raceID }: ResultsProps) {
                 <div className='auto-grid' style={{padding: '2rem 1rem', gap: '1rem 2rem'}}>
                     {
                         query.data?.drivers.map(d => 
-                            <div className='labeled-input' key={d.id}>
-                                <input name={d.name} className='form-input' type="text" required
-                                style={{color: d.color, boxShadow: `0 0 10px 5px ${d.color}`}}  onChange={(e) => handleChange(e, d.id)} />
-                            
-                                <label style={{color: d.color}} htmlFor={d.name}>{d.name}</label>
+                            <div>
+                                <div className='labeled-input' key={d.id}>
+                                    <input name={d.name} className='form-input' type="text" required
+                                    style={{color: d.color, boxShadow: `0 0 10px 5px ${d.color}`}}  onChange={(e) => handleChange(e, d.id)} />
+                                
+                                    <label style={{color: d.color}} htmlFor={d.name}>{d.name}</label>
 
+                                </div>
+
+                                <input type='number' min={0} onChange={(e) => handlePlusLapsChange(e, d.id)}  />
                             </div>
                             
                         )
@@ -143,7 +169,7 @@ export default function SetRaceResults({ raceID }: ResultsProps) {
 
 
 
-async function fetchRaceResults(id: string | undefined) {
+async function fetchRaceResults(id: string | undefined, token: string | null | undefined) {
     type Data = {
         drivers: {
             id: string,
@@ -151,7 +177,11 @@ async function fetchRaceResults(id: string | undefined) {
             color: string
         }[]
     }
-    const response = await axios.get<Data>(`${URI}/admins/edit-race/${id}/results/`)
+    const response = await axios.get<Data>(`${URI}/admins/edit-race/${id}/results/`, {
+        headers: {
+            Authorization: `Bearer ${insertTokenIntoHeader(token)}`
+        }
+    })
     return response.data
 }
 

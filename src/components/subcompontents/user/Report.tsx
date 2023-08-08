@@ -11,16 +11,15 @@ import ReportVerdict from "./ReportVerdict";
 
 type Props = {
     setResponseData: React.Dispatch<React.SetStateAction<{isActive: boolean, rank: number, from: string, targets: {name: string, id: string}[]}>>,
-    setIsAddingVerdict: React.Dispatch<React.SetStateAction<boolean>>,
 } & ReportType
 
-export default function Report({ rank, verdict, penalties, reportID, videos, content, createdAt, from, targets, setResponseData, responses, setIsAddingVerdict }: Props ) {
+export default function Report({ rank, verdict, penalties, reportID, videos, content, createdAt, from, targets, setResponseData, responses }: Props ) {
     const [raceContext, setRaceContext] = (useOutletContext() as RaceContext)
     const [isViewingResponses, setIsViewingResponses] = useState(false)
     const [isViewingVerdict, setIsViewingVerdict] = useState(false)
 
     function openResponseForm() {
-        setResponseData(p => {return {rank: rank, isActive: true, from: from.name, targets: targets}})
+        setResponseData({rank: rank, isActive: true, from: from.name, targets: targets})
         setRaceContext(p => {return {...p, reportID: reportID}})
     }
 
@@ -29,12 +28,6 @@ export default function Report({ rank, verdict, penalties, reportID, videos, con
         //setRaceContext(p => {return {...p, reportID: reportID}})
         setIsViewingVerdict(true)
     }
-
-    function openVerdictForm() {
-        setIsAddingVerdict(true)
-        setRaceContext(p => {return {...p, reportID: reportID}})  
-    }
-
 
     return( 
     <>

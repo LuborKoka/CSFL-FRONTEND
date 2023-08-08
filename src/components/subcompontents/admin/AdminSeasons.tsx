@@ -1,12 +1,15 @@
 import axios from 'axios';
-import { URI, randomURIkey } from '../../../App';
-import { NavLink, useOutletContext } from 'react-router-dom';
+import { URI, UserContext, UserTypes, insertTokenIntoHeader, randomURIkey } from '../../../App';
+import { Link, NavLink, useOutletContext } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { AdminOutletContext, OutletSeason } from '../../controls/AdminNav';
+import { useContext, Context} from 'react'
 
 
 export default function AdminSeasons() {
-    const query = useQuery([`list-of-seasons`], fetchSeasons)
+    const { user } = useContext(UserContext as Context<UserTypes>)
+
+    const query = useQuery([`list-of-seasons`],() => fetchSeasons(user?.token))
 
     const setSeason = (useOutletContext() as AdminOutletContext)[1]
 
@@ -29,22 +32,30 @@ type LinkProps = {
 
 function SeasonLink({ id, name, setSeason }: LinkProps) {
     return(
-        <div style={{display: 'inline-block', padding: '20px'}} onClick={() => setSeason(p => {return {...p, seasonName: name}})}>
-            <NavLink to={`/${randomURIkey}/admin/season/${id}`}>{name}</NavLink>
-        </div>
+        <Link className='tiltable-card link' to={`/${randomURIkey}/admin/season/${id}`} style={{margin: '2rem'}} onClick={() => setSeason(p => {return {...p, seasonName: name}})}>
+            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+            
+            <div className='content' style={{padding: '1rem 2rem'}} >{name}</div>
+        </Link>
     )
 }
 
 
 
 
-async function fetchSeasons() {
+async function fetchSeasons(token: string | undefined | null) {
     type Data = {
         seasons: {
             id: string,
             name: string
         }[]
     }
-    const res = await axios.get<Data>(`${URI}/seasons/`)
+    const res = await axios.get<Data>(`${URI}/seasons/`, {
+        headers: {
+            Authorization: `Bearer ${insertTokenIntoHeader(token)}`
+        }
+    })
     return res.data
 }

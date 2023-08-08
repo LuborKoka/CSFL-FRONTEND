@@ -25,55 +25,35 @@
 
 
 .card {
-    display: inline-block;
-    color: $white;
     text-decoration: none;
     position: relative;
     padding: 1rem 2rem;
-    text-align: center;
-
-    &::before {
-        content: '';
-        width: 100%;
-        height: 101%;
-        border-left: 1px solid $white;
-        border-right: 1px solid $white;
-        background-color: transparent;
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        transform: scaleY(40%);
-        opacity: 0;
-        transition: all .4s;
-    }
-
-    &::after {
-        content: '';
-        width: 100%;
-        height: 100%;
-        border-top: 1px solid $white;
-        border-bottom: 1px solid $white;
-        background-color: transparent;
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        transform: scaleX(40%);
-        opacity: 0
-    }
-
-    &:hover {
-        &::before {
-            opacity: .6;
-            transform: scaleY(100%);
-        }
-
-        &::after {
-            opacity: .6;
-            transform: scaleX(100%);
-        }
-    }
+    cursor: pointer;
+    width: 350px;
+    min-height: 200px;
 }
 
+.team-members-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 2rem;
+    position: relative;
+}
+
+.team-logo {
+    width: clamp(150px, 25vw, 300px);
+}
+
+.team-members {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto auto;
+    padding-bottom: .5rem;
+
+    &::after {
+        height: 1px
+    }
+}   
 
 
 
@@ -87,13 +67,27 @@
 // tento layout pri zmene treba upravit aj v navigaton.scss
 @media screen and (max-width: 600px) {
     .content-container {
-        display: block;
+        grid-template-columns: 100%;
     }
 }
 
 
 @media screen and (max-width: 1000px) {
     .header-navigation {
-        padding-left: 65px;
+        padding: 10px 1rem .5rem 65px;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background-color: $darkblue;
+
+        h3 {
+            font-size: 30px;
+        }
+    }
+}
+
+@media screen and (max-width: 1415px) {
+    .team-members-grid {
+        grid-template-columns: 1fr;
     }
 }

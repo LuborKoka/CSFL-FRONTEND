@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Context, useContext, useState } from 'react'
 import Select, { MultiValue } from 'react-select'
 import { selectMultiValueStyles } from '../../user/AddReport'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -6,7 +6,7 @@ import { faPenToSquare } from '@fortawesome/free-regular-svg-icons'
 import useConfirmation from '../../../../hooks/useConfirmation'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
-import { URI } from '../../../../App'
+import { URI, UserContext, UserTypes, insertTokenIntoHeader } from '../../../../App'
 import { useQueryClient } from '@tanstack/react-query'
 
 
@@ -33,6 +33,8 @@ export default function EditTeamDrivers({ color, id, name, signed, options }: Pr
     const { seasonID } = useParams()
 
     const queryClient = useQueryClient()
+
+    const { user } = useContext(UserContext as Context<UserTypes>)
 
     const [confirmation, showConfirmation] = useConfirmation()
 
@@ -61,6 +63,10 @@ export default function EditTeamDrivers({ color, id, name, signed, options }: Pr
             params: {
                 teamID: id, //id is string - uuid
                 drivers: handleOldAndNewDrivers(signed, values)
+            }
+        }, {
+            headers: {
+                Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
             }
         })
         .then(r => {

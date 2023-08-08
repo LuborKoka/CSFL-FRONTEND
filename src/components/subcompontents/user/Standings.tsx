@@ -16,7 +16,7 @@ export default function Standings() {
 
     const query = useQuery([`season_standings_${seasonID}`], () => fetchStandings(seasonID))
 
-    const [isPending, startTransition] = useTransition()
+    const startTransition = useTransition()[1]
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         startTransition(() => {
@@ -39,7 +39,7 @@ export default function Standings() {
     }
 
     return(
-        <div className='section'>
+        <div>
             <h2 className="section-heading fade-in-out-border">Tabuľka priebežného poradia jazdcov</h2>
             <div className='center switch-container section-heading fade-in-out-border'>
                 <span>Poradie</span>
@@ -49,52 +49,56 @@ export default function Standings() {
                 </label>
                 <span>Body</span>
             </div>
-            <table className="table standings-table">
-                <thead>
-                    <tr>
-                        <th></th><th style={{textAlign: 'left'}}>Meno</th>
-                        {
-                            query.data?.data.races.map((r, i) => 
-                            <th key={r.id} >
-                                <div className='flag-box'>
-                                    <img alt='' style={{objectFit: 'cover', width: '100%', height: '100%'}}   src={`${URI}/images/tracks/${r.trackID}/`} />                                   
-                                </div>
-                            </th>)
-                        }
-                        <th>Body</th>
-                    </tr>
-                </thead>
 
-                <tbody>
-                {
-                    query.data?.data.drivers.map((d, i) => {
-                        return(
-                            <tr key={d.driverID}>
-                                <td>{i+1}.</td>
-                                <td style={{whiteSpace: "nowrap"}}>{d.driverName}</td>
-                                {d.races.map((r, i) => 
-                                    r.hasBeenRaced ?
-                                    
-                                    <td key={`${d.driverID}, race${i}`}>
-                                        <div className="switcher-visible">
-                                            <div className={`switcher-container ${isPoints ? '' : 'switcher-container-rank'}`}>
-                                                <div className={`switcher-item-${isPoints ? 'active' : 'inactive'}`}>{r.points}</div>
-                                                <div style={{color: getTextColor(r.rank)}} className={`switcher-item-${isPoints ? 'inactive' : 'active'}`}>{r.rank}</div>
+            <div className="overflow-y">
+                <table className="table standings-table">
+                    <thead>
+                        <tr>
+                            <th></th><th style={{textAlign: 'left'}}>Meno</th>
+                            {
+                                query.data?.data.races.map(r => 
+                                <th key={r.id} >
+                                    <div className='flag-box'>
+                                        <img alt='flag' style={{objectFit: 'cover', width: '100%', height: '100%'}}   src={`${URI}/media/${r.flag}/`} />                                   
+                                    </div>
+                                </th>)
+                            }
+                            <th>Body</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    {
+                        query.data?.data.drivers.map((d, i) => {
+                            return(
+                                <tr key={d.driverID}>
+                                    <td>{i+1}.</td>
+                                    <td className='team-border' style={{whiteSpace: "nowrap", borderColor: d.color, paddingLeft: '8px'}}>{d.driverName}</td> {/* i wanna target this element on tr hover */}
+                                    {d.races.map((r, i) => 
+                                        r.hasBeenRaced ?
+                                        
+                                        <td key={`${d.driverID}, race${i}`}>
+                                            <div className="switcher-visible">
+                                                <div className={`switcher-container ${isPoints ? '' : 'switcher-container-rank'}`}>
+                                                    <div className={`switcher-item-${isPoints ? 'active' : 'inactive'}`}>{r.points}</div>
+                                                    <div style={{color: getTextColor(r.rank)}} className={`switcher-item-${isPoints ? 'inactive' : 'active'}`}>{r.rank}</div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    : <td key={`${d.driverID}, race${i}`}></td>
-                                    )
-                                
-                                }
-                                <td>{d.totalPoints}</td>
-                            </tr>
-                        )
-                    })
-                }
-                </tbody>
-                
-            </table>
+                                        </td>
+                                        : <td key={`${d.driverID}, race${i}`}></td>
+                                        )
+                                    
+                                    }
+                                    <td>{d.totalPoints}</td>
+                                </tr>
+                            )
+                        })
+                    }
+                    </tbody>
+                    
+                </table>
+            </div>
+            
 
             <br/><br/>
             <h2 className='section-heading fade-in-out-border'>Tabuľka priebežného poradia konštruktérov</h2>
@@ -111,7 +115,7 @@ export default function Standings() {
                             return(
                                 <tr key={r.id}>
                                     <td>{i + 1}.</td>
-                                    <td>{r.name}</td>
+                                    <td><img style={{transform: 'translateY(5px)'}} src={`${URI}/media/${r.icon}/`} alt={r.name} width={'30px'} />{r.name}</td>
                                     <td>{r.points}</td>
                                 </tr>
                             )
@@ -121,6 +125,46 @@ export default function Standings() {
                 </tbody>
 
             </table>
+
+            <br/><br/>
+            <h2 className="section-heading fade-in-out-border">
+                Tabuľka trestných bodov
+            </h2>
+
+            <div className="overflow-y">
+                <table className='table standings-table'>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th style={{textAlign: 'left'}}>Meno</th>
+                            {
+                                query.data?.data.races.map((r, i) => 
+                                <th key={r.id} >
+                                    <div className='flag-box'>
+                                        <img alt='' style={{objectFit: 'cover', width: '100%', height: '100%'}}   src={`${URI}/media/${r.flag}/`} />                                   
+                                    </div>
+                                </th>)
+                            }
+                            <th>Celkom</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {
+                            query.data?.data.penaltyPoints.map(p =>
+                                <tr key={p.id}>
+                                    <td></td>
+                                    <td style={{whiteSpace: 'nowrap'}}>{p.name}</td>
+                                    {
+                                        p.races.map((r, i) => <td key={`${p.id}${i}`}>{r === 0 ? '' : r}</td>)
+                                    }
+                                    <td>{p.totalPoints}</td>
+                                </tr>
+                            )
+                        }
+                    </tbody>
+                </table>
+            </div>
 
         </div>
     )
@@ -140,20 +184,29 @@ type Driver = {
     driverName: string,
     isReserve: boolean,
     totalPoints: number,
-    races: Race[]
+    races: Race[],
+    color: string
 }
 
 type Data = {
     races: {
         id: string,
         trackID: string,
+        flag: string
     }[],
     drivers: Driver[],
     teams: {
         id: string,
         name: string,
         points: number,
-        color: string
+        color: string,
+        icon: string
+    }[],
+    penaltyPoints: {
+        id: string,
+        name: string,
+        totalPoints: number,
+        races: number[]
     }[]
 }
 

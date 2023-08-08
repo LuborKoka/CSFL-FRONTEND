@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Auth from './components/screens/Auth';
 import Reports from './components/screens/Reports';
@@ -10,7 +10,6 @@ import Season from './components/screens/Season';
 import RaceResults from './components/subcompontents/user/RaceResults';
 import EditSeason from './components/subcompontents/admin/EditSeason';
 import EditRace from './components/subcompontents/admin/edit race related/EditRace';
-import RaceDetails from './components/screens/RaceDetails';
 import Standings from './components/subcompontents/user/Standings';
 import SeasonNav from './components/controls/SeasonNav';
 import Welcome from './components/screens/Welcome';
@@ -23,6 +22,13 @@ import CreateSeason from './components/subcompontents/admin/edit season related/
 import CreateSchedule from './components/subcompontents/admin/edit season related/Schedule';
 import AssignDriversTeams from './components/subcompontents/admin/edit season related/AssignDriversTeams';
 import AddReserves from './components/subcompontents/admin/edit season related/AddReserves';
+import ManageFIA from './components/subcompontents/admin/edit season related/ManageFIA';
+import jwtDecode from 'jwt-decode';
+import { storageKeyName } from './constants';
+import { Forbidden, NotFound } from './components/controls/BadReq';
+import RaceOverview from './components/subcompontents/user/RaceOverview';
+import axios from 'axios';
+import getenv from 'getenv'
 
 export const URI = 'http://192.168.100.22:8000/api'
 
@@ -30,7 +36,9 @@ export const randomURIkey = generateRandomString(10)
 
 type User = {
   username: string,
-  id: string
+  id: string,
+  token: string,
+  roles: string[]
 }
 
 export type UserTypes = {
@@ -45,36 +53,54 @@ export const UserContext = createContext<UserTypes | null>(null)
 function App() {
   const [user, setUser] = useState<User | null>(null)
 
-  const contextValue = {
-    user: user,
-    setUser: setUser
-  }
+  useEffect(() => {
+    const token = localStorage.getItem(storageKeyName)
+
+
+    if (token !== null) {
+      const data = jwtDecode(token) as { username: string, id: string }
+
+      axios.get(`${URI}/roles/${data.id}/`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+        .then(r => {
+          setUser({ ...data, token: token, roles: r.data.roles })
+        })
+        .catch(e => {
+          setUser({ ...data, token: token, roles: [] })
+        })
+    }
+
+
+  }, [setUser])
 
   return (
-    <UserContext.Provider value={contextValue}>
+    <UserContext.Provider value={{ user, setUser }}>
       <QueryClientProvider client={queryClient}>
         <Router>
           <Nav />
           <Routes>
             <Route path='/' element={<Auth />} />
-
             <Route path='/welcome' element={<Welcome />} />
             <Route path='/reports' element={<Reports />} />
             <Route path='/settings' element={<Settings />} />
             <Route path='/seasons' element={<SeasonNav />} >
               <Route path=':seasonID' element={<Season />} />
-              <Route path=':seasonID/standings' element={<Standings />} />
               <Route path=':seasonID/race' element={<RaceNav />}>
-                <Route path=':raceID' element={<RaceDetails />} />
+                <Route path=':raceID' element={<RaceOverview />} />
+                <Route path=':raceID/standings' element={<Standings />} />
                 <Route path=':raceID/reports' element={<Reports />} />
                 <Route path=':raceID/results' element={<RaceResults />} />
                 <Route path=':raceID/reports/new' element={<AddReport />} />
+
               </Route>
               {/*<Route path=':seasonID/race/:raceID' element={<RaceDetails />} />
               <Route path=':seasonID/race/:raceID/reports' element={<Reports />} />
   <Route path=':seasonID/race/:raceID/results' element={<RaceResults />} />*/}
             </Route>
-            
+
             <Route path={`/${randomURIkey}/admin`} element={<AdminNav />}>
               <Route index element={<AdminUI />} />
               <Route path='new-season' element={<CreateSeason />} />
@@ -82,15 +108,18 @@ function App() {
               <Route path='season/:seasonID/drivers' element={<AssignDriversTeams />} />
               <Route path='season/:seasonID/schedule' element={<CreateSchedule />} />
               <Route path='season/:seasonID/reserves' element={<AddReserves />} />
-              
+              <Route path='season/:seasonID/fia' element={<ManageFIA />} />
+
               <Route path='season/:seasonID/race/:raceID' element={<EditRace />} />
             </Route>
 
-           {/* <Route path={`/${randomURIkey}/admin`} element={<AdminUI />} />
+            <Route path='*' element={<NotFound />} />
+            <Route path='/forbidden' element={<Forbidden />} />
+            {/* <Route path={`/${randomURIkey}/admin`} element={<AdminUI />} />
             <Route path={`/${randomURIkey}/admin/season/:seasonID`} element={<EditSeason />} />
 <Route path={`/${randomURIkey}/admin/season/:seasonID/race/:raceID`} element={<EditRace />} />*/}
           </Routes>
-        </Router>   
+        </Router>
       </QueryClientProvider>
     </UserContext.Provider>
   )
@@ -104,7 +133,13 @@ export function generateRandomString(length: number) {
   let result = '';
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * characters.length));
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
   }
   return result;
+}
+
+
+export function insertTokenIntoHeader(token: string | undefined | null) {
+  if (token !== undefined && token !== null) return token
+  return ''
 }

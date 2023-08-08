@@ -16,19 +16,17 @@ export default function Reports() {
     //disappears in a puff of smoke. I'm sure you can think of situations where this would be appropriate and satisfying. 
     //The reverse is also pretty impressive. https://youtu.be/y8-F5-2EIcg
     const [responseData, setResponseData] = useState({isActive: false, rank: 0, from: '', targets: [{name: '', id: ''}]})
-    const [isAddingVerdict, setIsAddingVerdict] = useState(false)
-
+    
     const { raceID } = useParams()
 
     const query = useQuery([`race_${raceID}_reports`], () => fetchReports(raceID))
 
-    console.log(query.data)
     return(
         <div>
             <h1 className='section-heading fade-in-out-border'>Reporty</h1>
             {
                 query.data?.reports.slice().reverse().map(r =>/* toten setter musi ist dovnutra komponentu, tam uz mam aj tak kontext na reportID, ktory treba nastavit */ 
-                    <Report key={r.reportID} {...r} setResponseData={setResponseData} setIsAddingVerdict={setIsAddingVerdict} />
+                    <Report key={r.reportID} {...r} setResponseData={setResponseData} />
                 )
             }
             <ReportResponse responseData={responseData} setResponseData={setResponseData} />

@@ -1,4 +1,4 @@
-import { URI, UserContext, UserTypes, randomURIkey } from "../../../../App";
+import { URI, UserContext, UserTypes, insertTokenIntoHeader, randomURIkey } from "../../../../App";
 import React, { useContext, Context, useState, useRef } from 'react' 
 import axios, { AxiosResponse, AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +10,7 @@ export default function CreateSeason() {
 
     const name = useRef<HTMLInputElement>(null)
 
-    const user = useContext(UserContext as Context<UserTypes>)
+    const { user } = useContext(UserContext as Context<UserTypes>)
 
     const queryClient = useQueryClient()
 
@@ -20,7 +20,7 @@ export default function CreateSeason() {
 
     function confirm(id: string) {
         navigate(`/${randomURIkey}/admin/season/${id}/schedule`)
-        queryClient.invalidateQueries([`list-of-seasons`])
+        queryClient.invalidateQueries([`seasons-navigation`])
     }
 
 
@@ -31,6 +31,10 @@ export default function CreateSeason() {
         axios.post(`${URI}/admins/create-season/`, {
             params: {
                 name: name.current!.value
+            }
+        }, {
+            headers: {
+                Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
             }
         })
         .then((r: AxiosResponse) => {

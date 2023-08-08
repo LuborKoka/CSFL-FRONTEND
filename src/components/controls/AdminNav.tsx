@@ -46,6 +46,7 @@ export default function AdminNav() {
                             <NavLink className='clickable-button' to={`/${randomURIkey}/admin/season/${seasonID}/drivers`}>Tímové dvojice</NavLink>
                             <NavLink className='clickable-button' to={`/${randomURIkey}/admin/season/${seasonID}/schedule`}>Kalendár</NavLink>
                             <NavLink className='clickable-button' to={`/${randomURIkey}/admin/season/${seasonID}/reserves`}>Náhradníci</NavLink>
+                            <NavLink className='clickable-button' to={`/${randomURIkey}/admin/season/${seasonID}/fia`}>Nastavenie FIA</NavLink>
                         </>
                     }
                     <NavLink className='clickable-button' to={`/${randomURIkey}/admin/new-season`}>Vytvoriť sezónu</NavLink>
@@ -66,6 +67,8 @@ function lastLink(pathname: string): JSX.Element | null {
     if ( pathname.includes('/schedule')) return <>{'>'} <Link className='link' to={pathname}>Kalendár</Link> </>   
     
     if ( pathname.includes('/reserves')) return <>{'>'} <Link className='link' to={pathname}>Náhradníci</Link> </>
+
+    if ( pathname.includes('/fia')) return <>{'>'} <Link className='link' to={pathname}>Nastavenie FIA</Link> </>
 
     return null
 }

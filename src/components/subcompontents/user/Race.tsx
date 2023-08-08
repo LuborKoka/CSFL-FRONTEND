@@ -2,6 +2,7 @@ import React from "react";
 import '../../../styles/race.css';
 import { Link, useOutletContext } from "react-router-dom";
 import { RaceContext } from "../../controls/SeasonNav";
+import { URI } from "../../../App";
 
 
 type Props = {
@@ -9,10 +10,11 @@ type Props = {
     raceName: string,
     date: string,
     trackID: string,
-    isSprint: boolean
+    isSprint: boolean,
+    image: string
 }
 
-export default function Race({ id, isSprint, raceName, date }: Props) {
+export default function Race({ id, isSprint, raceName, date, image }: Props) {
     const setContext = (useOutletContext() as RaceContext)[1]
     
     function setRace() {
@@ -22,10 +24,17 @@ export default function Race({ id, isSprint, raceName, date }: Props) {
     }
 
     return(
-        <Link onClick={setRace} className="card" to={`race/${id}`}>
-            <h2>{`${isSprint ? 'Sprint: ' : ''}${raceName}`}</h2>
-            <img src='https://cdn-wp.thesportsrush.com/2023/03/9090e1d3-untitled-design-3.jpg?w=1200&q=60' alt='xd' width='200px' height='100px' />
-            <p>{convertTimeStamp(date)}</p>
+
+        <Link className='tiltable-card card' onClick={setRace} to={`race/${id}`} >
+            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+
+            <div className='content'>
+                <b>{`${isSprint ? 'Sprint: ' : ''}${raceName}`}</b>
+                <img src={`${URI}/media/${image}/`} style={{objectFit: 'cover'}} alt={raceName} width='200px' height='100px' />
+                <p>{convertTimeStamp(date)}</p>
+            </div>
         </Link>
     )
 }

@@ -20,9 +20,9 @@ export default function RaceResults() {
     }, [query])
 
     return(
-        <div style={{display: 'grid'}}>
+        <div style={{display: 'grid', overflowX: 'auto'}}>
             <h2 className='section-heading fade-in-out-border'>Výsledky pretekov</h2>
-            <table className='table'>
+            <table className='table' id='race-results-table'>
                 <thead className='table-header'>
                     <tr>
                         <th></th>
@@ -42,10 +42,10 @@ export default function RaceResults() {
                                 <td>{d.driverName}</td>
                                 <td>{d.teamName}</td>
                                 <td>
-                                    {d.time === null ? 'DNF' : d.rank === 1 ? formatTime(d.time) : `+${formatTime(d.time - leaderTime)}`}
+                                    {d.time === null ? 'DNF' : d.rank === 1 ? formatTime(d.time, d.plusLaps) : `+${formatTime(d.time - leaderTime, d.plusLaps)}`}
                                 </td>
                                 <td style={{whiteSpace: 'nowrap'}}>
-                                    {assignPoints(d.rank, d.hasFastestLap, d.isSprint)}
+                                    {assignPoints(d.rank, d.hasFastestLap, d.isSprint, d.time === null)}
                                     {d.hasFastestLap ? <FontAwesomeIcon 
                                     style={{color: 'purple', marginLeft: '5px', backgroundColor: WHITE, borderRadius: '50%'}} icon={faClock} /> 
                                     : null}
@@ -68,19 +68,42 @@ type Driver = {
     rank: number,
     time: number,
     hasFastestLap: boolean,
-    isSprint: boolean
+    isSprint: boolean,
+    plusLaps: number
 }
 
 type Data = {
     results: Driver[]
 }
 
+
+
 async function fetchResults(id: string | undefined) {
-    const res = await axios.get<Data>(`${URI}/races/${id}/results/`)
+    const jwtCookie = document.cookie//.split(';').find(cookie => cookie.trim().startsWith('jwt='));
+    console.log(`cookie: ${jwtCookie}`)
+    const res = await axios.get<Data>(`${URI}/races/${id}/results/`, {
+        withCredentials: true
+    })
     return res.data
 }
 
-function formatTime(input: number): string {
+function formatTime(input: number, laps: number): string {
+    if ( laps > 0 ) {
+        switch(laps) {
+            case 1:
+                return '+1 kolo'
+            case 2:
+                return '+2 kolá'
+            case 3:
+                return '+3 kolá'
+            case 4:
+                return '+4 kolá'
+            
+            default:
+                return `+${laps} kôl`
+        }
+    }
+
     // Convert the input seconds into milliseconds
     const totalMilliseconds = Math.round(input * 1000)
     
@@ -103,7 +126,9 @@ function formatTime(input: number): string {
     return timeString
   }
   
-  function assignPoints(rank: number, hasFL: boolean, isSprint: boolean) {
+  function assignPoints(rank: number, hasFL: boolean, isSprint: boolean, didDNF: boolean) {
+    if ( didDNF ) return 0
+
     switch(rank) {
         case 1:
             return isSprint ? 8 : 25 + Number(hasFL)
@@ -128,4 +153,4 @@ function formatTime(input: number): string {
         default:
             return 0
     }
-  } 
+} 

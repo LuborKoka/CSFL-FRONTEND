@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useContext, Context } from 'react'
 import { useLocation, NavLink } from 'react-router-dom'
 import '../../styles/navigation.css'
 import axios from 'axios'
-import { URI, randomURIkey } from '../../App'
-import { useQuery } from '@tanstack/react-query'
+import { URI, UserContext, UserTypes, randomURIkey } from '../../App'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRightFromBracket, faGears, faLock } from '@fortawesome/free-solid-svg-icons'
+import { storageKeyName } from '../../constants'
 
 type SeasonType = {
     id: string,
@@ -20,9 +21,21 @@ export default function Nav() {
     const location = useLocation()
 
     const seasons = useQuery([`seasons-navigation`], () => fetchSeasons())
+    const queryClient = useQueryClient()
+
+    const { setUser } = useContext(UserContext as Context<UserTypes>)
+
+
 
     function closeNavbar() {
-        setIsOpen(false)
+        setIsOpen(false)   
+    }
+
+
+    function logOut() {
+        localStorage.removeItem(storageKeyName)
+        setUser(null)
+        queryClient.clear()
     }
 
 
@@ -33,7 +46,11 @@ export default function Nav() {
                     <ul>
                         {
                             seasons.data?.seasons.map(s =>
-                                <NavLink className='clickable-button' onClick={closeNavbar} to={`/seasons/${s.id}`} key={s.id}>{s.name}</NavLink>
+                                <NavLink style={{position: 'relative', textDecoration: 'none'}} onClick={closeNavbar} to={`/seasons/${s.id}`} key={s.id}>
+                                    <div className='clickable-button'>
+                                        {s.name}
+                                    </div>
+                                </NavLink>
                             )
                         }
                     </ul>
@@ -41,17 +58,21 @@ export default function Nav() {
 
                 <div className="account-options">
                     <ul>
-                        <NavLink className='clickable-button' onClick={closeNavbar} to={`/${randomURIkey}/admin`}>
-                            <span>
-                                <FontAwesomeIcon icon={faLock} /> F1 Admin
-                            </span>
+                        <NavLink style={{position: 'relative', textDecoration: 'none'}} onClick={closeNavbar} to={`/${randomURIkey}/admin`}>
+                            <div className='clickable-button'>
+                                <span>
+                                    <FontAwesomeIcon icon={faLock} /> F1 Admin
+                                </span>
+                            </div>        
                         </NavLink>
-                        <NavLink className='clickable-button' onClick={closeNavbar} to='/settings'>
-                            <span>
-                                <FontAwesomeIcon icon={faGears} /> Nastavenia
-                            </span>
+                        <NavLink style={{position: 'relative', textDecoration: 'none'}} onClick={closeNavbar} to='/settings'>
+                            <div className='clickable-button'>
+                                <span>
+                                    <FontAwesomeIcon icon={faGears} /> Nastavenia
+                                </span>
+                            </div>
                         </NavLink>
-                        <NavLink className='clickable-button' to='/'>
+                        <NavLink className='clickable-button' onClick={logOut} to='/'> 
                             <span>
                                 <FontAwesomeIcon icon={faArrowRightFromBracket} /> Odhlásiť sa  
                             </span>

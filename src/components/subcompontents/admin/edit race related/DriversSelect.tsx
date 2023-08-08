@@ -11,9 +11,15 @@ type Team = {
     teamName: string,
     drivers: {
         id: string,
-        name: string
+        name: string,
+        isReserve: boolean
     }[],
-    color: string
+    color: string,
+    allOptions: {
+        id: string,
+        name: string,
+        isReserve: boolean
+    }[]
 }
 
 type Data = {
@@ -26,9 +32,9 @@ type Data = {
     }[]
 }
 
-type DriversSelectProps = (Team & {reserves: Data["reserves"]} & {setDrivers: (teamID: string, drivers: string[]) => void} ) 
+type DriversSelectProps = (Team & {setDrivers: (teamID: string, drivers: string[]) => void} ) 
 
-export default function DriversSelect({ teamID, teamName, drivers, reserves, setDrivers, color }: DriversSelectProps ) {
+export default function DriversSelect({ teamID, teamName, drivers, allOptions, setDrivers, color }: DriversSelectProps ) {
     const [value, setValue] = useState<{value: string, label: string}[]>([])
     const [options, setOptions] = useState<{value: string, label: string}[]>([])
 
@@ -40,19 +46,24 @@ export default function DriversSelect({ teamID, teamName, drivers, reserves, set
 
     useEffect(() => {
         setOptions(
-            [...drivers.map(d => {return {value: d.id, label: d.name}}), 
-            ...reserves.map(r => {return {value: r.id, label: `Rezerva: ${r.name}`}})]
+            allOptions.map(o => { return {
+                value: o.id,
+                label: `${o.isReserve ? 'Rezerva: ' : ''}${o.name}`
+            }})
         )
 
-        setValue([...drivers.map(d => {return {value: d.id, label: d.name}})])
+        setValue(drivers.map(d => {return {
+            value: d.id,
+            label: `${d.isReserve ? 'Rezerva: ' : ''}${d.name}`
+        }}))
 
         setDrivers(teamID, drivers.map(d => d.id))
-    }, [drivers, reserves, teamID, setDrivers])
+    }, [drivers, allOptions, teamID, setDrivers])
 
     return(
         <div style={{padding: '1.5rem 0'}}>
             <div className='labeled-input' key={teamID}>
-                <Select name={teamName} value={value} isMulti styles={selectMultiValueStyles(color)} placeholder={teamName} options={options} onChange={updateValue} />
+                <Select name={teamName} value={value} isMulti styles={selectMultiValueStyles(color)} placeholder={null} options={options} onChange={updateValue} />
                 <label htmlFor={teamName} style={{color: color, transform: 'translate(-2%, -120%) scale(.9)', padding: '2px 5px'}}>
                     {teamName}
                 </label>

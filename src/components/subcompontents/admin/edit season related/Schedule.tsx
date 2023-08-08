@@ -1,10 +1,9 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import React, { useEffect, useState, useRef } from "react";
-import { URI, generateRandomString } from "../../../../App";
+import React, { useContext, useState, useRef, Context } from "react";
+import { URI, UserContext, UserTypes, generateRandomString, insertTokenIntoHeader } from "../../../../App";
 import CreateRace from "./CreateRace";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCirclePlus, faLightbulb } from "@fortawesome/free-solid-svg-icons";
-import AssignDriversTeams from "./AssignDriversTeams";
+import { faLightbulb } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import ExistingRace from "./ExistingRace";
@@ -27,14 +26,15 @@ export type Race = {
 export default function Schedule() {
     const [createTrackForms, setCreateTrackForms] = useState<{elementID: string, element: JSX.Element}[]>([])
     const [isPendingSchedule, setIsPendingSchedule] = useState(false)
-    const [isConfirmed, setIsConfirmed] = useState(false)
 
     const { seasonID } = useParams()
 
     const races = useRef<Race[]>([])
 
-    const tracks = useQuery([`admin_all-tracks`], () => fetchTracks(), {staleTime: Infinity})
-    const existingRaces = useQuery([`scheduled-races-${seasonID}`], () => fetchExistingRaces(seasonID), { staleTime: Infinity})
+    const { user } = useContext(UserContext as Context<UserTypes>)
+
+    const tracks = useQuery([`admin_all-tracks`], () => fetchTracks(user?.token), {staleTime: Infinity})
+    const existingRaces = useQuery([`scheduled-races-${seasonID}`], () => fetchExistingRaces(seasonID, user?.token), { staleTime: Infinity})
 
     const queryClient = useQueryClient()
 
@@ -60,7 +60,11 @@ export default function Schedule() {
     }
 
     async function deleteRace(raceID: string) {
-        axios.delete(`${URI}/schedule/${seasonID}/${raceID}/`)
+        axios.delete(`${URI}/schedule/${seasonID}/${raceID}/`, {
+            headers: {
+                Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
+            }
+        })
         .then(r => {
             queryClient.invalidateQueries([`scheduled-races-${seasonID}`])
             showConfirmation()
@@ -71,10 +75,14 @@ export default function Schedule() {
 
     async function patchRace(raceID: string, trackID: string, date: string) {
         try {
-            axios.patch(`${URI}/schedule/${seasonID}/${raceID}/`, {
+            await axios.patch(`${URI}/schedule/${seasonID}/${raceID}/`, {
                 params: {
                     trackID: trackID,
                     date: date
+                }
+            }, {
+                headers: {
+                    Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
                 }
             })
             queryClient.invalidateQueries([`scheduled-races-${seasonID}`])
@@ -97,9 +105,13 @@ export default function Schedule() {
             params: {
                 races: races.current
             }
+        }, {
+            headers: {
+                Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
+            }
         })
         .then((r: AxiosResponse) => {
-            queryClient.invalidateQueries([`admins-existing-races-${seasonID}`])
+            queryClient.invalidateQueries([`scheduled-races-${seasonID}`])
             showConfirmation(() => setCreateTrackForms([]))
         })
         .catch((e: AxiosError) => {
@@ -114,7 +126,7 @@ export default function Schedule() {
             <div className='user-tip'>
                 <FontAwesomeIcon icon={faLightbulb} />
                 <span>Preteky, ktoré majú dátum v minulosti (oproti terajšku), sa už nedajú upraviť ani vymazať. Dávaj si pozor na to, aký dátum im nastavíš.<br/>
-                    Nezabudni si zakšrtnúť šprinty. Defaultne ich veľká cena nemá.
+                    Nezabudni si zaškrtnúť šprinty. Defaultne ich veľká cena nemá.
                 </span>
                 <FontAwesomeIcon icon={faLightbulb} />
             </div>
@@ -148,19 +160,23 @@ export default function Schedule() {
 }
 
 
-export async function fetchTracks() {
+export async function fetchTracks(token: string | null | undefined) {
     type Data = {
         tracks: {
             id: string,
             name: string
         }[]
     }
-    const res = await axios.get<Data>(`${URI}/admins/all-tracks/`)
+    const res = await axios.get<Data>(`${URI}/admins/all-tracks/`, {
+        headers: {
+            Authorization: `Bearer ${insertTokenIntoHeader(token)}`
+        }
+    })
     return res.data
 }
 
 
-async function fetchExistingRaces(seasonID: string | undefined) {
+async function fetchExistingRaces(seasonID: string | undefined, token: string | undefined | null) {
     type Data = {
         races: {
             id: string,
@@ -170,7 +186,11 @@ async function fetchExistingRaces(seasonID: string | undefined) {
             isSprint: boolean
         }[]
     }
-    const res = await axios.get<Data>(`${URI}/schedule/${seasonID}/`)
+    const res = await axios.get<Data>(`${URI}/schedule/${seasonID}/`, {
+        headers: {
+            Authorization: `Bearer ${insertTokenIntoHeader(token)}`
+        }
+    })
     return res.data
 }
 

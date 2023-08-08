@@ -866,7 +866,7 @@
   margin-right: 10px;
 }
 .main-navigation .clickable-button::-webkit-scrollbar {
-  height: clamp(3px, 1vw, 8px);
+  height: 3px;
 }
 .main-navigation .clickable-button::-webkit-scrollbar-track {
   background: transparent;
@@ -972,6 +972,26 @@
   text-decoration: none;
 }
 
+.bottom-tabs {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 9;
+  display: none;
+  background-color: #001010;
+  justify-content: space-evenly;
+  padding: 5px 0;
+}
+.bottom-tabs-link {
+  display: grid;
+  place-content: center center;
+  color: #EFEFEF;
+  text-decoration: none;
+}
+.bottom-tabs-link > div:first-child {
+  display: flex;
+  justify-content: center;
+}
+
 /**
     SEASON NAVIGATION
     SEASON NAVIGATION
@@ -1000,6 +1020,9 @@
 @media screen and (max-width: 600px) {
   .section-navigation {
     display: none;
+  }
+  .bottom-tabs {
+    display: flex;
   }
 }
 @media screen and (min-width: 1001px) {

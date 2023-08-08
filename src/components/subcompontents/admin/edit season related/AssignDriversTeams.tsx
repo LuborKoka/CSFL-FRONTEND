@@ -1,38 +1,42 @@
-import React, { useEffect, useState, useRef } from 'react';
-import axios, { AxiosError, AxiosResponse } from 'axios'
-import { URI } from '../../../../App';
-import Select, { MultiValue } from 'react-select'
-import { selectMultiValueStyles } from '../../user/AddReport';
+import React, { useContext, Context, useState, useEffect } from 'react';
+import axios from 'axios'
+import { URI, UserContext, UserTypes, insertTokenIntoHeader } from '../../../../App';
 import { useQuery } from '@tanstack/react-query';
-import useConfirmation from '../../../../hooks/useConfirmation';
 import EditTeamDrivers from './EditTeamDrivers';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLightbulb } from '@fortawesome/free-solid-svg-icons';
-import { useParams } from 'react-router-dom';
-
-
-
-type Params = {
-    seasonID: string
-}
-
-type Team = {
-    teamID: string,
-    drivers: string[]
-}
+import { useNavigate, useParams } from 'react-router-dom';
+import { Forbidden } from '../../../controls/BadReq';
 
 // potom upravit tu logiku pre ligy s uz priradenymi jazdcami do timov
 // 2 select komponenty, jeden na vytvorenie, jeden na update
 
-//for now creation works
+// for now creation works
+// uz aj prepisanie by malo fungovat
 
 export default function AssignDriversTeams() {
+    const [isForbidden, setIsForbidden] = useState(true)
+
     const { seasonID } = useParams()
 
-    //zoznam zvolenych teamov aj s jazdcami
-    const teams = useRef<Team[]>([])
+    //nefunguje context
+    const user = useContext(UserContext as Context<UserTypes>)
 
-    const query = useQuery([`drivers-for-season-and-replacements-${seasonID}`], () => fetchDriversAndTeams(seasonID))
+    //zoznam zvolenych teamov aj s jazdcami
+    const navigate = useNavigate()
+
+    const query = useQuery([`season-drivers-${seasonID}`], () => fetchDriversAndTeams(seasonID, user.user?.token))
+
+
+    useEffect(() => {
+        if ( query.data === undefined ) return
+        if ( query.data.code === 403 ) setIsForbidden(true) 
+        else setIsForbidden(false)
+    }, [query.data])
+    
+    if ( isForbidden ) {
+        return <Forbidden />
+    }
 
     return(
         <div>
@@ -49,10 +53,10 @@ export default function AssignDriversTeams() {
             <h2 className='section-heading fade-in-out-border'>Vytvorenie tímových dvojíc</h2>
 
             {
-                    query.data?.teams.map(t => 
+                    query.data?.data.teams.map(t => 
                         <div key={t.id} style={{padding: '1.5rem 0'}}>
                             <EditTeamDrivers {...t} signed={t.drivers} 
-                            options={query.data === undefined ? [] : query.data.availableDrivers.map(o => {return {value: o.id, label: o.name}})} />    
+                            options={query.data === undefined ? [] : query.data.data.availableDrivers.map(o => {return {value: o.id, label: o.name}})} />    
                         </div>
                     )
                 }
@@ -62,50 +66,7 @@ export default function AssignDriversTeams() {
 }
 
 
-
-
-
-type TeamSelectProps = {
-    id: string,
-    name: string,
-    signed: {
-        id: string,
-        name: string
-    }[],
-    drivers: {value: string, label: string}[],
-    color: string,
-    setDrivers: (v: MultiValue<{value: string, label: string}>, id: string) => void
-}
-
-
-
-
-function TeamSelect({ id, name, signed, drivers, color, setDrivers }: TeamSelectProps) {
-    const [options, setOptions] = useState<{value: string, label: string}[]>([])
-
-    useEffect(() => {
-        if ( signed.length === 0 ) return
-        const d = drivers.filter(d => d.value === signed[0].id || d.value === signed[1].id )
-        setOptions(d)
-    }, [signed, drivers])
-
-    function setSelected(v: MultiValue<{value: string, label: string}>) {
-        if ( v.length > 2 ) return
-        setOptions(v.map(d => {
-            return {value: d.value, label: d.label}
-        }))
-        setDrivers(v, id)
-    }
-
-    return(
-        <Select value={options} isMulti placeholder={name} options={drivers} closeMenuOnSelect={false}
-        styles={selectMultiValueStyles(color)} 
-        onChange={(v: MultiValue<{value: string, label: string}>) => setSelected(v)} key={id}  />
-    )
-}
-
-
-async function fetchDriversAndTeams(seasonID: string | undefined) {
+async function fetchDriversAndTeams(seasonID: string | undefined, token: string | undefined | null) {
     type Data = {
         teams: {
             color: string,
@@ -125,6 +86,13 @@ async function fetchDriversAndTeams(seasonID: string | undefined) {
             name: string
         }[]
     }
-    const res = await axios.get<Data>(`${URI}/admins/season-drivers/${seasonID}/`)
-    return res.data
+    const res = await axios.get<Data>(`${URI}/season-drivers/${seasonID}/`, {
+        headers: {
+            'Authorization': `Bearer ${insertTokenIntoHeader(token)}`
+        }
+    })
+    return {
+        code: res.status,
+        data: res.data
+    }
 }

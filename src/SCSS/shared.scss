@@ -34,13 +34,24 @@
   
     &:hover, &:focus, &:valid{
       box-shadow: 0 0 10px rgba($white, .4);
+      @supports not (box-shadow: 0 0 10px rgba($white, .4)) {
+        border: 1px solid $white
+        }
     }
+}
+
+.input-error {
+    padding: 5px 20px;
+    color: $red;
 }
 
 .disabled-input {
     cursor: not-allowed !important;
     opacity: .8;
     box-shadow: 0 0 10px rgba($white, .4);
+    @supports not (box-shadow: 0 0 10px rgba($white, .4)) {
+        border: 1px solid $white
+    }
 }
 
 .clickable-button {
@@ -78,7 +89,8 @@
     overflow: hidden;
     min-height: 80vh;
     position: relative;
-    max-width: 100%;
+    max-width: 100vw;
+
 }
 
 .section-heading {
@@ -94,6 +106,9 @@
     z-index: 1;
 }
 
+.link {
+    text-decoration: none;
+}
 
 .fade-in-out-border {
     &::after {
@@ -139,7 +154,10 @@
     width: clamp(280px, 100%, 1000px);
     position: relative;
     box-shadow: 0 0 10px rgba($white, .4);
-    
+    @supports not (box-shadow: 0 0 10px rgba($white, .4)) {
+        border: 1px solid $white
+    }
+
     &::-webkit-scrollbar {
         width: clamp(3px, 1vw, 8px)
     }
@@ -232,6 +250,7 @@
         color: rgb(0, 215, 57)
     }
 }
+
 
 
 

@@ -1,6 +1,6 @@
 import axios from "axios";
-import React, { useState } from "react";
-import { URI } from "../../../../App";
+import React, { Context, useContext, useState } from "react";
+import { URI, UserContext, UserTypes, insertTokenIntoHeader } from "../../../../App";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import Select, { MultiValue } from 'react-select'
@@ -14,7 +14,10 @@ export default function AddReserves() {
 
     const [reserves, setReserves] = useState<{label: string, value: string}[]>([])
 
-    const query = useQuery([`season-non-reserve-drivers-${seasonID}`], () => fetchNonReserves(seasonID))
+    const { user } = useContext(UserContext as Context<UserTypes>)
+
+    const query = useQuery([`season-non-reserve-drivers-${seasonID}`], () => fetchNonReserves(seasonID, user?.token
+        ))
 
     const [confirmation, showConfirmation] = useConfirmation()
 
@@ -31,6 +34,10 @@ export default function AddReserves() {
         axios.post(`${URI}/admins/season-drivers/${seasonID}/reserves/`, {
             params: {
                 drivers: reserves.map(r => r.value)
+            }
+        }, {
+            headers: {
+                Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
             }
         })
         .then(r => {
@@ -65,7 +72,7 @@ export default function AddReserves() {
 
 
 
-async function fetchNonReserves(seasonID: string | undefined) {
+async function fetchNonReserves(seasonID: string | undefined, token: string | null | undefined) {
     type Data = {
         drivers: {
             driverID: string,
@@ -73,6 +80,10 @@ async function fetchNonReserves(seasonID: string | undefined) {
         }[]
     }
 
-    const res = await axios.get<Data>(`${URI}/admins/season-drivers/${seasonID}/reserves/`)
+    const res = await axios.get<Data>(`${URI}/admins/season-drivers/${seasonID}/reserves/`, {
+        headers: {
+            Authorization: `Bearer ${insertTokenIntoHeader(token)}`
+        }
+    })
     return res.data
 }

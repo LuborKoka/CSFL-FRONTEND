@@ -1,20 +1,15 @@
 import React, { useState, useRef, useContext, Context } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { URI, UserContext, UserTypes, generateRandomString } from "../../../App";
+import { URI, UserContext, UserTypes, generateRandomString, insertTokenIntoHeader } from "../../../App";
 import Select, { MultiValue, StylesConfig, ActionMeta } from 'react-select';
-import { Link, useNavigate, useOutletContext, useParams } from "react-router-dom";
-import { RaceContext } from "../../controls/SeasonNav";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLightbulb, faPaperclip, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { DARKBLUE, RED, WHITE } from "../../../constants";
 import { ReactComponent as PaperPlane }from '../../../images/sipka.svg'
 import useConfirmation from "../../../hooks/useConfirmation";
-
-type Race = {
-    name: string,
-    id: string
-}
+import useErrorMessage from "../../../hooks/useErrorMessage";
 
 type Driver = {
     name: string,
@@ -23,27 +18,25 @@ type Driver = {
 
 export default function AddReport() {
     const [isPending, setIsPending] = useState(false)
+    const [isEmptyTarget, setIsEmptyTarget] = useState(false)
+    const [isEmptyText, setIsEmptyText] = useState(false)
+    const [isEmptyVideo, setIsEmptyVideo] = useState(false)
     const [files, setFiles] = useState<{id: string, file: File}[]>([])
     const [links, setLinks] = useState<{url: string, id: string}[]>([])
-    const [isConfirmation, setIsConfirmation] = useState(false)
-
 
     const { raceID, seasonID } = useParams()
 
-    const query = useQuery([`report_${raceID}_driver_options`], () => fetchDrivers(raceID))
+    const { user } = useContext(UserContext as Context<UserTypes>)
+    
+    const query = useQuery([`race_${raceID}_drivers`], () => fetchDrivers(raceID, user?.token))
     const queryClient = useQueryClient()
     const navigate = useNavigate()
     
-    
     const report = useRef<{targets: string[], inchident: string, from_driver: string, video: string[]}>({inchident: '', targets: [], from_driver: '', video: []})
-    const reportDesc = useRef<HTMLTextAreaElement>(null)
     const video = useRef<HTMLInputElement>(null)
 
-    const user = useContext(UserContext as Context<UserTypes>)
-
-    const race = (useOutletContext() as RaceContext)[0]
-
     const [confirmation, showConfirmation] = useConfirmation()
+    const [message, showMessage] = useErrorMessage()
 
     function handleFileInput(e: React.ChangeEvent<HTMLInputElement>) {
         const files = Array.prototype.slice.call(e.target.files) as File[]
@@ -54,6 +47,7 @@ export default function AddReport() {
     }
 
     function handleVideoInput(e: React.FormEvent) {
+        setIsEmptyVideo(false)
         e.preventDefault()
         if ( video.current === null ) return
 
@@ -75,20 +69,36 @@ export default function AddReport() {
 
     function handleDriversChange(d: MultiValue<{value: string, label: string} | undefined>,  actionMeta: ActionMeta<{value: string, label: string}>) {
         if ( d === undefined || d === null ) return
-
+        setIsEmptyTarget(false)
         report.current = {...report.current, targets: d.map(d => d!.value)}
     }
 
     function handleDescChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
         report.current = {...report.current, inchident: e.target.value}
+        setIsEmptyText(false)
     }
     
     function handleReportSubmit(e: React.MouseEvent<HTMLButtonElement>) {
         e.preventDefault()
 
-        if ( user.user === null || ( files.length === 0 && links.length === 0 ) ) return
+        if ( report.current.targets.length === 0 ) {
+            setIsEmptyTarget(true)
+            return
+        }
 
-        report.current = {...report.current, from_driver: user.user.id, video: links.map(l => l.url)}
+        if ( report.current.inchident.trim().length < 20 ) {
+            setIsEmptyText(true)
+            return
+        }
+
+        if ( files.length === 0 && links.length === 0 ) {
+            setIsEmptyVideo(true)
+            return
+        }
+
+        if ( user === null ) return
+
+        report.current = {...report.current, from_driver: user.id, video: links.map(l => l.url)}
 
         setIsPending(true)
 
@@ -110,8 +120,13 @@ export default function AddReport() {
             queryClient.invalidateQueries([`race_${raceID}_reports`])
             showConfirmation(() => navigate(`/seasons/${seasonID}/race/${raceID}/reports`))
         })
-        .catch((e: AxiosError) => {
+        .catch((e: unknown) => {
+            if (e instanceof AxiosError && e.response?.data.error !== undefined ) {
+                showMessage(e.response.data.error)
+                return
+            }
             console.log(e)
+            showMessage('Niečo sa pokazilo. Skús to znova.')
         })
         .finally(() => setIsPending(false))
     }
@@ -124,19 +139,23 @@ export default function AddReport() {
                     <input name='raceName' className='form-input' type="text" readOnly value={`${query.data?.raceName}`} />
                     <label htmlFor='raceName'>Preteky</label>
                 </div>
-                <div className="labeled-input perma-active" /*style={{position: 'relative'}}*/>
-                    <Select name="reported-drivers" options={[{value: 'hra', label: 'Hra'}, ...driversFromQuery(query.data, user.user?.id)]} isMulti onChange={handleDriversChange} styles={selectMultiValueStyles()} />
+                <div className="labeled-input perma-active" >
+                    <Select name="reported-drivers" options={[{value: 'hra', label: 'Hra'}, ...driversFromQuery(query.data, user?.id)]} isMulti onChange={handleDriversChange} styles={selectMultiValueStyles()} />
                     <label htmlFor="reported-driver">Nahlásení hráči</label>
+                    { isEmptyTarget && <p className='input-error'>Musíš nahlásiť aspoň jedného hráča alebo hru.</p>}
                 </div>
 
                 <div className='inchident labeled-input ' >
-                    <textarea name='inchident' ref={reportDesc} onChange={handleDescChange} spellCheck={false} />
+                    <textarea name='inchident' onChange={handleDescChange} spellCheck={false} />
                     <label htmlFor='inchident'>Popis inchidentu</label>
+                    { isEmptyText && <p className='input-error'>Popis inchidentu musí mať aspoň 20 znakov.</p>}
                 </div>
 
                 <h2 className='fade-in-out-border'>
-                    <FontAwesomeIcon icon={faPaperclip}/> Prílohy 
+                    <FontAwesomeIcon icon={faPaperclip} /> Prílohy 
                 </h2>
+
+                { isEmptyVideo && <p className='input-error' style={{marginTop: '-1rem'}}>Potrebujeme od teba aspoň jednu prílohu.</p>}
 
                 <div className='user-tip' style={{zIndex: '0'}}>
                     <FontAwesomeIcon icon={faLightbulb} />
@@ -181,7 +200,6 @@ export default function AddReport() {
                             <button className="svg-button" type="submit"><PaperPlane /></button>
                         </form>
                     </div>
-                        
                 </div>
 
                 <div className='submit-button-container'>
@@ -190,14 +208,19 @@ export default function AddReport() {
             </div>
 
             { confirmation }
+            { message }
         </>
     )
 }
 
 
 
-async function fetchDrivers(id: string | undefined) {
-    const res = await axios.get<{drivers: Driver[], raceName: string}>(`${URI}/races/${id}/drivers/`)
+async function fetchDrivers(id: string | undefined, token: string | null | undefined) {
+    const res = await axios.get<{drivers: Driver[], raceName: string}>(`${URI}/races/${id}/drivers/`, {
+        headers: {
+            Authorization: `Bearer ${insertTokenIntoHeader(token)}`
+        }
+    })
     return res.data
 }
 
@@ -264,8 +287,9 @@ export function AddedVideo({ name, id, deleteVideo}: VideoProps) {
 
 type OptionType = { value: string, label: string };
 
-export function selectMultiValueStyles(color = 'rgba(239, 239, 239, .4') {
-    const underLineColor = color === 'rgba(239, 239, 239, .4' ? WHITE : color
+export function selectMultiValueStyles(color = 'rgba(239, 239, 239, .4)') {
+    const underLineColor = color === 'rgba(239, 239, 239, .4)' ? WHITE : color
+    const boxShadow = color === 'rgba(239, 239, 239, .4)' ? `0 0 10px ${color}` : `0 0 10px 5px ${color}`
 
     const selectMultiValueStyles: StylesConfig<OptionType, true> = {
         control: (styles) => {
@@ -274,7 +298,7 @@ export function selectMultiValueStyles(color = 'rgba(239, 239, 239, .4') {
                 cursor: 'text',
                 backgroundColor: 'transparent',
                 border: 'none',
-                boxShadow: `0px 0px 10px 5px ${color}`,
+                boxShadow: boxShadow,
                 padding: '3px 10px',
                 fontSize: '20px'
             }

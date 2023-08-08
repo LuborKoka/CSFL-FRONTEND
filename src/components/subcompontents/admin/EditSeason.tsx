@@ -1,11 +1,10 @@
 import axios from 'axios'
-import React from 'react'
+import React, { useContext, Context} from 'react'
 import { Link, useOutletContext, useParams } from 'react-router-dom'
-import { URI } from '../../../App'
+import { URI, UserContext, UserTypes, insertTokenIntoHeader } from '../../../App'
 import { useQuery } from '@tanstack/react-query'
-import { Race } from './edit season related/Schedule'
-import AssignDriversTeams from './edit season related/AssignDriversTeams'
 import { AdminOutletContext, OutletSeason } from '../../controls/AdminNav'
+import { timestampToDateTime } from '../user/Report'
 
 type RaceProps = {
     id: string,
@@ -26,7 +25,9 @@ export default function EditSeason() {
 
     const setSeason = (useOutletContext() as AdminOutletContext)[1]
 
-    const query = useQuery([`admin-season-schedule_${seasonID}`], () => fetchSeasonSchedule(seasonID))
+    const { user } = useContext(UserContext as Context<UserTypes>)
+
+    const query = useQuery([`admin-season-schedule_${seasonID}`], () => fetchSeasonSchedule(seasonID, user?.token))
     
 
     return(
@@ -42,19 +43,29 @@ export default function EditSeason() {
 }
 
 function RaceBox({ id, raceName, date, isSprint, setSeason}: RaceProps) {
+    function setBreadcrumbs() {
+        const name = `${isSprint ? 'Sprint: ' : ''}${raceName}`
+        setSeason(p => {return {...p, raceName: name}})
+    }
 
     return(
-        <div style={{padding: '20px', display: 'inline-block'}} onClick={() => setSeason(p => {return {...p, raceName: raceName}})}>
-            <h5>{`${isSprint ? 'Sprint: ' : ''}${raceName}`}</h5>
-            <h5>{date}</h5>
-
-            <Link to={`race/${id}`}>Edit</Link>
-        </div>
+        <Link className='tiltable-card link' style={{margin: '2rem'}} to={`race/${id}`} onClick={setBreadcrumbs}>
+            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+            
+            <div className='content'>
+                <h5>{`${isSprint ? 'Sprint: ' : ''}${raceName}`}</h5>
+                <h5>{timestampToDateTime(date)}</h5>
+                <i>Upraviť</i>
+            </div>
+        </Link>
     )
 }
 
 
-async function fetchSeasonSchedule(seasonID: string | undefined) {
+
+async function fetchSeasonSchedule(seasonID: string | undefined, token: string | undefined | null) {
     type Data = {
         races: {
             id: string,
@@ -64,7 +75,11 @@ async function fetchSeasonSchedule(seasonID: string | undefined) {
             isSprint: boolean
         }[]
     }
-    const res = await axios.get<Data>(`${URI}/schedule/${seasonID}/`)
+    const res = await axios.get<Data>(`${URI}/schedule/${seasonID}/`, {
+        headers: {
+            Authorization: `Bearer ${insertTokenIntoHeader(token)}`
+        }
+    })
     return res.data
 }
 

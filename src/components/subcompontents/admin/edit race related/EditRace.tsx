@@ -1,8 +1,8 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useRef, useState, Context } from "react";
 import { useParams } from "react-router-dom";
-import { URI } from "../../../../App";
+import { URI, UserContext, UserTypes, insertTokenIntoHeader } from "../../../../App";
 import DriversSelect from "./DriversSelect";
 import SetRaceResults from "./SetRaceResults";
 import useConfirmation from "../../../../hooks/useConfirmation";
@@ -14,15 +14,14 @@ export default function EditRace() {
     const [isPending, setIsPending] = useState(false)
 
     const raceDrivers = useRef<{teamID: string, drivers: string[]}[]>([])
-    const reserves = useRef<{id: string, name: string}[]>([])
 
     const { raceID } = useParams()
 
-    const query = useQuery([`edit-race-${raceID}`], () => fetchPreRace(raceID))
+    const { user } = useContext(UserContext as Context<UserTypes>)
+
+    const query = useQuery([`edit-race-${raceID}`], () => fetchPreRace(raceID, user?.token))
 
     const queryClient = useQueryClient()
-
-    reserves.current = query.data === undefined ? [] : query.data.reserves
 
     const [confirmation, showConfirmation] = useConfirmation()
 
@@ -47,12 +46,16 @@ export default function EditRace() {
             params: {
                 teams: raceDrivers.current
             }
+        }, {
+            headers: {
+                Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
+            }
         })
         .then((r: AxiosResponse) => {
             showConfirmation(() => queryClient.invalidateQueries([`edit-race-results-${raceID}`]))
         })
         .catch((e: AxiosError) => {
-
+            console.log(e)
         })
         .finally(() => setIsPending(false))
     }
@@ -73,7 +76,7 @@ export default function EditRace() {
             <form onSubmit={submitRaceDrivers}>
                 {
                     query.data?.teams.map(t => {
-                        return <DriversSelect {...t} reserves={query.data.reserves} setDrivers={setRaceDrivers} key={t.teamID} />
+                        return <DriversSelect {...t} setDrivers={setRaceDrivers} key={t.teamID} />
                     })
                 }
                 <div className='submit-button-container'>
@@ -98,24 +101,30 @@ type Team = {
     teamName: string,
     drivers: {
         id: string,
-        name: string
+        name: string,
+        isReserve: boolean
     }[],
-    color: string
+    color: string,
+    allOptions: {
+        id: string,
+        name: string,
+        isReserve: boolean
+    }[]
 }
 
 type Data = {
     raceName: string,
     date: string,
-    teams: Team[],
-    reserves: {
-        id: string,
-        name: string
-    }[]
+    teams: Team[]
 }
 
 
-async function fetchPreRace(id: string | undefined) {
-    const response = await axios.get<Data>(`${URI}/admins/edit-race/${id}/drivers/`)
+async function fetchPreRace(id: string | undefined, token: string | null | undefined) {
+    const response = await axios.get<Data>(`${URI}/admins/edit-race/${id}/drivers/`, {
+        headers: {
+            Authorization: `Bearer ${insertTokenIntoHeader(token)}`
+        }
+    })
     return response.data
 }
 

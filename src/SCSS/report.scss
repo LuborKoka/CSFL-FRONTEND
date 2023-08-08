@@ -8,6 +8,9 @@
 
 .text-content {
     box-shadow: 0 0 10px rgba($white, .4);
+    @supports not (box-shadow: 0 0 10px rgba($white, .4)) {
+        border: 1px solid $white;
+    }
     min-height: 7.5rem;
     padding: 1rem;
     font-size: 16px;
