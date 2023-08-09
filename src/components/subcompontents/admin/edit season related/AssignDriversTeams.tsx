@@ -23,7 +23,6 @@ export default function AssignDriversTeams() {
     const user = useContext(UserContext as Context<UserTypes>)
 
     //zoznam zvolenych teamov aj s jazdcami
-    const navigate = useNavigate()
 
     const query = useQuery([`season-drivers-${seasonID}`], () => fetchDriversAndTeams(seasonID, user.user?.token))
 

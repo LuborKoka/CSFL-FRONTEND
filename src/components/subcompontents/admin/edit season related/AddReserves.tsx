@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { Context, useContext, useState } from "react";
 import { URI, UserContext, UserTypes, insertTokenIntoHeader } from "../../../../App";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import Select, { MultiValue } from 'react-select'
 import { selectMultiValueStyles } from "../../user/AddReport";
@@ -16,8 +16,9 @@ export default function AddReserves() {
 
     const { user } = useContext(UserContext as Context<UserTypes>)
 
+    const queryClient = useQueryClient()
     const query = useQuery([`season-non-reserve-drivers-${seasonID}`], () => fetchNonReserves(seasonID, user?.token
-        ))
+    ))
 
     const [confirmation, showConfirmation] = useConfirmation()
 
@@ -26,6 +27,11 @@ export default function AddReserves() {
             setReserves([])
         else 
             setReserves(v.map(o => {return {...o}}))
+    }
+
+    function confirm() {
+        setReserves([])
+        queryClient.invalidateQueries([`season-drivers-${seasonID}`])
     }
 
     function submit(e: React.FormEvent) {
@@ -41,7 +47,7 @@ export default function AddReserves() {
             }
         })
         .then(r => {
-            showConfirmation(() => setReserves([]))
+            showConfirmation(confirm)
         })
         .catch(e => {
 

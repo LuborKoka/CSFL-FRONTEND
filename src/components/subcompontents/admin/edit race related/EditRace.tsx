@@ -51,8 +51,8 @@ export default function EditRace() {
                 Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
             }
         })
-        .then((r: AxiosResponse) => {
-            showConfirmation(() => queryClient.invalidateQueries([`edit-race-results-${raceID}`]))
+        .then(() => {
+            showConfirmation(() => queryClient.invalidateQueries([`edit-race-${raceID}`]))
         })
         .catch((e: AxiosError) => {
             console.log(e)

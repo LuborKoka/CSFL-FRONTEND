@@ -54,12 +54,12 @@ export default function EditTeamDrivers({ color, id, name, signed, options }: Pr
 
     function resetAfterSubmit() {
         setIsDisabled(true)
-        queryClient.invalidateQueries([`drivers-for-season-and-replacements-${seasonID}`])
+        queryClient.invalidateQueries([`season-drivers-${seasonID}`])
     }
 
     //doplnit uri
     function submit() {
-        axios.post(`${URI}/admins/season-drivers/${seasonID}/`, {
+        axios.post(`${URI}/season-drivers/${seasonID}/`, {
             params: {
                 teamID: id, //id is string - uuid
                 drivers: handleOldAndNewDrivers(signed, values)

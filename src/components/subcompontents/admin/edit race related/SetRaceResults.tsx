@@ -92,7 +92,6 @@ export default function SetRaceResults({ raceID }: ResultsProps) {
 
         const leader = results.current.results.leader!.id
         const index = results.current.results.otherDrivers.findIndex(d => d.id === leader)
-        // regex na kontrolovanie, ci je cas v spravnom formate ([0-5]?[0-9]):([0-5]?[0-9])([.,][0-9]{1,3})? 
 
         if (index !== -1) results.current.results.otherDrivers.splice(index, 1)
 
@@ -123,7 +122,14 @@ export default function SetRaceResults({ raceID }: ResultsProps) {
 
             <div className='user-tip'>
                 <FontAwesomeIcon icon={faLightbulb} />
-                <span>Čas víťaza zadávaj vo formáte MM:SS:msmsms. Časy ostatných prepíš ako rozostup od víťaza, vždy vo formáte +rozostup, vpodstate opíš výslednú tabuľku z hry. <br/> Ak nedokončil preteky, napíš tam dnf (nie je to case-sensitive).</span>
+                <span>Čas víťaza zadávaj vo formáte MM:SS:msmsms. Časy ostatných prepíš ako rozostup od víťaza, vždy vo formáte +rozostup, vpodstate opíš výslednú tabuľku z hry.</span>
+                <FontAwesomeIcon icon={faLightbulb} />
+            </div>
+
+            <br/>
+            <div className='user-tip'>
+                <FontAwesomeIcon icon={faLightbulb} />
+                <span>Ak nedokončil preteky, napíš tam dnf (nie je to case-sensitive).</span>
                 <FontAwesomeIcon icon={faLightbulb} />
             </div>
 

@@ -28,9 +28,8 @@ import { storageKeyName } from './constants';
 import { Forbidden, NotFound } from './components/controls/BadReq';
 import RaceOverview from './components/subcompontents/user/RaceOverview';
 import axios from 'axios';
-import getenv from 'getenv'
 
-export const URI = 'http://192.168.100.22:8000/api'
+export const URI = `http://localhost:8000/api`
 
 export const randomURIkey = generateRandomString(10)
 
