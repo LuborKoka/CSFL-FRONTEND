@@ -7,7 +7,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLightbulb, faPaperclip, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { DARKBLUE, RED, WHITE } from "../../../constants";
-import { ReactComponent as PaperPlane }from '../../../images/sipka.svg'
+import PaperPlane from '../../../images/sipka.svg'
 import useConfirmation from "../../../hooks/useConfirmation";
 import useErrorMessage from "../../../hooks/useErrorMessage";
 
@@ -197,7 +197,9 @@ export default function AddReport() {
                                 <input className='form-input' required ref={video} name='video' type="url"/>
                                 <label htmlFor='video'>Pridaj link na video</label>
                             </div>
-                            <button className="svg-button" type="submit"><PaperPlane /></button>
+                            <button className="svg-button" type="submit">
+                                <img alt="submit" src={PaperPlane} width='100%' />
+                            </button>
                         </form>
                     </div>
                 </div>
