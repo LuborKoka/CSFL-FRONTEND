@@ -28,8 +28,10 @@ import { storageKeyName } from './constants';
 import { Forbidden, NotFound } from './components/controls/BadReq';
 import RaceOverview from './components/subcompontents/user/RaceOverview';
 import axios from 'axios';
+import Rules from './components/screens/Rules';
+import secureLocalStorage from 'react-secure-storage';
 
-export const URI = `http://localhost:8000/api`
+export const URI = `http://192.168.100.22:8000/api`
 
 export const randomURIkey = generateRandomString(10)
 
@@ -53,7 +55,8 @@ function App() {
   const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
-    const token = localStorage.getItem(storageKeyName)
+    const token = secureLocalStorage.getItem(storageKeyName) as string | null //localStorage.getItem(storageKeyName)
+
 
 
     if (token !== null) {
@@ -83,7 +86,7 @@ function App() {
           <Routes>
             <Route path='/' element={<Auth />} />
             <Route path='/welcome' element={<Welcome />} />
-            <Route path='/reports' element={<Reports />} />
+            <Route path='/rules' element={<Rules />} />
             <Route path='/settings' element={<Settings />} />
             <Route path='/seasons' element={<SeasonNav />} >
               <Route path=':seasonID' element={<Season />} />

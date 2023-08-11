@@ -5,8 +5,9 @@ import axios from 'axios'
 import { URI, UserContext, UserTypes, randomURIkey } from '../../App'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRightFromBracket, faGears, faLock } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRightFromBracket, faGears, faLock, faScroll } from '@fortawesome/free-solid-svg-icons'
 import { storageKeyName } from '../../constants'
+import secureLocalStorage from 'react-secure-storage'
 
 type SeasonType = {
     id: string,
@@ -33,7 +34,7 @@ export default function Nav() {
 
 
     function logOut() {
-        localStorage.removeItem(storageKeyName)
+        secureLocalStorage.removeItem(storageKeyName)
         setUser(null)
         queryClient.clear()
     }
@@ -44,6 +45,11 @@ export default function Nav() {
             <div className='navbar'>
                 <div className="league-options">
                     <ul>
+                        <NavLink style={{position: 'relative', textDecoration: 'none'}} onClick={closeNavbar} to='/rules'>
+                            <div className='clickable-button'>
+                                <span><FontAwesomeIcon icon={faScroll} flip='horizontal' /> Pravidlá</span>
+                            </div>
+                        </NavLink>
                         {
                             seasons.data?.seasons.map(s =>
                                 <NavLink style={{position: 'relative', textDecoration: 'none'}} onClick={closeNavbar} to={`/seasons/${s.id}`} key={s.id}>

@@ -10,6 +10,7 @@ import useErrorMessage from "../../../hooks/useErrorMessage";
 import { storageKeyName } from "../../../constants";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+import secureLocalStorage from "react-secure-storage";
 
 const schema = z.object({
     username: z.string().min(5, {
@@ -71,7 +72,8 @@ export default function Signup({ swap }: Props) {
         })
         .then(r => {
             const data = jwtDecode(r.data.token) as {username: string, id: string}
-            localStorage.setItem(storageKeyName, JSON.stringify(r.data.token))
+            secureLocalStorage.setItem(storageKeyName, r.data.token)
+            //localStorage.setItem(storageKeyName, JSON.stringify(r.data.token))
             user.setUser({...data, token: r.data.token, roles: []})
             navigate('/welcome')
         })
