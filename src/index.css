@@ -29,7 +29,10 @@ nav ~ div {
 
 
 * {
-  padding: 0;
   margin: 0;
   box-sizing: border-box;
+}
+
+.main-navigation *, .content-container *, .season-with-race-cards * {
+  padding: 0;
 }

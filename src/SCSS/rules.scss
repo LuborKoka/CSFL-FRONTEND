@@ -1,0 +1,49 @@
+@import 'mixin.scss';
+
+#markdown {
+    em {
+        text-transform: capitalize;
+    }
+
+    & > ol li ol li:first-child { // toto jest napicu
+        margin-top: .5rem;
+    }
+
+    & > ol > li{
+        margin-bottom: 1rem;
+    }
+
+    ul {
+       margin: .5rem 0;
+    }
+
+    table {
+        text-transform: capitalize;
+        thead {
+            background-color: #022;
+            
+            th {
+                padding: 0.3rem .3rem .3rem .5rem;
+            }
+        }
+
+        tbody {
+            tr {
+                transition: .3s;
+                &:hover {
+                    background-color: #244;
+                  }
+            }
+            td {
+              padding: .1rem .5rem;  
+            }
+        }
+    }
+}
+
+
+@media (hover:none)  {
+    #markdown table tbody tr td {
+        border-bottom: 1px solid #244;
+    }
+}

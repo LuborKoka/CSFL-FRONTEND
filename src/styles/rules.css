@@ -1,0 +1,38 @@
+#markdown em {
+  text-transform: capitalize;
+}
+#markdown > ol li ol li:first-child {
+  margin-top: 0.5rem;
+}
+#markdown > ol > li {
+  margin-bottom: 1rem;
+}
+#markdown ul {
+  margin: 0.5rem 0;
+}
+#markdown table {
+  text-transform: capitalize;
+}
+#markdown table thead {
+  background-color: #022;
+}
+#markdown table thead th {
+  padding: 0.3rem 0.3rem 0.3rem 0.5rem;
+}
+#markdown table tbody tr {
+  transition: 0.3s;
+}
+#markdown table tbody tr:hover {
+  background-color: #244;
+}
+#markdown table tbody td {
+  padding: 0.1rem 0.5rem;
+}
+
+@media (hover: none) {
+  #markdown table tbody tr td {
+    border-bottom: 1px solid #244;
+  }
+}
+
+/*# sourceMappingURL=rules.css.map */
