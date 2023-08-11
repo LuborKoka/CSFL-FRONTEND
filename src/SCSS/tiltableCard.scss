@@ -328,3 +328,19 @@
     --rotateX: 25deg;
     --rotateY: -25deg;
 }
+
+
+//targets safari hopefully
+@supports (-webkit-appearance: none) {
+    .tiltable-card .content {
+        &::before {
+            z-index: -2;
+        }
+
+        &::after {
+            z-index: -1;
+            opacity: 1;
+            filter: unset;
+        }
+    }
+}

@@ -320,4 +320,15 @@
   --rotateY: -25deg;
 }
 
+@supports (-webkit-appearance: none) {
+  .tiltable-card .content::before {
+    z-index: -2;
+  }
+  .tiltable-card .content::after {
+    z-index: -1;
+    opacity: 1;
+    filter: unset;
+  }
+}
+
 /*# sourceMappingURL=tiltableCard.css.map */
