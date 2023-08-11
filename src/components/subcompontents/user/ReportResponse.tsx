@@ -8,6 +8,7 @@ import { faPaperclip, faRightLong, faTriangleExclamation, faLightbulb } from '@f
 import { faRectangleXmark } from '@fortawesome/free-regular-svg-icons'
 import {ReactComponent as PaperPlane} from '../../../images/sipka.svg'
 import { AddedLink, AddedVideo } from './AddReport'
+import useConfirmation from '../../../hooks/useConfirmation'
 
 type Props = {
     responseData: {
@@ -30,7 +31,9 @@ export default function ReportResponse({ responseData, setResponseData }: Props)
 
     const user = useContext(UserContext as Context<UserTypes>)
 
-    const [race, setRace] = useOutletContext<RaceContext>()
+    const race = useOutletContext<RaceContext>()[0]
+
+    const [confirmation, showConfirmation] = useConfirmation()
 
     function closeWindow() {
         setResponseData(p => {return {...p, isActive: false}})
@@ -87,8 +90,8 @@ export default function ReportResponse({ responseData, setResponseData }: Props)
                 'Content-Type': 'multipart/form-data'
             }
         })
-        .then((r: AxiosResponse) => {
-            setResponseData(p => {return {...p, isActive: false}})
+        .then(() => {
+            showConfirmation(() => setResponseData(p => {return {...p, isActive: false}}))
         })
         .catch((e: AxiosError) => {
 
@@ -183,7 +186,14 @@ export default function ReportResponse({ responseData, setResponseData }: Props)
     </div>
 
     return(
-        responseData.isActive ? form : null
+        <>
+            { 
+                responseData.isActive ? form : null
+            }
+
+            { confirmation }
+        </>
+        
     )
 }
 
