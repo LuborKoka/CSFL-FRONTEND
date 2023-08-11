@@ -3,9 +3,9 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { URI } from '../../../App';
-import { faClock } from '@fortawesome/free-solid-svg-icons';
+import { faClock, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { WHITE } from '../../../constants';
+import { RED, WHITE } from '../../../constants';
 
 export default function RaceResults() {
     const [leaderTime, setLeaderTime] = useState(0)
@@ -18,6 +18,19 @@ export default function RaceResults() {
         if ( !query || !query.data || query.data.results.length === 0 ) return
         setLeaderTime(query.data.results[0].time)
     }, [query])
+
+    if ( query.data?.results.length === 0) {
+        return(
+            <>
+                <br/><br/>
+                <h2 className='section-heading fade-in-out-border' style={{textAlign: 'center'}}> 
+                    <FontAwesomeIcon icon={faExclamationTriangle} style={{color: RED, margin: '0 2rem'}} />
+                    Výsledky tu budú do 3 hodín od začiatku pretekov.
+                    <FontAwesomeIcon icon={faExclamationTriangle} style={{color: RED, margin: '0 2rem'}} />
+                </h2>
+            </>
+        )
+    }
 
     return(
         <div style={{display: 'grid', overflowX: 'auto'}}>

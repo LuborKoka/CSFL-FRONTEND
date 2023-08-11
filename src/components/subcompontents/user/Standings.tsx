@@ -26,20 +26,20 @@ export default function Standings() {
 
     if ( query.data?.code === 204 ) {
         return(
-            <div className='section'>
+            <>
                 <br/><br/>
-                <h1 className='section-heading fade-in-out-border' style={{textAlign: 'center'}}> 
+                <h2 className='section-heading fade-in-out-border' style={{textAlign: 'center'}}> 
                     <FontAwesomeIcon icon={faExclamationTriangle} style={{color: RED, margin: '0 2rem'}} />
-                    Nie je tu čo zobraziť
+                    Ešte nie je z čoho vyrobiť tabuľky.
                     <FontAwesomeIcon icon={faExclamationTriangle} style={{color: RED, margin: '0 2rem'}} />
-                </h1>
+                </h2>
 
-            </div>
+            </>
         )
     }
 
     return(
-        <div>
+        <>
             <h2 className="section-heading fade-in-out-border">Tabuľka priebežného poradia jazdcov</h2>
             <div className='center switch-container section-heading fade-in-out-border'>
                 <span>Poradie</span>
@@ -166,7 +166,7 @@ export default function Standings() {
                 </table>
             </div>
 
-        </div>
+        </>
     )
 }
 

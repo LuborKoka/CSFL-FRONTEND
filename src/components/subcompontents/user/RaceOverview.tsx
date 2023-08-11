@@ -3,6 +3,9 @@ import React, { useContext, Context} from 'react'
 import { useParams } from "react-router-dom";
 import { URI, UserContext, UserTypes, insertTokenIntoHeader } from '../../../App';
 import axios from 'axios'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { RED } from '../../../constants';
 
 
 
@@ -13,8 +16,20 @@ export default function RaceOverview() {
 
     const query = useQuery([`race_${raceID}_drivers_overview`], () => fetchDrivers(raceID, user?.token))
 
+    if ( query.data?.length === 0 ) return(
+        <>
+            <br/><br/>
+            <h2 className='section-heading fade-in-out-border' style={{textAlign: 'center'}}> 
+                <FontAwesomeIcon icon={faExclamationTriangle} style={{color: RED, margin: '0 2rem'}} />
+                Súpiska pre túto veľkú cenu ešte nebola vytvorená.
+                <FontAwesomeIcon icon={faExclamationTriangle} style={{color: RED, margin: '0 2rem'}} />
+            </h2>
+
+        </>
+    )
+
     return(
-        <div>
+        <>
 
             <h2 className='section-heading fade-in-out-border'>
                 Súpiska
@@ -39,7 +54,7 @@ export default function RaceOverview() {
                     </div>    
                 )
             }
-        </div>
+        </>
     )
 }
 

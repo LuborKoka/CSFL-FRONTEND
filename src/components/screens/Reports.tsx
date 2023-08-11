@@ -5,9 +5,10 @@ import { useQuery } from "@tanstack/react-query"
 import { useParams } from "react-router-dom"
 import Report from "../subcompontents/user/Report"
 import ReportResponse from "../subcompontents/user/ReportResponse"
-import Verdict from "../subcompontents/FIA/FIAVerdict"
 import '../../styles/newReport.css'
 import '../../styles/report.css'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faThumbsUp } from "@fortawesome/free-solid-svg-icons"
 
 
 export default function Reports() {
@@ -21,8 +22,20 @@ export default function Reports() {
 
     const query = useQuery([`race_${raceID}_reports`], () => fetchReports(raceID))
 
+    if ( query.data?.reports.length === 0 ) {
+        return(
+            <>
+                <br/><br/>
+                <h2 className='section-heading fade-in-out-border' style={{textAlign: 'center'}}> 
+                    Žiadne reporty
+                    <FontAwesomeIcon icon={faThumbsUp} style={{ margin: '0 2rem'}} />
+                </h2>
+            </>
+        )
+    }
+
     return(
-        <div>
+        <>
             <h1 className='section-heading fade-in-out-border'>Reporty</h1>
             {
                 query.data?.reports.slice().reverse().map(r =>/* toten setter musi ist dovnutra komponentu, tam uz mam aj tak kontext na reportID, ktory treba nastavit */ 
@@ -30,7 +43,7 @@ export default function Reports() {
                 )
             }
             <ReportResponse responseData={responseData} setResponseData={setResponseData} />
-        </div>
+        </>
     )
 }
 
