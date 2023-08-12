@@ -1,17 +1,22 @@
 #markdown em {
   text-transform: capitalize;
 }
-#markdown > ol li ol li:first-child {
+#markdown ol li ol, #markdown ol li table {
+  font-size: 1rem;
+}
+#markdown > ol > li > ol > li {
   margin-top: 0.5rem;
 }
 #markdown > ol > li {
   margin-bottom: 1rem;
+  font-size: 1.2rem;
 }
 #markdown ul {
   margin: 0.5rem 0;
 }
 #markdown table {
   text-transform: capitalize;
+  margin-top: 0.5rem;
 }
 #markdown table thead {
   background-color: #022;
@@ -27,6 +32,18 @@
 }
 #markdown table tbody td {
   padding: 0.1rem 0.5rem;
+}
+#markdown > ol > li > ol > li > table:nth-of-type(2) {
+  margin-bottom: 0.5rem;
+}
+
+.rules-input {
+  width: 100%;
+  min-height: 500px;
+  max-width: 100%;
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  color: #EFEFEF;
 }
 
 @media (hover: none) {

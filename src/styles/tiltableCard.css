@@ -327,7 +327,6 @@
   .tiltable-card .content::after {
     z-index: -1;
     opacity: 1;
-    filter: unset;
   }
 }
 

@@ -60,28 +60,6 @@
     .league-options {
         overflow-y: auto;
         padding: 0 1rem;
-    
-        &::-webkit-scrollbar {
-            width: clamp(3px, 1vw, 8px)
-        }
-    
-        &::-webkit-scrollbar-track {
-            background: transparent;
-        }
-    
-        &::-webkit-scrollbar-thumb {
-            background-color: rgba($white, 0.7); 
-            border-radius: 20px;
-            border: 4px solid transparent;
-            transition: background-color .2s;
-            &:hover {
-                background-color: rgba($white, 1);
-            }
-        }
-    
-        &::-webkit-scrollbar-button {
-            display: none;
-        }
 
         & ul > *:not(:first-child) {
             margin-top: .5rem;

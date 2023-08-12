@@ -5,12 +5,18 @@
         text-transform: capitalize;
     }
 
-    & > ol li ol li:first-child { // toto jest napicu
+
+    ol  li  ol, ol li table {
+        font-size: 1rem;
+    }
+
+    & > ol > li > ol > li {
         margin-top: .5rem;
     }
 
     & > ol > li{
         margin-bottom: 1rem;
+        font-size: 1.2rem;
     }
 
     ul {
@@ -19,6 +25,7 @@
 
     table {
         text-transform: capitalize;
+        margin-top: .5rem;
         thead {
             background-color: #022;
             
@@ -39,6 +46,20 @@
             }
         }
     }
+
+    & > ol > li > ol > li > table:nth-of-type(2) {
+        margin-bottom: .5rem;
+    }
+}
+
+
+.rules-input {
+    width: 100%;
+    min-height: 500px;
+    max-width: 100%;
+    padding: .5rem 1rem;
+    background-color: transparent;
+    color: $white;
 }
 
 
