@@ -32,14 +32,22 @@
 
 
 .standings-table {
+    thead th:nth-child(1) {
+        z-index: 1;
+        position: sticky;
+        left: -5px;
+        background-color: $darkblue;
+        border-top: 2px solid $darkblue;
+    }
+
     thead th:nth-child(2) {
         background-color: $darkblue;
         z-index: 1;
         position: sticky;
-        left: -1px;
+        left: 27px;
     }
 
-    tbody tr:hover td:nth-child(2) {
+    tbody tr:hover td:nth-child(2), tbody tr:hover td:nth-child(1) {
         background-color: #244 !important;
     }
     
@@ -52,22 +60,28 @@
             text-align: left;
         }
 
+        & > td:nth-child(1) {
+            position: sticky;
+            left: -5px;
+        }
+
         & > td:nth-child(2) {
             text-align: left;
             position: sticky;
-            left: -1px;
-            z-index: 1;
+            left: 27px;
         }
     }
 
-    & tbody > tr:nth-child(2n) td:nth-child(2) {
+    & tbody > tr:nth-child(2n) td:nth-child(2), & tbody > tr:nth-child(2n) td:nth-child(1) {
         background-color: $darkblue;
         transition: background-color .2s;
+        z-index: 1;
     }
 
-    & tbody > tr:nth-child(2n + 1) td:nth-child(2) {
+    & tbody > tr:nth-child(2n + 1) td:nth-child(2), & tbody > tr:nth-child(2n + 1) td:nth-child(1) {
         background-color: #002020;
         transition: background-color .2s;
+        z-index: 1;
     }
 
     .switcher-visible {

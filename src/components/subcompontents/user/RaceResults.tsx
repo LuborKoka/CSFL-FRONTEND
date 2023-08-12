@@ -92,11 +92,7 @@ type Data = {
 
 
 async function fetchResults(id: string | undefined) {
-    const jwtCookie = document.cookie//.split(';').find(cookie => cookie.trim().startsWith('jwt='));
-    console.log(`cookie: ${jwtCookie}`)
-    const res = await axios.get<Data>(`${URI}/races/${id}/results/`, {
-        withCredentials: true
-    })
+    const res = await axios.get<Data>(`${URI}/races/${id}/results/`)
     return res.data
 }
 

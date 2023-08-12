@@ -6,7 +6,7 @@ import { RaceContext } from "../../controls/SeasonNav";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMessage, faPaperclip, faReply, faRightLong, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { faRectangleXmark } from '@fortawesome/free-regular-svg-icons'
-import { ReactComponent as FIA } from '../../../images/logo_Fia.svg' 
+import FIA from '../../../images/logo_Fia.svg' 
 import ReportVerdict from "./ReportVerdict";
 
 type Props = {
@@ -70,13 +70,13 @@ export default function Report({ rank, verdict, penalties, reportID, videos, con
 
             <br/>
 
-            <div className="single-row" style={{justifyContent: 'space-evenly', fontSize: '25px'}}>
+            <div className="single-row" style={{justifyContent: 'space-evenly', whiteSpace:  'nowrap'}}>
                 <span className='clickable-button' onClick={openResponseForm}>
                     <FontAwesomeIcon icon={faReply} /> Odpovedať
                 </span>
 
                 <span className='clickable-button' onClick={() => setIsViewingResponses(true)}>
-                    <span className="single-row" style={{columnGap: '10px'}}>
+                    <span className="single-row" style={{columnGap: '5px'}}>
                         <div style={{position: 'relative'}}>
                             <FontAwesomeIcon style={{transform: 'translateY(10%)'}} icon={faMessage} />
                             <p className="response-count" >{responses.length}</p>
@@ -86,7 +86,7 @@ export default function Report({ rank, verdict, penalties, reportID, videos, con
                 </span>
 
                 <span className='clickable-button' onClick={openVerdict}>
-                    <FIA style={{height: '15px'}}/> Rozhodutie FIA
+                    <img src={FIA} alt="FIA" className="fia-logo" /> Rozhodnutie FIA
                 </span>
             </div>
 

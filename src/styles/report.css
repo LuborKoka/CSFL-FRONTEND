@@ -2,12 +2,20 @@
   position: relative;
   padding: 2rem 0 3rem;
 }
+.report-card .fia-logo {
+  height: 15px;
+}
 
 .text-content {
   box-shadow: 0 0 10px rgba(239, 239, 239, 0.4);
   min-height: 7.5rem;
   padding: 1rem;
   font-size: 16px;
+}
+@supports not (box-shadow: 0 0 10px rgba(239, 239, 239, 0.4)) {
+  .text-content {
+    border: 1px solid #EFEFEF;
+  }
 }
 .text-content + label {
   transform: scale(0.8) translateY(-2rem);
@@ -48,6 +56,19 @@
   grid-template-columns: 130px 1fr;
   grid-template-rows: 1.2em;
   padding-bottom: 0.5rem;
+}
+
+@media screen and (max-width: 600px) {
+  .report-card .fia-logo {
+    height: 10px;
+  }
+  .report-card .clickable-button {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+  .response-count {
+    left: 2.5px;
+  }
 }
 
 /*# sourceMappingURL=report.css.map */

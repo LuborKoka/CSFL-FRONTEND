@@ -46,16 +46,16 @@ export default function AddReport() {
         setFiles(p => [...p, ...files.map(f => {return {id: generateRandomString(12), file: f}})])        
     }
 
-    function handleVideoInput(e: React.FormEvent) {
+    function handleVideoInput(e: React.ChangeEvent<HTMLInputElement>) {
         setIsEmptyVideo(false)
-        e.preventDefault()
-        if ( video.current === null ) return
+        //if ( video.current === null ) return
 
-        const link = video.current.value
+        const link = e.target.value
 
         if ( validateURL(link) ) {
             setLinks(p => [...p, {url: link, id: generateRandomString(12)}])
-            video.current.value = ''
+            //video.current.value = ''
+            e.target.value = ''
         }   
     }
 
@@ -140,7 +140,7 @@ export default function AddReport() {
                     <label htmlFor='raceName'>Preteky</label>
                 </div>
                 <div className="labeled-input perma-active" >
-                    <Select name="reported-drivers" options={[{value: 'hra', label: 'Hra'}, ...driversFromQuery(query.data, user?.id)]} isMulti onChange={handleDriversChange} styles={selectMultiValueStyles()} />
+                    <Select name="reported-drivers" options={[{value: 'hra', label: 'Hra'}, ...driversFromQuery(query.data, user?.id)]} isMulti onChange={handleDriversChange} styles={selectMultiValueStyles()} placeholder='Hľadaj' />
                     <label htmlFor="reported-driver">Nahlásení hráči</label>
                     { isEmptyTarget && <p className='input-error'>Musíš nahlásiť aspoň jedného hráča alebo hru.</p>}
                 </div>
@@ -175,11 +175,11 @@ export default function AddReport() {
                         </div>
                         
                         <div className='center'>
-                        <label className='clickable-button' id='custom-input'>
-                            <input type="file" multiple disabled={isPending} style={{display: 'none'}}
-                            accept="image/jpeg, image/png, video/mp4, video/x-matroska, video/webm"  onChange={handleFileInput} />
-                            <span>Vyber video alebo obrázok</span>
-                        </label>
+                            <label className='clickable-button' id='custom-input'>
+                                <input type="file" multiple disabled={isPending} style={{display: 'none'}}
+                                accept="image/jpeg, image/png, video/mp4, video/x-matroska, video/webm"  onChange={handleFileInput} />
+                                <span>Vyber video alebo obrázok</span>
+                            </label>
                         </div>
                     </div>
                         
@@ -192,15 +192,12 @@ export default function AddReport() {
                             }
                         </div>
 
-                        <form className='video-submit' onSubmit={handleVideoInput}>
+                        <div className='video-submit'>
                             <div className='labeled-input'>
-                                <input className='form-input' required ref={video} name='video' type="url"/>
+                                <input className='form-input' required name='video' type="url" style={{width: '95%'}} onChange={handleVideoInput} />
                                 <label htmlFor='video'>Pridaj link na video</label>
                             </div>
-                            <button className="svg-button" type="submit">
-                                <img alt="submit" src={PaperPlane} width='100%' />
-                            </button>
-                        </form>
+                        </div>
                     </div>
                 </div>
 
@@ -244,14 +241,8 @@ function driversFromQuery(data: {drivers: Driver[]} | undefined, id: string | un
 }
 
 function validateURL(url: string) {
-    const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+ // domain name and extension
-    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-    '(\\:\\d+)?'+ // port
-    '(\\/[-a-z\\d%_.~+]*)*'+ // path
-    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-    return pattern.test(url);
+    const pattern = new RegExp('^(http(s)?:\\/\\/)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)$')
+    return pattern.test(url)
 }
 
 

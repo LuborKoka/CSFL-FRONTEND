@@ -916,6 +916,7 @@
   top: 20px;
   right: -60px;
   display: none;
+  background-color: #001010;
 }
 .hamburger-position button {
   background-color: transparent;
@@ -951,7 +952,13 @@
   flex-direction: column;
 }
 .section-navigation ul .clickable-button {
+  margin: 0.25rem 0;
   text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+}
+.section-navigation .active {
+  background-color: #EFEFEF;
+  color: #001010;
 }
 
 .bottom-tabs {

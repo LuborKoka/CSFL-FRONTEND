@@ -42,7 +42,7 @@ export default function Reports() {
                     <Report key={r.reportID} {...r} setResponseData={setResponseData} />
                 )
             }
-            <ReportResponse responseData={responseData} setResponseData={setResponseData} />
+            <ReportResponse responseData={responseData} setResponseData={setResponseData} raceID={raceID} />
         </>
     )
 }

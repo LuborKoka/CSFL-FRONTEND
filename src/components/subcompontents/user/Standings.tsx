@@ -12,7 +12,7 @@ import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons"
 
 export default function Standings() {
     const { seasonID } = useParams()
-    const [isPoints, setIsPoints] = useState(false)
+    const [isChecked, setIsChecked] = useState(false)
 
     const query = useQuery([`season_standings_${seasonID}`], () => fetchStandings(seasonID))
 
@@ -20,7 +20,7 @@ export default function Standings() {
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         startTransition(() => {
-            setIsPoints(e.target.checked)
+            setIsChecked(e.target.checked)
         })
     }
 
@@ -42,19 +42,19 @@ export default function Standings() {
         <>
             <h2 className="section-heading fade-in-out-border">Tabuľka priebežného poradia jazdcov</h2>
             <div className='center switch-container section-heading fade-in-out-border'>
-                <span>Poradie</span>
+                <span style={{cursor: 'pointer'}} onClick={() => setIsChecked(false)}>Poradie</span>
                 <label className="switch">
-                    <input type="checkbox" onChange={handleChange} />
+                    <input type="checkbox" checked={isChecked} onChange={handleChange} />
                     <span className="slider round"></span>
                 </label>
-                <span>Body</span>
+                <span style={{cursor: 'pointer'}} onClick={() => setIsChecked(true)}>Body</span>
             </div>
 
             <div className="overflow-y">
                 <table className="table standings-table">
                     <thead>
                         <tr>
-                            <th></th><th style={{textAlign: 'left'}}>Meno</th>
+                            <th></th><th style={{textAlign: 'left', paddingLeft: '8px'}}>Meno</th>
                             {
                                 query.data?.data.races.map(r => 
                                 <th key={r.id} >
@@ -79,9 +79,9 @@ export default function Standings() {
                                         
                                         <td key={`${d.driverID}, race${i}`}>
                                             <div className="switcher-visible">
-                                                <div className={`switcher-container ${isPoints ? '' : 'switcher-container-rank'}`}>
-                                                    <div className={`switcher-item-${isPoints ? 'active' : 'inactive'}`}>{r.points}</div>
-                                                    <div style={{color: getTextColor(r.rank)}} className={`switcher-item-${isPoints ? 'inactive' : 'active'}`}>{r.rank}</div>
+                                                <div className={`switcher-container ${ !isChecked && 'switcher-container-rank'}`}>
+                                                    <div className={`switcher-item-${isChecked ? 'active' : 'inactive'}`}>{r.points}</div>
+                                                    <div style={{color: getTextColor(r.rank)}} className={`switcher-item-${isChecked ? 'inactive' : 'active'}`}>{r.rank}</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -136,7 +136,7 @@ export default function Standings() {
                     <thead>
                         <tr>
                             <th></th>
-                            <th style={{textAlign: 'left'}}>Meno</th>
+                            <th style={{textAlign: 'left', paddingLeft: '8px'}}>Meno</th>
                             {
                                 query.data?.data.races.map((r, i) => 
                                 <th key={r.id} >

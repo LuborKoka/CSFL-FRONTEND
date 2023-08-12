@@ -83,6 +83,7 @@
     top: 20px;
     right: -60px;
     display: none;
+    background-color: $darkblue;
 
     button {
         background-color: transparent;
@@ -122,8 +123,15 @@
         @include flexColumn();
 
         .clickable-button {
+            margin: .25rem 0;
             text-decoration: none;
+            transition: background-color .2s, color .2s;
         }
+    }
+
+    .active {
+        background-color: $white;
+        color: $darkblue;
     }
 }
 

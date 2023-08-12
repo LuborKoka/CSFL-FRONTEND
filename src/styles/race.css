@@ -22,13 +22,20 @@
   background-color: #002020;
 }
 
+.standings-table thead th:nth-child(1) {
+  z-index: 1;
+  position: sticky;
+  left: -5px;
+  background-color: #001010;
+  border-top: 2px solid #001010;
+}
 .standings-table thead th:nth-child(2) {
   background-color: #001010;
   z-index: 1;
   position: sticky;
-  left: -1px;
+  left: 27px;
 }
-.standings-table tbody tr:hover td:nth-child(2) {
+.standings-table tbody tr:hover td:nth-child(2), .standings-table tbody tr:hover td:nth-child(1) {
   background-color: #244 !important;
 }
 .standings-table tbody tr {
@@ -38,19 +45,24 @@
   padding: 0.5rem;
   text-align: left;
 }
+.standings-table tbody tr > td:nth-child(1) {
+  position: sticky;
+  left: -5px;
+}
 .standings-table tbody tr > td:nth-child(2) {
   text-align: left;
   position: sticky;
-  left: -1px;
-  z-index: 1;
+  left: 27px;
 }
-.standings-table tbody > tr:nth-child(2n) td:nth-child(2) {
+.standings-table tbody > tr:nth-child(2n) td:nth-child(2), .standings-table tbody > tr:nth-child(2n) td:nth-child(1) {
   background-color: #001010;
   transition: background-color 0.2s;
+  z-index: 1;
 }
-.standings-table tbody > tr:nth-child(2n+1) td:nth-child(2) {
+.standings-table tbody > tr:nth-child(2n+1) td:nth-child(2), .standings-table tbody > tr:nth-child(2n+1) td:nth-child(1) {
   background-color: #002020;
   transition: background-color 0.2s;
+  z-index: 1;
 }
 .standings-table .switcher-visible {
   overflow-x: hidden;

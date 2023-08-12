@@ -24,17 +24,17 @@ export default function RaceNav() {
                     <Outlet context={context} />
                 </div>
             </div>
-            <div className='section-navigation'>
+            <aside className='section-navigation'>
                 {/*ten prvy link moze ist asi do pici, to bude v tej breadcrumbs navigacii*/}
                 <ul>
-                    <NavLink className='clickable-button' to={`${raceID}`}>Prehľad</NavLink>
+                    <NavLink className='clickable-button' to={`${raceID}/overview`}>Prehľad</NavLink>
                     <NavLink className='clickable-button' to={`${raceID}/results`}>Výsledky</NavLink>
                     <NavLink className='clickable-button' to={`${raceID}/standings`}>Tabuľka</NavLink>
                     <NavLink className='clickable-button' to={`${raceID}/reports`}>Reporty</NavLink>
-                    <NavLink className='clickable-button' to={`${raceID}/reports/new`}>Pridať report</NavLink>
+                    <NavLink className='clickable-button' to={`${raceID}/new-report`}>Pridať report</NavLink>
                     <button onClick={openFiaForm} className='clickable-button single-row'>Kancelária FIA</button>
                 </ul>
-            </div>
+            </aside>
 
             {
                 isAddingVerdict ? <FIAVerdict setIsAddingVerdict={setIsAddingVerdict} /> : null

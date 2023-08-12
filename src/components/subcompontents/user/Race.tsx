@@ -25,7 +25,7 @@ export default function Race({ id, isSprint, raceName, date, image }: Props) {
 
     return(
 
-        <Link className='tiltable-card card' onClick={setRace} to={`race/${id}`} >
+        <Link className='tiltable-card card' onClick={setRace} to={`race/${id}/overview`} >
             <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
             <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
             <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>

@@ -4,6 +4,10 @@
     position: relative;
     //border-radius: 20px;
     padding: 2rem 0 3rem;
+
+    .fia-logo {
+        height: 15px;
+    }
 }
 
 .text-content {
@@ -59,4 +63,23 @@
     grid-template-columns: 130px 1fr;
     grid-template-rows: 1.2em;
     padding-bottom: .5rem;
+}
+
+
+
+@media screen and (max-width: 600px) {
+    .report-card {
+        .fia-logo {
+            height: 10px;
+        }
+
+        .clickable-button {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+    }
+
+    .response-count {
+        left: 2.5px;
+    }
 }

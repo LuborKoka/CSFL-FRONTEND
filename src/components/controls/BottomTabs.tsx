@@ -8,7 +8,7 @@ export default function BottomTabs() {
     const { raceID } = useParams()
 
     return(
-        <div className='bottom-tabs'>
+        <nav className='bottom-tabs'>
             <NavLink className='bottom-tabs-link' to={`${raceID}/results`}>
                 <div>
                     <FontAwesomeIcon icon={faTable} />
@@ -27,13 +27,13 @@ export default function BottomTabs() {
                 </div>
                 Reporty
             </NavLink>
-            <NavLink className='bottom-tabs-link' to={`${raceID}/reports/new`}>
+            <NavLink className='bottom-tabs-link' to={`${raceID}/new-report`}>
                 <div>
                     <FontAwesomeIcon icon={faPlusCircle} />
                 </div>
                 Nový report
             </NavLink>
 
-        </div>
+        </nav>
     )
 }

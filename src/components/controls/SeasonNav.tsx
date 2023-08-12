@@ -47,7 +47,7 @@ export default function SeasonNav() {
 
 
 function lastLink(pathname: string): JSX.Element | null {
-    if ( pathname.includes('/reports/new') ) return <>{'>'} <Link className='link' to={pathname}>Pridať report</Link></>
+    if ( pathname.includes('/new-report') ) return <>{'>'} <Link className='link' to={pathname}>Pridať report</Link></>
 
     if ( pathname.includes('/reports')) return <>{'>'} <Link className='link' to={pathname}>Reporty</Link> </>
 

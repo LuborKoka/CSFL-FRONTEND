@@ -9,6 +9,7 @@ import { faRectangleXmark } from '@fortawesome/free-regular-svg-icons'
 import {ReactComponent as PaperPlane} from '../../../images/sipka.svg'
 import { AddedLink, AddedVideo } from './AddReport'
 import useConfirmation from '../../../hooks/useConfirmation'
+import { useQueryClient } from '@tanstack/react-query'
 
 type Props = {
     responseData: {
@@ -17,10 +18,11 @@ type Props = {
         from: string,
         targets: {name: string, id: string}[]
     },
-    setResponseData: React.Dispatch<React.SetStateAction<{isActive: boolean,rank: number, from: string, targets: {name: string, id: string}[]}>>
+    setResponseData: React.Dispatch<React.SetStateAction<{isActive: boolean,rank: number, from: string, targets: {name: string, id: string}[]}>>,
+    raceID: string | undefined
 }
 
-export default function ReportResponse({ responseData, setResponseData }: Props) {
+export default function ReportResponse({ responseData, setResponseData, raceID }: Props) {
     const content = useRef<HTMLTextAreaElement>(null)
     const video = useRef<HTMLInputElement>(null)
 
@@ -32,6 +34,8 @@ export default function ReportResponse({ responseData, setResponseData }: Props)
     const user = useContext(UserContext as Context<UserTypes>)
 
     const race = useOutletContext<RaceContext>()[0]
+
+    const queryClient = useQueryClient()
 
     const [confirmation, showConfirmation] = useConfirmation()
 
@@ -56,16 +60,19 @@ export default function ReportResponse({ responseData, setResponseData }: Props)
         setFiles(p => [...p, ...files.map(f => {return {id: generateRandomString(12), file: f}})]) 
     }
 
-    function handleVideoInput(e: React.FormEvent) {
-        e.preventDefault()
-        if ( video.current === null ) return
-
-        const link = video.current.value
+    function handleVideoInput(e: React.ChangeEvent<HTMLInputElement>) {
+        const link = e.target.value
 
         if ( validateURL(link) ) {
             setLinks(p => [...p, {url: link, id: generateRandomString(12)}])
-            video.current.value = ''
+            e.target.value = ''
         }   
+    }
+
+
+    function confirm() {
+        queryClient.invalidateQueries([`race_${raceID}_reports`])
+        setResponseData(p => {return {...p, isActive: false}})
     }
 
     function submitReportResponse(e: React.MouseEvent<HTMLButtonElement>) {
@@ -91,7 +98,7 @@ export default function ReportResponse({ responseData, setResponseData }: Props)
             }
         })
         .then(() => {
-            showConfirmation(() => setResponseData(p => {return {...p, isActive: false}}))
+            showConfirmation(confirm)
         })
         .catch((e: AxiosError) => {
 
@@ -166,13 +173,12 @@ export default function ReportResponse({ responseData, setResponseData }: Props)
                             }
                         </div>
 
-                        <form className='video-submit' onSubmit={handleVideoInput}>
+                        <div className='video-submit'>
                             <div className='labeled-input'>
-                                <input className='form-input' required ref={video} name='video' type="url"/>
+                                <input className='form-input' required name='video' type="url" style={{width: '95%'}} onChange={handleVideoInput}/>
                                 <label htmlFor='video'>Pridaj link na video</label>
                             </div>
-                            <button className="svg-button" type="submit"><PaperPlane /></button>
-                        </form>
+                        </div>
                     </div>
                         
                 </div>                       
@@ -202,12 +208,6 @@ export default function ReportResponse({ responseData, setResponseData }: Props)
 
 
 function validateURL(url: string) {
-    const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+ // domain name and extension
-    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-    '(\\:\\d+)?'+ // port
-    '(\\/[-a-z\\d%_.~+]*)*'+ // path
-    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-    return pattern.test(url);
+    const pattern = new RegExp('^(http(s)?:\\/\\/)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)$')
+    return pattern.test(url)
 }

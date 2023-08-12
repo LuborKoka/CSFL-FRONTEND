@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import Auth from './components/screens/Auth';
 import Reports from './components/screens/Reports';
 import Nav from './components/controls/Nav';
@@ -58,8 +58,6 @@ function App() {
   useEffect(() => {
     const token = secureLocalStorage.getItem(storageKeyName) as string | null //localStorage.getItem(storageKeyName)
 
-
-
     if (token !== null) {
       const data = jwtDecode(token) as { username: string, id: string }
 
@@ -92,11 +90,11 @@ function App() {
             <Route path='/seasons' element={<SeasonNav />} >
               <Route path=':seasonID' element={<Season />} />
               <Route path=':seasonID/race' element={<RaceNav />}>
-                <Route path=':raceID' element={<RaceOverview />} />
+                <Route path=':raceID/overview' element={<RaceOverview />} />
                 <Route path=':raceID/standings' element={<Standings />} />
                 <Route path=':raceID/reports' element={<Reports />} />
                 <Route path=':raceID/results' element={<RaceResults />} />
-                <Route path=':raceID/reports/new' element={<AddReport />} />
+                <Route path=':raceID/new-report' element={<AddReport />} />
 
               </Route>
               {/*<Route path=':seasonID/race/:raceID' element={<RaceDetails />} />

@@ -38,7 +38,7 @@ export default function AdminNav() {
             </div>
             
 
-            <div className='section-navigation'>
+            <nav className='section-navigation'>
                 <ul>
                     {
                         seasonID === undefined ? null :
@@ -52,7 +52,7 @@ export default function AdminNav() {
                     <NavLink className='clickable-button' to={`/${randomURIkey}/admin/rules`}>Upraviť pravidlá</NavLink>
                     <NavLink className='clickable-button' to={`/${randomURIkey}/admin/new-season`}>Vytvoriť sezónu</NavLink>
                 </ul>
-            </div>
+            </nav>
 
         </div>
     )
