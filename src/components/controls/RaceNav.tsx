@@ -32,7 +32,7 @@ export default function RaceNav() {
                     <NavLink className='clickable-button' to={`${raceID}/standings`}>Tabuľka</NavLink>
                     <NavLink className='clickable-button' to={`${raceID}/reports`}>Reporty</NavLink>
                     <NavLink className='clickable-button' to={`${raceID}/reports/new`}>Pridať report</NavLink>
-                    <button onClick={openFiaForm} className='clickable-button single-row'><FIA style={{height: '20px'}} /></button>
+                    <button onClick={openFiaForm} className='clickable-button single-row'>Kancelária FIA</button>
                 </ul>
             </div>
 

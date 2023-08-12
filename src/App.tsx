@@ -30,6 +30,7 @@ import RaceOverview from './components/subcompontents/user/RaceOverview';
 import axios from 'axios';
 import Rules from './components/screens/Rules';
 import secureLocalStorage from 'react-secure-storage';
+import EditRules from './components/subcompontents/admin/EditRules';
 
 export const URI = `http://192.168.100.22:8000/api`
 
@@ -105,6 +106,7 @@ function App() {
 
             <Route path={`/${randomURIkey}/admin`} element={<AdminNav />}>
               <Route index element={<AdminUI />} />
+              <Route path='rules' element={<EditRules />} />
               <Route path='new-season' element={<CreateSeason />} />
               <Route path='season/:seasonID' element={<EditSeason />} />
               <Route path='season/:seasonID/drivers' element={<AssignDriversTeams />} />

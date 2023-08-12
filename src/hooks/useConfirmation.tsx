@@ -5,7 +5,6 @@ import { useState } from 'react'
 
 export default function useConfirmation(): [JSX.Element | null, (callback?: () => any) => Promise<void>] {
     const [isShown, setIsShown] = useState(false)
-    const a = useState()
 
 
     //takes an optional parameter, function what they want to do after the confirmation sign disappears
@@ -15,6 +14,7 @@ export default function useConfirmation(): [JSX.Element | null, (callback?: () =
         setIsShown(false)
         if ( callback !== undefined ) callback()
     }
+
 
     const jsx =
     <div className='confirmation'>
