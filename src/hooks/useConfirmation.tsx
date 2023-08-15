@@ -3,6 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from 'react'
 
 
+/**
+ * A custom hook for displaying confirmation messages.
+ * @returns An array containing a JSX element representing the confirmation message
+ *          and a function to trigger the confirmation display. This function takes an optional parameter, 
+ *          function that you want to call after the confirmation sign disappears.
+ */
 export default function useConfirmation(): [JSX.Element | null, (callback?: () => any) => Promise<void>] {
     const [isShown, setIsShown] = useState(false)
 

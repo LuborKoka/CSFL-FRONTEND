@@ -3,7 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 
 
-
+/**
+ * Displays an error message for the user.
+ * 
+ * @returns An array containing a JSX element representing the error message
+ *          and a function to trigger the error message display. This function takes one parameter: the content of the message.
+ */
 export default function useErrorMessage(): [JSX.Element | null, (messageContent: string) => void] {
     const [isOpen, setIsOpen] = useState(false)
     const [text, setText] = useState('')
