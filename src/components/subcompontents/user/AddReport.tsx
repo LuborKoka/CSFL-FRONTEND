@@ -140,7 +140,7 @@ export default function AddReport() {
                     <label htmlFor='raceName'>Preteky</label>
                 </div>
                 <div className="labeled-input perma-active" >
-                    <Select name="reported-drivers" options={[{value: 'hra', label: 'Hra'}, ...driversFromQuery(query.data, user?.id)]} isMulti onChange={handleDriversChange} styles={selectMultiValueStyles()} placeholder='Hľadaj' />
+                    <Select name="reported-drivers" options={[{value: 'hra', label: 'Hra'}, ...driversFromQuery(query.data, user?.id)]} isMulti onChange={handleDriversChange} styles={selectMultiValueStyles()} placeholder='Hľadať' />
                     <label htmlFor="reported-driver">Nahlásení hráči</label>
                     { isEmptyTarget && <p className='input-error'>Musíš nahlásiť aspoň jedného hráča alebo hru.</p>}
                 </div>
