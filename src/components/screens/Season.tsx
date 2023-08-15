@@ -6,8 +6,11 @@ import Race from "../subcompontents/user/Race";
 import '../../styles/seasons.css'
 import '../../styles/tiltableCard.css'
 
-import { useOutletContext, useParams } from "react-router-dom";
+import { Link, useOutletContext, useParams } from "react-router-dom";
 import { RaceContext } from "../controls/SeasonNav";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowUpRightFromSquare, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import { RED, WHITE } from "../../constants";
 
 
 export default function Season() {
@@ -20,18 +23,43 @@ export default function Season() {
     const query = useQuery([`scheduled-races-${seasonID}`], () => fetchData(seasonID, setSeason))
     const drivers = useQuery([`season-drivers-user-${seasonID}`], () => fetchSeasonDrivers(seasonID, user?.token))
 
+    const calendar = 
+    <>
+        <div className='section-heading fade-in-out-border header-with-time'>
+            <h2>Kalendár</h2>
+            <Link className='link-in-header' to={`/seasons/${seasonID}/standings`}>
+                <h2 className='clickable-button'>
+                    Tabuľka
+                    <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+                </h2>
+                
+            </Link>
+        </div>
+        
+
+        {
+            query?.data?.races.map(r => {
+                return <Race key={r.id} {...r} />
+            })
+        }
+    </>
+
+    const emptyCalendar =
+    <>
+        <br/><br/>
+        <h2 className='section-heading fade-in-out-border' style={{textAlign: 'center'}}> 
+            <FontAwesomeIcon icon={faExclamationTriangle} style={{color: RED, margin: '0 2rem'}} />
+            Kalendár pre túto sezónu je zatiaľ prázdny.
+            <FontAwesomeIcon icon={faExclamationTriangle} style={{color: RED, margin: '0 2rem'}} />
+        </h2>
+
+    </>
 
 
     return(
         <div className='section'>
-            <h2 className="section-heading fade-in-out-border">
-                Kalendár
-            </h2>
-
             {
-                query?.data?.races.map(r => {
-                    return <Race key={r.id} {...r} />
-                })
+                query.data?.races.length === 0 ? emptyCalendar : calendar
             }
 
             <h2 className="section-heading fade-in-out-border" style={{marginTop: '2rem'}}>
