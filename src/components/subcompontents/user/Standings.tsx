@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useParams } from "react-router-dom"
+import { useLocation, useParams } from "react-router-dom"
 import { URI } from "../../../App"
 import { useQuery } from "@tanstack/react-query"
 import { useState, useTransition } from 'react'
@@ -15,6 +15,8 @@ export default function Standings() {
     const [isChecked, setIsChecked] = useState(false)
 
     const query = useQuery([`season_standings_${seasonID}`], () => fetchStandings(seasonID))
+
+    const location = useLocation()
 
     const startTransition = useTransition()[1]
 
@@ -39,7 +41,7 @@ export default function Standings() {
     }
 
     return(
-        <>
+        <div className={ `${!location.pathname.includes('/race') && 'section'}`}>
             <h2 className="section-heading fade-in-out-border">Tabuľka priebežného poradia jazdcov</h2>
             <div className='center switch-container section-heading fade-in-out-border'>
                 <span style={{cursor: 'pointer'}} onClick={() => setIsChecked(false)}>Poradie</span>
@@ -165,8 +167,7 @@ export default function Standings() {
                     </tbody>
                 </table>
             </div>
-
-        </>
+        </div>
     )
 }
 
