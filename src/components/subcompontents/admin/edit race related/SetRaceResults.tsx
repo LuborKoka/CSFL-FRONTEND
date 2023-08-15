@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext, Context } from 'react'
+import React, { useState, useRef, useContext, Context, useEffect } from 'react'
 import axios from 'axios'
 import { URI, UserContext, UserTypes, insertTokenIntoHeader } from '../../../../App'
 import { useQuery } from '@tanstack/react-query'
@@ -7,6 +7,8 @@ import { selectSingleValueStyles } from '../edit season related/CreateRace'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLightbulb } from '@fortawesome/free-solid-svg-icons'
 import useConfirmation from '../../../../hooks/useConfirmation'
+import SingleDriverResult from './SingleDriverResults'
+import useErrorMessage from '../../../../hooks/useErrorMessage'
 
 type Results = {
     results: {
@@ -19,9 +21,7 @@ type Results = {
             time: string,
             plusLaps: number
         }[]
-    },
-    fastestLap: string
-
+    }
 }
 
 type ResultsProps = {
@@ -31,58 +31,43 @@ type ResultsProps = {
 
 export default function SetRaceResults({ raceID }: ResultsProps) {
     const [isPending, setIsPending] = useState(false)
+    const [fastestLapDriver, setFastestLapDriver] = useState<{label: string, value: string} | null>(null)
 
     const { user } = useContext(UserContext as Context<UserTypes>)
 
-    const query = useQuery([`edit-race-results-${raceID}`], () => fetchRaceResults(raceID, user?.token))
+    const query = useQuery([`edit-race-results-${raceID}`], () => fetchRaceResults(raceID, user?.token), {staleTime: Infinity})
 
-    const results = useRef<Results>({results: {leader: null, otherDrivers: []}, fastestLap: ''})
+    const results = useRef<Results>({results: {leader: null, otherDrivers: []}})
 
     const [confirmation, showConfirmation] = useConfirmation()
+    const [message, showMessage] = useErrorMessage()
 
     function handleFastestLapChange(v: SingleValue<{label: string, value: string}>) {
-        if ( v === null ) return
-
-        results.current.fastestLap = v.value
+        setFastestLapDriver(v)
     }
 
-    function handlePlusLapsChange(e: React.ChangeEvent<HTMLInputElement>, id: string) {
-        const driver = results.current.results.otherDrivers.find(d => d.id === id)
-        if ( driver === undefined ) {
-            results.current.results.otherDrivers.push({
-                id: id,
-                time: '',
-                plusLaps: e.target.valueAsNumber
-            })
-            return
-        }
-
-        driver.plusLaps = e.target.valueAsNumber
-    }
-
-    function handleChange(e: React.ChangeEvent<HTMLInputElement>, id: string) {
-        //treba este vyriesit kontrolu, ci to je leader
-        //vyriesene
-        if ( matchesTimeFormat(e.target.value) ) {
+    function saveDriverResult(driverID: string, resultTime: string, plusLaps: number) {
+        //if race leader/winner
+        if ( matchesTimeFormat(resultTime) ) {
             results.current.results.leader = {
-                id: id,
-                time: e.target.value.replace(',', '.')
+                id: driverID,
+                time: resultTime
             }
             return
         }
 
-        const driver = results.current.results.otherDrivers.find(d => d.id === id)
-        
-        if ( driver === undefined ) {
+        const driver = results.current.results.otherDrivers.find(d => d.id === driverID)
+
+        if ( !driver ) {
             results.current.results.otherDrivers.push({
-                id: id,
-                time: e.target.value.replace(',', '.'),
-                plusLaps: 0
+                id: driverID, 
+                time: resultTime, 
+                plusLaps: plusLaps
             })
             return
         }
-
-        driver.time = e.target.value
+        driver.time = resultTime
+        driver.plusLaps = plusLaps
     }
 
     function submit(e: React.FormEvent) {
@@ -100,7 +85,7 @@ export default function SetRaceResults({ raceID }: ResultsProps) {
                 results: {
                     leader: results.current.results.leader,
                     otherDrivers: results.current.results.otherDrivers,
-                    fastestLap: results.current.fastestLap
+                    fastestLap: fastestLapDriver?.value
                 }
             }
         }, {
@@ -108,14 +93,21 @@ export default function SetRaceResults({ raceID }: ResultsProps) {
                 Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
             }
         })
-        .then((r) => {
+        .then(() => {
             showConfirmation()
         })
-        .catch((e) => {
+        .catch((e: unknown) => {
 
         })
         .finally(() => setIsPending(false))
     }
+
+    useEffect(() => {
+        if ( !query.data ) return
+
+        if ( query.data.fastestLap ) 
+            setFastestLapDriver({label: query.data.fastestLap.driverName, value: query.data.fastestLap.driverID})
+    }, [query.data])
 
     return(
         <div>
@@ -138,26 +130,16 @@ export default function SetRaceResults({ raceID }: ResultsProps) {
                 <div className='auto-grid' style={{padding: '2rem 1rem', gap: '1rem 2rem'}}>
                     {
                         query.data?.drivers.map(d => 
-                            <div>
-                                <div className='labeled-input' key={d.id}>
-                                    <input name={d.name} className='form-input' type="text" required
-                                    style={{color: d.color, boxShadow: `0 0 10px 5px ${d.color}`}}  onChange={(e) => handleChange(e, d.id)} />
-                                
-                                    <label style={{color: d.color}} htmlFor={d.name}>{d.name}</label>
-
-                                </div>
-
-                                <input type='number' min={0} onChange={(e) => handlePlusLapsChange(e, d.id)}  />
-                            </div>
-                            
+                            <SingleDriverResult {...d} driverID={d.id} driverName={d.name} key={d.id} saveResult={saveDriverResult} /> 
                         )
                     }
                 </div>
                 
                 
-                <div style={{padding: '0 1rem'}}>
-                    <Select required placeholder='Majiteľ najrýchlejšieho kola' styles={selectSingleValueStyles()} onChange={handleFastestLapChange}
-                    options={query.data === undefined ? [] : query.data.drivers.map(d => {return {label: d.name, value: d.id}})}/>
+                <div className='labeled-input' style={{padding: '0 1rem'}}>
+                    <Select required placeholder='Hľadať' styles={selectSingleValueStyles()} onChange={handleFastestLapChange} value={fastestLapDriver}
+                    options={query.data === undefined ? [] : query.data.drivers.map(d => {return {label: d.name, value: d.id}})} name='fl-owner' />
+                    <label style={{transform: 'translate(-.2rem, -1.5rem) scale(.8)'}} htmlFor='fl-owner'>Majiteľ najrýchlejšieho kola</label>
                 </div>
 
                 
@@ -174,14 +156,18 @@ export default function SetRaceResults({ raceID }: ResultsProps) {
 }
 
 
-
 async function fetchRaceResults(id: string | undefined, token: string | null | undefined) {
     type Data = {
         drivers: {
             id: string,
             name: string, 
-            color: string
-        }[]
+            color: string,
+            time: string | null
+        }[],
+        fastestLap?: {
+            driverID: string,
+            driverName: string
+        }
     }
     const response = await axios.get<Data>(`${URI}/admins/edit-race/${id}/results/`, {
         headers: {
@@ -196,4 +182,4 @@ async function fetchRaceResults(id: string | undefined, token: string | null | u
 function matchesTimeFormat(input: string): boolean {
     const regex = /^(?!\+)([0-5]?[0-9]):([0-5]?[0-9])([.,][0-9]{1,3})?/
     return regex.test(input)
-  }
+}
