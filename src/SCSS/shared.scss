@@ -199,6 +199,11 @@
     }
 }
 
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 .center-right {
     right: 1rem;

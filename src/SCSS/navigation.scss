@@ -143,18 +143,26 @@
     display: none;
     background-color: $darkblue;
     justify-content: space-evenly;
-    padding: 5px 0;
+    padding: 5px ;
 
     &-link {
         display: grid;
         place-content: center center;
         color: $white;
         text-decoration: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        //border: 2px solid transparent;
 
         & > div:first-child {
             display: flex;
             justify-content: center;
         }
+    }
+
+    .active {
+        //border-color: $white;
+        box-shadow: 0 0 5px $white;
     }
 }
 

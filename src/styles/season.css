@@ -1,50 +1,92 @@
-.card {
-  display: inline-block;
+.content-container {
   color: #EFEFEF;
+  position: relative;
+  max-height: 100lvh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 1fr auto;
+}
+.content-container .section-navigation {
+  grid-column: 2;
+  grid-row: 1/span 2;
+}
+
+.link-in-header {
+  text-decoration: none;
+  color: #EFEFEF;
+}
+.link-in-header svg {
+  padding-left: 0.5rem;
+}
+
+#link-to-standings {
+  transition: all 0.2s;
+}
+#link-to-standings:hover {
+  opacity: 0.8;
+}
+
+.season-with-race-cards {
+  display: block;
+  position: relative;
+  color: #EFEFEF;
+}
+
+.card {
   text-decoration: none;
   position: relative;
-  padding: 1em 2em;
-  text-align: center;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  width: 350px;
+  min-height: 200px;
 }
-.card::before {
-  content: "";
-  width: 100%;
-  height: 101%;
-  border-left: 1px solid #EFEFEF;
-  border-right: 1px solid #EFEFEF;
-  background-color: transparent;
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  transform: scaleY(40%);
-  opacity: 0;
-  transition: all 0.4s;
+
+.team-members-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 2rem;
+  position: relative;
 }
-.card::after {
-  content: "";
-  width: 100%;
-  height: 100%;
-  border-top: 1px solid #EFEFEF;
-  border-bottom: 1px solid #EFEFEF;
-  background-color: transparent;
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  transform: scaleX(40%);
-  opacity: 0;
+
+.team-logo {
+  width: clamp(150px, 25vw, 300px);
 }
-.card:hover::before {
-  opacity: 0.6;
-  transform: scaleY(100%);
+
+.team-members {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto auto;
+  padding-bottom: 0.5rem;
 }
-.card:hover::after {
-  opacity: 0.6;
-  transform: scaleX(100%);
+.team-members::after {
+  height: 1px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .card::after, .card::before {
     transition: all 0.4s;
+  }
+}
+@media screen and (max-width: 600px) {
+  .content-container {
+    grid-template-columns: 100%;
+  }
+}
+@media screen and (max-width: 1000px) {
+  .header-navigation {
+    padding: 10px 1rem 0.5rem 65px;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: #000606;
+  }
+  .header-navigation h3 {
+    font-size: 30px;
+  }
+}
+@media screen and (max-width: 1415px) {
+  .team-members-grid {
+    grid-template-columns: 1fr;
   }
 }
 
