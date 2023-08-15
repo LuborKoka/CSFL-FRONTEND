@@ -8,7 +8,7 @@
   top: 0.5rem;
   pointer-events: none;
   font-size: 20px;
-  background-color: #001010;
+  background-color: #000606;
   transition: all 0.3s;
 }
 .labeled-input input:focus + label, .labeled-input input:valid + label {
@@ -70,7 +70,7 @@
 .button-disabled {
   cursor: not-allowed;
   background-color: #EFEFEF;
-  color: #001010;
+  color: #000606;
 }
 
 .rotate-180 {
@@ -99,7 +99,7 @@
 .sticky-heading {
   position: sticky;
   top: -2rem;
-  background-color: #001010;
+  background-color: #000606;
   z-index: 1;
 }
 
@@ -114,7 +114,7 @@
   bottom: 0;
   width: 100%;
   height: 0.6px;
-  background-image: linear-gradient(to right, #001010, #EFEFEF, #EFEFEF, #001010);
+  background-image: linear-gradient(to right, #000606, #EFEFEF, #EFEFEF, #000606);
 }
 
 .auto-grid {
@@ -127,7 +127,7 @@
   position: fixed;
   inset: 0;
   z-index: 11;
-  background-color: #001010;
+  background-color: #000606;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -144,7 +144,7 @@
   height: 100%;
   padding: 2rem 1rem 5rem;
   overflow-y: auto;
-  background-color: #001010;
+  background-color: #000606;
   width: clamp(280px, 100%, 1000px);
   position: relative;
   box-shadow: 0 0 10px rgba(239, 239, 239, 0.4);
@@ -188,6 +188,12 @@
 }
 .icon-delete:hover {
   color: #CC1E23;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .center-right {

@@ -11,6 +11,21 @@
   grid-row: 1/span 2;
 }
 
+.link-in-header {
+  text-decoration: none;
+  color: #EFEFEF;
+}
+.link-in-header svg {
+  padding-left: 0.5rem;
+}
+
+#link-to-standings {
+  transition: all 0.2s;
+}
+#link-to-standings:hover {
+  opacity: 0.8;
+}
+
 .season-with-race-cards {
   display: block;
   position: relative;
@@ -63,7 +78,7 @@
     position: sticky;
     top: 0;
     z-index: 2;
-    background-color: #001010;
+    background-color: #000606;
   }
   .header-navigation h3 {
     font-size: 30px;

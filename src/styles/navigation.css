@@ -916,7 +916,7 @@
   top: 20px;
   right: -60px;
   display: none;
-  background-color: #001010;
+  background-color: #000606;
 }
 .hamburger-position button {
   background-color: transparent;
@@ -958,7 +958,7 @@
 }
 .section-navigation .active {
   background-color: #EFEFEF;
-  color: #001010;
+  color: #000606;
 }
 
 .bottom-tabs {
@@ -966,19 +966,24 @@
   inset: auto 0 0 0;
   z-index: 9;
   display: none;
-  background-color: #001010;
+  background-color: #000606;
   justify-content: space-evenly;
-  padding: 5px 0;
+  padding: 5px;
 }
 .bottom-tabs-link {
   display: grid;
   place-content: center center;
   color: #EFEFEF;
   text-decoration: none;
+  border-radius: 5px;
+  padding: 5px 10px;
 }
 .bottom-tabs-link > div:first-child {
   display: flex;
   justify-content: center;
+}
+.bottom-tabs .active {
+  box-shadow: 0 0 5px #EFEFEF;
 }
 
 /**
@@ -1038,7 +1043,7 @@
   }
   @supports not (box-shadow: 0 2px 15px rgba(255, 255, 255, 0.3)) {
     .nav-active {
-      background-color: #001010;
+      background-color: #000606;
     }
   }
   .breadcrumbs {
