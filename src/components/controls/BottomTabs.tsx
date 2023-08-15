@@ -1,11 +1,19 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { NavLink, useParams } from "react-router-dom"
-import Icon from '../../images/poll.svg'
 import { faAddressCard, faPlusCircle, faTable, faTableList } from "@fortawesome/free-solid-svg-icons"
+import FiaLogo from '../../images/logo_Fia.svg'
 
-export default function BottomTabs() {
+type Props = {
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
 
+
+export default function BottomTabs({ setOpen}: Props) {
     const { raceID } = useParams()
+
+    function openFiaForm() {
+        setOpen(true)
+    }
 
     return(
         <nav className='bottom-tabs'>
@@ -33,6 +41,10 @@ export default function BottomTabs() {
                 </div>
                 Nový report
             </NavLink>
+            <button onClick={openFiaForm} className='bottom-tabs-link' style={{background: 'none', border: 'none'}}>
+                <img src={FiaLogo} height='15px' alt="fia" />
+                FIA
+            </button>
 
         </nav>
     )

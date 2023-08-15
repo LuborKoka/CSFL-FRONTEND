@@ -40,7 +40,7 @@ export default function RaceNav() {
                 isAddingVerdict ? <FIAVerdict setIsAddingVerdict={setIsAddingVerdict} /> : null
             }
 
-            <BottomTabs />
+            <BottomTabs setOpen={setIsAddingVerdict} />
         </>
     )
 }
