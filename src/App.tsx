@@ -31,6 +31,7 @@ import axios from 'axios';
 import Rules from './components/screens/Rules';
 import secureLocalStorage from 'react-secure-storage';
 import EditRules from './components/subcompontents/admin/EditRules';
+import DiscordVerification from './components/screens/DiscordVerification';
 
 export const URI = `http://192.168.100.22:8000/api`
 
@@ -87,8 +88,10 @@ function App() {
             <Route path='/welcome' element={<Welcome />} />
             <Route path='/rules' element={<Rules />} />
             <Route path='/settings' element={<Settings />} />
+            <Route path='/verify-user' element={<DiscordVerification />} />
             <Route path='/seasons' element={<SeasonNav />} >
               <Route path=':seasonID' element={<Season />} />
+              <Route path=':seasonID/standings' element={<Standings />} />
               <Route path=':seasonID/race' element={<RaceNav />}>
                 <Route path=':raceID/overview' element={<RaceOverview />} />
                 <Route path=':raceID/standings' element={<Standings />} />
