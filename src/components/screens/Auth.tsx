@@ -8,7 +8,7 @@ export default function Auth() {
 
     return(
         <div className='auth-form'>
-            <h1>Vitaj V ČSFL</h1>
+            <h1>Vitaj V CSFL</h1>
             {
                 isLogin ? <Login swap={() => setIsLogin(false)}/> : <Signup swap={() => setIsLogin(true)} />
             }
