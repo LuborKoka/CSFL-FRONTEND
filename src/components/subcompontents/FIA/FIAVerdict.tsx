@@ -2,13 +2,14 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { URI } from "../../../App";
 import '../../../styles/verdict.css'
-import { useOutletContext, useParams } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import { RaceContext } from "../../controls/SeasonNav";
 import { useQuery } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRectangleXmark } from "@fortawesome/free-regular-svg-icons"
 import { faCaretDown, faRightLong, faSquareCheck, faTriangleExclamation, faLightbulb } from "@fortawesome/free-solid-svg-icons";
 import useConfirmation from "../../../hooks/useConfirmation";
+import useErrorMessage from "../../../hooks/useErrorMessage";
 
 type Props = {
     setIsAddingVerdict: React.Dispatch<React.SetStateAction<boolean>>
@@ -70,6 +71,7 @@ type RSProps = {
 function ReportSection({ rank, from, targets, reportID }: RSProps) {
     const [isExpanded, setIsExpanded] = useState(false)
     const [isSubmitted, setIsSubmitted] = useState(false)
+    const [isPending, setIsPending] = useState(false)
     const [height, setHeight] = useState('0px')
 
     const container = useRef<HTMLDivElement>(null)
@@ -77,6 +79,9 @@ function ReportSection({ rank, from, targets, reportID }: RSProps) {
     const content = useRef<HTMLTextAreaElement>(null)
 
     const [confirmation, showConfirmation] = useConfirmation()
+    const [message, showMessage] = useErrorMessage()
+
+    const navigate = useNavigate()
 
     function setPenalty(time: number, points: number, driverID: string) {
         const pen = penalties.current.find(p => p.driverID === driverID)
@@ -107,6 +112,7 @@ function ReportSection({ rank, from, targets, reportID }: RSProps) {
 
         const pents = penalties.current.filter(p => (p.penaltyPoints !== 0 || p.time !== 0) ) //poslem len tie, ktore maju aspon jednu hodnotu rozdielnu od 0
         
+        setIsPending(true)
         axios.post(`${URI}/report/${reportID}/verdict/`, {
             params: {
                 penalties: pents,
@@ -116,9 +122,15 @@ function ReportSection({ rank, from, targets, reportID }: RSProps) {
         .then((r: AxiosResponse) => {
             showConfirmation(confirm)
         })
-        .catch(e => {
+        .catch((e: unknown) => {
+            if ( e instanceof AxiosError && e.response?.data.error !== undefined ) {
+                showMessage(e.response.data.error)
+                return
+            }
 
+            showMessage('Niečo sa pokazilo, skús to znova.')
         })
+        .finally(() => setIsPending(false))
     }
 
 
@@ -180,7 +192,7 @@ function ReportSection({ rank, from, targets, reportID }: RSProps) {
                     
                     { /* isSubmitted namiesto is pending, aby sa nedalo znova odoslat report, !nemazat! */}
                     <div className='submit-button-container'>
-                        <button className={`clickable-button ${isSubmitted ? 'button-disabled' : ''}`} onClick={submit} disabled={isSubmitted} >
+                        <button className={`clickable-button ${( isSubmitted || isPending ) ? 'button-disabled' : ''}`} onClick={submit} disabled={isSubmitted} >
                             Odoslať
                         </button>
                     </div>
@@ -188,6 +200,8 @@ function ReportSection({ rank, from, targets, reportID }: RSProps) {
             </div>
 
             { confirmation }
+
+            { message }
         </div>
     )
 }
