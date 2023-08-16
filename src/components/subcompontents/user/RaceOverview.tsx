@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import React, { useContext, Context} from 'react'
 import { useParams } from "react-router-dom";
-import { URI, UserContext, UserTypes, insertTokenIntoHeader } from '../../../App';
+import { URI } from '../../../App';
 import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
@@ -12,11 +11,9 @@ import { RED } from '../../../constants';
 export default function RaceOverview() {
     const { raceID } = useParams()
 
-    const { user } = useContext(UserContext as Context<UserTypes>)
+    const query = useQuery([`race_${raceID}_drivers_overview`], () => fetchDrivers(raceID))
 
-    const query = useQuery([`race_${raceID}_drivers_overview`], () => fetchDrivers(raceID, user?.token))
-
-    if ( query.data?.length === 0 ) return(
+    if ( query.data?.teams.length === 0 ) return(
         <>
             <br/><br/>
             <h2 className='section-heading fade-in-out-border' style={{textAlign: 'center'}}> 
@@ -35,9 +32,9 @@ export default function RaceOverview() {
                 Súpiska
             </h2>
             {
-                query.data?.map(t => 
+                query.data?.teams.map(t => 
                     <div className='team-members fade-in-out-border'  key={t.teamName}>
-                        <img src={`${URI}/media/${t.logo}/`} alt={t.teamName} className='team-logo'/>
+                        <img src={`${URI}/media/${t.logo}/`} alt={t.teamName} className='team-logo' loading='lazy'/>
                         <div style={{display: 'inline-grid', placeContent: 'center flex-start', rowGap: '1rem', fontSize: '1.2rem', minWidth: '160px'}}>
                             <b style={{whiteSpace: 'nowrap'}}>
                                 {
@@ -59,7 +56,7 @@ export default function RaceOverview() {
 }
 
 
-async function fetchDrivers(id: string | undefined, token: string | null | undefined) {
+export async function fetchDrivers(id: string | undefined) {
     type Data = {
         raceName: string,
         drivers: {
@@ -69,11 +66,7 @@ async function fetchDrivers(id: string | undefined, token: string | null | undef
             logo: string
         }[]
     }
-    const res = await axios.get<Data>(`${URI}/races/${id}/drivers/`, {
-        headers: {
-            Authorization: `Bearer ${insertTokenIntoHeader(token)}`
-        }
-    })
+    const res = await axios.get<Data>(`${URI}/races/${id}/drivers/`)
 
     type TeamDriver = {
         driverID: string,
@@ -107,5 +100,10 @@ async function fetchDrivers(id: string | undefined, token: string | null | undef
         }
     }
 
-    return Object.values(teamsMap)
+    const result = {
+        raceName: res.data.raceName,
+        teams: Object.values(teamsMap)
+    }
+
+    return result
 }

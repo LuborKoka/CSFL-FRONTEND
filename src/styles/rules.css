@@ -48,10 +48,5 @@
     border-bottom: 1px solid #244;
   }
 }
-@media screen and (min-width: 1000px) {
-  #rules-header {
-    display: none;
-  }
-}
 
 /*# sourceMappingURL=rules.css.map */

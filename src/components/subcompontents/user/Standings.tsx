@@ -61,7 +61,7 @@ export default function Standings() {
                                 query.data?.data.races.map(r => 
                                 <th key={r.id} >
                                     <div className='flag-box'>
-                                        <img alt='flag' style={{objectFit: 'cover', width: '100%', height: '100%'}} loading="lazy"  src={`${URI}/media/${r.flag}/`} />                                   
+                                        <img alt='flag' style={{objectFit: 'cover', width: '100%', height: '100%'}}   src={`${URI}/media/${r.flag}/`} />                                   
                                     </div>
                                 </th>)
                             }
@@ -117,7 +117,7 @@ export default function Standings() {
                             return(
                                 <tr key={r.id}>
                                     <td>{i + 1}.</td>
-                                    <td><img style={{transform: 'translateY(5px)'}} src={`${URI}/media/${r.icon}/`} loading="lazy" alt={r.name} width={'30px'} />{r.name}</td>
+                                    <td><img style={{transform: 'translateY(5px)'}} src={`${URI}/media/${r.icon}/`} alt={r.name} width={'30px'} />{r.name}</td>
                                     <td>{r.points}</td>
                                 </tr>
                             )
@@ -143,7 +143,7 @@ export default function Standings() {
                                 query.data?.data.races.map((r, i) => 
                                 <th key={r.id} >
                                     <div className='flag-box'>
-                                        <img alt='' style={{objectFit: 'cover', width: '100%', height: '100%'}} loading="lazy"  src={`${URI}/media/${r.flag}/`} />                                   
+                                        <img alt='' style={{objectFit: 'cover', width: '100%', height: '100%'}}   src={`${URI}/media/${r.flag}/`} />                                   
                                     </div>
                                 </th>)
                             }
@@ -155,7 +155,7 @@ export default function Standings() {
                         {
                             query.data?.data.penaltyPoints.map(p =>
                                 <tr key={p.id}>
-                                    <td>{ p.teamIcon ? <img src={`${URI}/media/${p.teamIcon}/`} width='25px'  loading="lazy" alt="team-icon"/> : <p style={{paddingLeft: '5px'}}>R</p>}</td>
+                                    <td></td>
                                     <td style={{whiteSpace: 'nowrap'}}>{p.name}</td>
                                     {
                                         p.races.map((r, i) => <td key={`${p.id}${i}`}>{r === 0 ? '' : r}</td>)
@@ -207,7 +207,6 @@ type Data = {
         id: string,
         name: string,
         totalPoints: number,
-        teamIcon: string | null,
         races: number[]
     }[]
 }

@@ -107,8 +107,8 @@ export default function ReportResponse({ responseData, setResponseData, raceID }
     }
 
     const form = 
-    <div className='pop-up-bg' onPointerDown={closeWindow} >
-        <div className='pop-up-content' onPointerDown={(e) => e.stopPropagation()}>
+    <div className='pop-up-bg' onClick={closeWindow} >
+        <div className='pop-up-content' onClick={(e) => e.stopPropagation()}>
             <div>
                 <div className='sticky-heading'>
                     <h2 className='header-with-time section-heading fade-in-out-border'>

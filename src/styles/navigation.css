@@ -946,7 +946,6 @@
   padding: 3rem 2rem;
   box-shadow: 0 0 10px rgba(239, 239, 239, 0.3);
   margin-left: 0.5rem;
-  min-width: 220px;
 }
 .section-navigation ul {
   display: flex;

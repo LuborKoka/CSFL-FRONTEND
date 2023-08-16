@@ -43,11 +43,11 @@ export default function ReportVideo(props: Props) {
     if ( !props.isOnline ) {
         return props.isImage ?
             <div>
-                <img loading="lazy" src={`${URI}/media/${props.url}/`} alt="File Not Found" width='100%' height='100%' style={{objectFit: 'contain'}}/>
+                <img src={`${URI}/media/${props.url}/`} alt="File Not Found" width='100%' height='100%' style={{objectFit: 'contain'}}/>
             </div>
             :
             <div >
-                <video width='100%' height='100%' controls src={`${URI}/media/${props.url}/`}/>
+                <video width='100%' height='100%' controls src={`${URI}/media/${props.url}/`} />
             </div>
         
     }

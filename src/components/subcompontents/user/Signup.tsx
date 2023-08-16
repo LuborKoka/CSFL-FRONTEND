@@ -11,10 +11,11 @@ import { storageKeyName } from "../../../constants";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import secureLocalStorage from "react-secure-storage";
+import useUserContext from "../../../hooks/useUserContext";
 
 const schema = z.object({
-    username: z.string().min(4, {
-        message: 'Meno musí obsahovať aspon 4 znakov.'
+    username: z.string().min(5, {
+        message: 'Meno musí obsahovať aspon 5 znakov.'
     }).max(50, {
         message: 'Meno musí mať najviac 50 znakov'
     }),
@@ -45,7 +46,7 @@ export default function Signup({ swap }: Props) {
 
     const navigate = useNavigate()
 
-    const user = useContext(UserContext as Context<UserTypes>)
+    const setUser = useUserContext()[1]
 
     const [message, showMessage] = useErrorMessage()
 
@@ -71,9 +72,10 @@ export default function Signup({ swap }: Props) {
             }
         })
         .then(r => {
-            const data = jwtDecode(r.data.token) as {username: string, id: string, driverID: string}
+            const data = jwtDecode(r.data.token) as {username: string, id: string}
             secureLocalStorage.setItem(storageKeyName, r.data.token)
-            user.setUser(p => {return {...p!, ...data, token: r.data.token, roles: []} })
+            //localStorage.setItem(storageKeyName, JSON.stringify(r.data.token))
+            setUser((p) => {return {...p!, ...data, token: r.data.token, roles: r.data.roles} } )
             navigate('/welcome')
         })
         .catch((e: unknown) => {
