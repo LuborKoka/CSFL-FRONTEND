@@ -1,20 +1,19 @@
 import React, { useState } from "react";
 import { ReportResponseProps, ReportType } from "../../screens/Reports";
 import ReportVideo from "./ReportVideo";
-import { useOutletContext } from "react-router-dom";
-import { RaceContext } from "../../controls/SeasonNav";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMessage, faPaperclip, faReply, faRightLong, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { faRectangleXmark } from '@fortawesome/free-regular-svg-icons'
 import FIA from '../../../images/logo_Fia.svg' 
 import ReportVerdict from "./ReportVerdict";
+import useRaceContext from "../../../hooks/useRaceContext";
 
 type Props = {
     setResponseData: React.Dispatch<React.SetStateAction<{isActive: boolean, rank: number, from: string, targets: {name: string, id: string}[]}>>,
 } & ReportType
 
 export default function Report({ rank, verdict, penalties, reportID, videos, content, createdAt, from, targets, setResponseData, responses }: Props ) {
-    const [raceContext, setRaceContext] = (useOutletContext() as RaceContext)
+    const setRaceContext = useRaceContext()[1]
     const [isViewingResponses, setIsViewingResponses] = useState(false)
     const [isViewingVerdict, setIsViewingVerdict] = useState(false)
 
@@ -118,8 +117,8 @@ function ResponseList({ responses, setOpen, rank }: ResListProps) {
     }
 
     return(
-        <div className='pop-up-bg' onClick={closeWindow}>
-            <div className='pop-up-content' onClick={(e) => e.stopPropagation()}>
+        <div className='pop-up-bg' onPointerDown={closeWindow}>
+            <div className='pop-up-content' onPointerDown={(e) => e.stopPropagation()}>
                 <div className='sticky-heading'>
                     <h2 className='section-heading header-with-time fade-in-out-border'>
                         {`Odpovede k reportu #${rank}`}
@@ -138,7 +137,7 @@ function ResponseList({ responses, setOpen, rank }: ResListProps) {
 
 
 
-function Response({ driverID, driverName, id, videos, content, createdAt }: ReportResponseProps) {
+function Response({ driverName, id, videos, content, createdAt }: ReportResponseProps) {
 
     return(
         <div className='report-response fade-in-out-border' style={{padding: '0 1rem', position: 'relative', paddingBottom: '2rem'}}>

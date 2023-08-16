@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import ExistingRace from "./ExistingRace";
 import useConfirmation from "../../../../hooks/useConfirmation";
+import useUserContext from "../../../../hooks/useUserContext";
 
 type RaceResponse = {
     raceID: string,
@@ -31,7 +32,7 @@ export default function Schedule() {
 
     const races = useRef<Race[]>([])
 
-    const { user } = useContext(UserContext as Context<UserTypes>)
+    const user = useUserContext()[0]
 
     const tracks = useQuery([`admin_all-tracks`], () => fetchTracks(user?.token), {staleTime: Infinity})
     const existingRaces = useQuery([`scheduled-races-${seasonID}`], () => fetchExistingRaces(seasonID, user?.token), { staleTime: Infinity})
@@ -62,7 +63,8 @@ export default function Schedule() {
     async function deleteRace(raceID: string) {
         axios.delete(`${URI}/schedule/${seasonID}/${raceID}/`, {
             headers: {
-                Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
+                Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`,
+                'X-CSRFToken': user?.csrfToken
             }
         })
         .then(r => {
@@ -82,7 +84,8 @@ export default function Schedule() {
                 }
             }, {
                 headers: {
-                    Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
+                    Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`,
+                    'X-CSRFToken': user?.csrfToken
                 }
             })
             queryClient.invalidateQueries([`scheduled-races-${seasonID}`])
@@ -107,7 +110,8 @@ export default function Schedule() {
             }
         }, {
             headers: {
-                Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
+                Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`,
+                'X-CSRFToken': user?.csrfToken
             }
         })
         .then((r: AxiosResponse) => {

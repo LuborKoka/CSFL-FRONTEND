@@ -10,6 +10,7 @@ import { DARKBLUE, RED, WHITE } from "../../../constants";
 import PaperPlane from '../../../images/sipka.svg'
 import useConfirmation from "../../../hooks/useConfirmation";
 import useErrorMessage from "../../../hooks/useErrorMessage";
+import useUserContext from "../../../hooks/useUserContext";
 
 type Driver = {
     name: string,
@@ -26,14 +27,13 @@ export default function AddReport() {
 
     const { raceID, seasonID } = useParams()
 
-    const { user } = useContext(UserContext as Context<UserTypes>)
+    const user = useUserContext()[0]
     
     const query = useQuery([`race_${raceID}_drivers`], () => fetchDrivers(raceID, user?.token))
     const queryClient = useQueryClient()
     const navigate = useNavigate()
     
     const report = useRef<{targets: string[], inchident: string, from_driver: string, video: string[]}>({inchident: '', targets: [], from_driver: '', video: []})
-    const video = useRef<HTMLInputElement>(null)
 
     const [confirmation, showConfirmation] = useConfirmation()
     const [message, showMessage] = useErrorMessage()
@@ -96,7 +96,10 @@ export default function AddReport() {
             return
         }
 
-        if ( user === null ) return
+        if ( !user?.id  ) {
+            showMessage('Musíš sa prihlásiť.')
+            return
+        }
 
         report.current = {...report.current, from_driver: user.id, video: links.map(l => l.url)}
 

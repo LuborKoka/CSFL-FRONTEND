@@ -18,7 +18,7 @@ export default function EditRules() {
     const [confirmation, showConfirmation] = useConfirmation()
     const [message, showMessage] = useErrorMessage()
 
-    const user = useUserContext()
+    const user = useUserContext()[0]
 
     function updateValue(e: React.ChangeEvent<HTMLTextAreaElement>) {
         setContent(e.target.value)
@@ -35,7 +35,7 @@ export default function EditRules() {
 
         axios.post(`${URI}/rules/`, form, {
             headers: {
-                Authorization: `Bearer ${insertTokenIntoHeader(user.user?.token)}`,
+                Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`,
                 "Content-Type": 'multipart/form-data'
             }
         })
@@ -60,7 +60,7 @@ export default function EditRules() {
             }
         }, {
             headers: {
-                Authorization: `Bearer ${insertTokenIntoHeader(user.user?.token)}`
+                Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
             }
         })
         .then(() => showConfirmation())

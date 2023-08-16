@@ -1,6 +1,6 @@
-import React, { useState, useContext, Context } from 'react'
+import React, { useState } from 'react'
 import axios, { AxiosResponse, AxiosError} from 'axios'
-import { URI, UserContext, UserTypes } from '../../../App'
+import { URI } from '../../../App'
 import jwtDecode from 'jwt-decode'
 import { storageKeyName } from '../../../constants'
 import { useNavigate } from 'react-router-dom'
@@ -9,10 +9,11 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import secureLocalStorage from 'react-secure-storage'
+import useUserContext from '../../../hooks/useUserContext'
 
 const schema = z.object({
-    username: z.string().min(5, {
-        message: 'Meno musí mať aspoň 5 znakov'
+    username: z.string().min(4, {
+        message: 'Meno musí mať aspoň 4 znakov'
     }).max(50, {
         message: 'Meno musí mať najviac 50 znakov.'
     }),
@@ -30,7 +31,7 @@ type LoginCredentials = z.infer<typeof schema>
 export default function Login({ swap }: Props) {
     const [isPending, setIsPending] = useState(false)
 
-    const user = useContext(UserContext as Context<UserTypes>)
+    const setUser = useUserContext()[1]
 
     const navigate = useNavigate()
 
@@ -55,10 +56,10 @@ export default function Login({ swap }: Props) {
             }
         })
         .then((r: AxiosResponse) => {
-            const data = jwtDecode(r.data.token) as {username: string, id: string}
+            const data = jwtDecode(r.data.token) as {username: string, id: string, driverID: string}
             secureLocalStorage.setItem(storageKeyName, r.data.token)
             //localStorage.setItem(storageKeyName, JSON.stringify(r.data.token))
-            user.setUser({...data, token: r.data.token, roles: r.data.roles})
+            setUser((p) => {return {...p!, ...data, token: r.data.token, roles: r.data.roles} } )
             navigate('/welcome')
         })
         .catch((e: unknown) => {

@@ -1,22 +1,21 @@
 import axios from "axios";
-import React, { Context, useContext, useState } from "react";
+import React, { Context, useContext } from "react";
 import { URI, UserContext, UserTypes, insertTokenIntoHeader } from "../../App";
 import { useQuery } from '@tanstack/react-query'
 import Race from "../subcompontents/user/Race";
 import '../../styles/seasons.css'
 import '../../styles/tiltableCard.css'
-
-import { Link, useOutletContext, useParams } from "react-router-dom";
-import { RaceContext } from "../controls/SeasonNav";
+import { Link, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUpRightFromSquare, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
-import { RED, WHITE } from "../../constants";
+import { RED } from "../../constants";
+import useSeasonDataContext from "../../hooks/useSeasonDataContext";
 
 
 export default function Season() {
     const { seasonID } = useParams()
 
-    const setSeason = (useOutletContext() as RaceContext)[1]
+    const setSeason = useSeasonDataContext()[1]
 
     const { user } = useContext(UserContext as Context<UserTypes>)
 
@@ -55,6 +54,49 @@ export default function Season() {
 
     </>
 
+    const lineUp = 
+    <>
+        <h2 className="section-heading fade-in-out-border" style={{marginTop: '2rem'}}>
+            Súpiska
+        </h2>
+
+        <div className='team-members-grid'>
+            {
+                drivers.data?.teams.map(t => 
+                    <div className='team-members'  key={t.id}>
+                        <img src={`${URI}/media/${t.image}/`} alt={t.name} className='team-logo' loading="lazy"/>
+                        <div className='fade-in-out-border' style={{display: 'inline-grid', placeContent: 'center flex-start', rowGap: '1rem', fontSize: '1.2rem', minWidth: '160px'}}>
+                            <b style={{whiteSpace: 'nowrap'}}>
+                                {
+                                    t.drivers.length >= 1 ? <b style={{textShadow: `2px 2px 3px ${t.color}`}}>{t.drivers[0].name}</b> : null
+                                } 
+                            </b>
+                            
+                            <b style={{whiteSpace: 'nowrap'}}> 
+                                {
+                                    t.drivers.length === 2 ? <b style={{textShadow: `2px 2px 3px ${t.color}`}}>{t.drivers[1].name}</b> : null
+                                } 
+                            </b>       
+                        </div>
+                    </div>    
+                )
+            }
+        </div>
+    </>
+    
+
+    const emptyLineUp = 
+    <>
+        <br/><br/>
+        <h2 className='section-heading fade-in-out-border' style={{textAlign: 'center'}}> 
+            <FontAwesomeIcon icon={faExclamationTriangle} style={{color: RED, margin: '0 2rem'}} />
+            Súpiska pre túto sezónu je zatiaľ prázdna.
+            <FontAwesomeIcon icon={faExclamationTriangle} style={{color: RED, margin: '0 2rem'}} />
+        </h2>
+
+    </>
+
+
 
     return(
         <div className='section'>
@@ -62,32 +104,11 @@ export default function Season() {
                 query.data?.races.length === 0 ? emptyCalendar : calendar
             }
 
-            <h2 className="section-heading fade-in-out-border" style={{marginTop: '2rem'}}>
-                Súpiska
-            </h2>
-
-            <div className="team-members-grid" >
-                {
-                    drivers.data?.teams.map(t => 
-                        <div className='team-members'  key={t.id}>
-                            <img src={`${URI}/media/${t.image}/`} alt={t.name} className='team-logo'/>
-                            <div className='fade-in-out-border' style={{display: 'inline-grid', placeContent: 'center flex-start', rowGap: '1rem', fontSize: '1.2rem', minWidth: '160px'}}>
-                                <b style={{whiteSpace: 'nowrap'}}>
-                                    {
-                                        t.drivers.length >= 1 ? <b style={{textShadow: `2px 2px 3px ${t.color}`}}>{t.drivers[0].name}</b> : null
-                                    } 
-                                </b>
-                                
-                                <b style={{whiteSpace: 'nowrap'}}> 
-                                    {
-                                        t.drivers.length === 2 ? <b style={{textShadow: `2px 2px 3px ${t.color}`}}>{t.drivers[1].name}</b> : null
-                                    } 
-                                </b>       
-                            </div>
-                        </div>    
-                    )
-                }
-            </div>
+                    
+            {
+                drivers.data?.isEmptyLineUp ? emptyLineUp : lineUp
+            }
+            
         
         </div>
     )
@@ -96,7 +117,7 @@ export default function Season() {
 
 
 
-async function fetchData(seasonID: string | undefined, setState: React.Dispatch<React.SetStateAction<{raceName: string, seasonName: string, reportID: string}>>) {
+async function fetchData(seasonID: string | undefined, setState: React.Dispatch<React.SetStateAction<{seasonName: string, reportID: string}>>) {
     type Data = {
         seasonName: string,
         races: {
@@ -133,7 +154,8 @@ async function fetchSeasonDrivers(seasonID: string | undefined, token: string | 
                 id: string,
                 name: string
             }[]
-        }[]
+        }[],
+        isEmptyLineUp?: true
     }
     const res = await axios.get<Data>(`${URI}/season-drivers/${seasonID}/`, {
         headers: {
