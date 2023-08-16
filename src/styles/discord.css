@@ -1,0 +1,12 @@
+.discord-account-grid {
+  padding-left: 20px;
+  display: grid;
+  grid-template-columns: 165px 1fr;
+  grid-template-rows: 2rem 2rem 2rem auto;
+}
+.discord-account-grid img {
+  grid-row: 1/span 4;
+  grid-column: 1;
+}
+
+/*# sourceMappingURL=discord.css.map */

@@ -1,0 +1,14 @@
+@import 'mixin.scss';
+
+
+.discord-account-grid {
+    padding-left: 20px;
+    display: grid;
+    grid-template-columns: 165px 1fr;
+    grid-template-rows: 2rem 2rem 2rem auto;
+
+    img {
+        grid-row: 1 / span 4;
+        grid-column: 1;
+    }
+}
