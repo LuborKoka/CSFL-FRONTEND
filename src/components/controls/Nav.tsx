@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRightFromBracket, faGears, faLock, faScroll } from '@fortawesome/free-solid-svg-icons'
 import { storageKeyName } from '../../constants'
 import secureLocalStorage from 'react-secure-storage'
+import useUserContext from '../../hooks/useUserContext'
 
 type SeasonType = {
     id: string,
@@ -24,9 +25,9 @@ export default function Nav() {
     const seasons = useQuery([`seasons-navigation`], () => fetchSeasons())
     const queryClient = useQueryClient()
 
-    const { setUser } = useContext(UserContext as Context<UserTypes>)
+    const [user, setUser] = useUserContext()
 
-
+    const allowedRoles = ['Sys Admin', 'F1 Super Admin', 'F1 Admin']
 
     function closeNavbar() {
         setIsOpen(false)   
@@ -64,13 +65,16 @@ export default function Nav() {
 
                 <div className="account-options">
                     <ul>
-                        <NavLink style={{position: 'relative', textDecoration: 'none'}} onClick={closeNavbar} to={`/${randomURIkey}/admin`}>
-                            <div className='clickable-button'>
-                                <span>
-                                    <FontAwesomeIcon icon={faLock} /> F1 Admin
-                                </span>
-                            </div>        
-                        </NavLink>
+                        {
+                            user?.roles.some(r => allowedRoles.includes(r)) &&
+                            <NavLink style={{position: 'relative', textDecoration: 'none'}} onClick={closeNavbar} to={`/${randomURIkey}/admin`}>
+                                <div className='clickable-button'>
+                                    <span>
+                                        <FontAwesomeIcon icon={faLock} /> F1 Admin
+                                    </span>
+                                </div>        
+                            </NavLink>
+                        }
                         <NavLink style={{position: 'relative', textDecoration: 'none'}} onClick={closeNavbar} to='/settings'>
                             <div className='clickable-button'>
                                 <span>

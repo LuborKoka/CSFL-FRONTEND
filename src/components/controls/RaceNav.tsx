@@ -1,8 +1,11 @@
-import { NavLink, Outlet, useOutletContext, useParams } from "react-router-dom"
-import { ReactComponent as FIA } from  '../../images/logo_Fia.svg'
+import { NavLink, Outlet, useParams } from "react-router-dom"
 import FIAVerdict from '../subcompontents/FIA/FIAVerdict'
 import { useState } from 'react'
 import BottomTabs from "./BottomTabs"
+import useUserContext from "../../hooks/useUserContext"
+import useSeasonDataContext from "../../hooks/useSeasonDataContext"
+import { fetchDrivers } from "../subcompontents/user/RaceOverview"
+import { useQuery } from "@tanstack/react-query"
 
 
 
@@ -11,7 +14,10 @@ export default function RaceNav() {
 
     const [isAddingVerdict, setIsAddingVerdict] = useState(false)
 
-    const context = useOutletContext()
+    const context = useSeasonDataContext()
+    const user = useUserContext()[0]
+
+    const query = useQuery([`race_${raceID}_drivers_overview`], () => fetchDrivers(raceID))
 
     function openFiaForm() {
         setIsAddingVerdict(true)
@@ -31,8 +37,15 @@ export default function RaceNav() {
                     <NavLink className='clickable-button' to={`${raceID}/results`}>Výsledky</NavLink>
                     <NavLink className='clickable-button' to={`${raceID}/standings`}>Tabuľka</NavLink>
                     <NavLink className='clickable-button' to={`${raceID}/reports`}>Reporty</NavLink>
-                    <NavLink className='clickable-button' to={`${raceID}/new-report`}>Pridať report</NavLink>
-                    <button onClick={openFiaForm} className='clickable-button single-row'>Kancelária FIA</button>
+                    {
+                        query.data?.teams.some(t => t.drivers.some(d => d.driverID === user?.driverID)) &&
+                        <NavLink className='clickable-button' to={`${raceID}/new-report`}>Pridať report</NavLink>
+                    }
+                    
+                    {
+                        user?.roles.includes(`${context[0].seasonName}fia`) &&
+                        <button onClick={openFiaForm} className='clickable-button single-row'>Kancelária FIA</button>
+                    }
                 </ul>
             </aside>
 

@@ -2,6 +2,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { NavLink, useParams } from "react-router-dom"
 import { faAddressCard, faPlusCircle, faTable, faTableList } from "@fortawesome/free-solid-svg-icons"
 import FiaLogo from '../../images/logo_Fia.svg'
+import useUserContext from "../../hooks/useUserContext"
+import useSeasonDataContext from "../../hooks/useSeasonDataContext"
 
 type Props = {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -10,6 +12,9 @@ type Props = {
 
 export default function BottomTabs({ setOpen}: Props) {
     const { raceID } = useParams()
+
+    const user = useUserContext()[0]
+    const season = useSeasonDataContext()[0]
 
     function openFiaForm() {
         setOpen(true)
@@ -41,10 +46,13 @@ export default function BottomTabs({ setOpen}: Props) {
                 </div>
                 Nový report
             </NavLink>
-            <button onClick={openFiaForm} className='bottom-tabs-link' style={{background: 'none', border: 'none'}}>
-                <img src={FiaLogo} height='15px' alt="fia" />
-                FIA
-            </button>
+            {
+                user?.roles.includes(`${season.seasonName}fia`) &&
+                <button onClick={openFiaForm} className='bottom-tabs-link' style={{background: 'none', border: 'none'}}>
+                    <img src={FiaLogo} height='15px' alt="fia" />
+                    FIA
+                </button>
+            }
 
         </nav>
     )

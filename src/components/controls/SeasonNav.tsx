@@ -1,8 +1,10 @@
 import { Link, Outlet, useLocation, useParams } from "react-router-dom";
 import React, { useState } from 'react'
+import { useQuery } from "@tanstack/react-query";
+import { fetchDrivers } from "../subcompontents/user/RaceOverview";
+import useUserContext from "../../hooks/useUserContext";
 
 type Data = {
-    raceName: string,
     seasonName: string,
     reportID: string
 }
@@ -12,11 +14,13 @@ export type RaceContext = [
 ]
 
 export default function SeasonNav() {
-    const [context, setContext] = useState<Data>({raceName: '', seasonName: '', reportID: ''})
+    const [context, setContext] = useState<Data>({seasonName: '', reportID: ''})
 
     const { seasonID, raceID } = useParams()
 
     const location = useLocation()
+
+    const query = useQuery([`race_${raceID}_drivers_overview`], () => fetchDrivers(raceID))
 
     return(
        //no neda sa nic robit, bude to mat ine classname podal toho, co vrati location.pathname, lebo toto ma v pici cely responzivny design
@@ -28,7 +32,7 @@ export default function SeasonNav() {
                     {
                         location.pathname.includes('/race') ?
                        <> {'>'}
-                        <Link className='link' to={`/seasons/${seasonID}/race/${raceID}`}>{context.raceName}</Link> </>
+                        <Link className='link' to={`/seasons/${seasonID}/race/${raceID}`}>{query.data?.raceName}</Link> </>
                     :
                     null
                     }
@@ -59,3 +63,4 @@ function lastLink(pathname: string): JSX.Element | null {
 
     return null
 }
+
