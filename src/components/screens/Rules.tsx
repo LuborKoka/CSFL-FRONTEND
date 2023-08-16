@@ -4,7 +4,7 @@ import remarkGfm from 'remark-gfm'
 import { URI } from "../../App";
 import { useQuery } from "@tanstack/react-query";
 import '../../styles/rules.css'
-import { timestampToDateTime } from "../subcompontents/user/Report";
+import { DARKBLUE } from "../../constants";
 
 
 export default function Rules() { 
@@ -15,6 +15,7 @@ export default function Rules() {
     
     return(
         <article id="markdown" className="section">
+            <div id='rules-header' style={{position: 'fixed', top: '0', width: '100vw', height: '65px', backgroundColor: DARKBLUE, zIndex: '1'}}></div>
             <br/><br/>
             <div className='header-with-time section-heading fade-in-out-border'>
                 <h2>Pravidlá</h2>

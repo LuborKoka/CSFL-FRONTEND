@@ -26,8 +26,8 @@ export default function Verdict({ setIsAddingVerdict }: Props) {
     }
 
     return(
-        <div className='pop-up-bg' onClick={closeWindow}>
-            <div className='pop-up-content' onClick={(e) => e.stopPropagation()}>
+        <div className='pop-up-bg' onPointerDown={closeWindow}>
+            <div className='pop-up-content' onPointerDown={(e) => e.stopPropagation()}>
                 <div className='sticky-heading'>
                     <h2 className='section-heading header-with-time fade-in-out-border'>
                         {'FIA: '}{query.data?.raceName}

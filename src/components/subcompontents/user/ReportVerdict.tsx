@@ -27,8 +27,8 @@ export default function ReportVerdict({ verdict, penalties, setOpen, rank, from,
     }
 
     return(
-        <div className='pop-up-bg' onClick={closeWindow}>
-            <div className='pop-up-content' onClick={(e) => e.stopPropagation()}>
+        <div className='pop-up-bg' onPointerDown={closeWindow}>
+            <div className='pop-up-content' onPointerDown={(e) => e.stopPropagation()}>
                 <div className="sticky-heading">
                     <h2 className="header-with-time section-heading fade-in-out-border">
                         {`Rozhodnutie reportu #${rank}`}
