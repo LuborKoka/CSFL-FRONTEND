@@ -14,8 +14,8 @@ import secureLocalStorage from "react-secure-storage";
 import useUserContext from "../../../hooks/useUserContext";
 
 const schema = z.object({
-    username: z.string().min(5, {
-        message: 'Meno musí obsahovať aspon 5 znakov.'
+    username: z.string().min(4, {
+        message: 'Meno musí obsahovať aspon 4 znaky.'
     }).max(50, {
         message: 'Meno musí mať najviac 50 znakov'
     }),

@@ -13,7 +13,7 @@ import useUserContext from '../../../hooks/useUserContext'
 
 const schema = z.object({
     username: z.string().min(4, {
-        message: 'Meno musí mať aspoň 4 znakov'
+        message: 'Meno musí mať aspoň 4 znaky'
     }).max(50, {
         message: 'Meno musí mať najviac 50 znakov.'
     }),
