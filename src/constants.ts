@@ -1,6 +1,5 @@
-export const URI = 'http://192.168.100.22:8000/api'
 export const WHITE = '#EFEFEF'
 export const RED = '#CC1E23'
 export const BLUE = '#0A1321'
-export const DARKBLUE = '#001010'
+export const DARKBLUE = '#000606'
 export const storageKeyName = 'session-token'
