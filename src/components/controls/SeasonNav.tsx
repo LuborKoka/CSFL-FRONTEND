@@ -28,7 +28,8 @@ export default function SeasonNav() {
             <div className='header-navigation'>
                 <h3>{context.seasonName}</h3>
                 <div className='breadcrumbs'>
-                    <Link className='link' to={`/seasons/${seasonID}`}>Prehľad ročníka</Link>
+                    <Link className='link' to={'/'}>Úvod</Link>
+                    <Link className='link' to={`/seasons/${seasonID}`}>{'> Prehľad ročníka'}</Link>
                     {
                         location.pathname.includes('/race') ?
                        <> {'>'}

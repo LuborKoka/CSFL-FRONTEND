@@ -65,11 +65,11 @@ export default function CreateRace({ options, racesList, elementID, deleteForm }
             <div className='two-columns' style={{marginTop: '2rem'}}>
                <div className='center'>
 
-                    <label className='center clickable-button' style={{columnGap: '2rem'}}>
+                    <label className='center clickable-button' style={{columnGap: '2rem', opacity: isChecked ? '1' : '.7'}}>
                         <b style={{fontSize: '20px'}}>
                             Šprint
                         </b>
-                        <ReactSwitch onChange={handleSprintInput} checked={isChecked} offColor={DARKBLUE} />
+                        <ReactSwitch onChange={handleSprintInput}  checked={isChecked} offColor={DARKBLUE} />
                     </label>
 
                </div>

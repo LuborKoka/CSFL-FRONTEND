@@ -1,6 +1,23 @@
 @import 'mixin.scss';
 
 
+.discord-account-info {
+    max-width: 356px;
+    img {
+        margin-left: 50px;
+    }
+
+    .account {
+        position: relative;
+        border-radius: 15px;
+        background-color: #000D0D;
+        margin-top: -2.5rem;
+        padding: 3rem 0 2rem calc(50px + 2rem);
+        text-align: left;
+        z-index: -1;
+    }
+}
+
 .discord-account-grid {
     padding-left: 20px;
     display: grid;
@@ -10,5 +27,20 @@
     img {
         grid-row: 1 / span 4;
         grid-column: 1;
+    }
+}
+
+
+
+@media screen and (max-width: 550px) {
+    .discord-account-info {
+        max-width: 100%;
+        img {
+            margin-left: calc( (100% - 256px) / 2 );
+        }
+
+        .account {
+            padding: 3rem 0 2rem clamp(10%, calc(20px + 20vw), 35%);
+        }
     }
 }

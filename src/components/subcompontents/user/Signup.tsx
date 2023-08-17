@@ -75,7 +75,7 @@ export default function Signup({ swap }: Props) {
             }
         })
         .then(r => {
-            const data = jwtDecode(r.data.token) as {username: string, id: string}
+            const data = jwtDecode(r.data.token) as {username: string, id: string, driverName: string, driverID: string}
             secureLocalStorage.setItem(storageKeyName, r.data.token)
             setUser({isLoggedIn: true, ...data, token: r.data.token, roles: r.data.roles})
             if ( redirectUrl ) navigate(redirectUrl)

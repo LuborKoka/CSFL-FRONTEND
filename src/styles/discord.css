@@ -1,3 +1,19 @@
+.discord-account-info {
+  max-width: 356px;
+}
+.discord-account-info img {
+  margin-left: 50px;
+}
+.discord-account-info .account {
+  position: relative;
+  border-radius: 15px;
+  background-color: #000D0D;
+  margin-top: -2.5rem;
+  padding: 3rem 0 2rem calc(50px + 2rem);
+  text-align: left;
+  z-index: -1;
+}
+
 .discord-account-grid {
   padding-left: 20px;
   display: grid;
@@ -7,6 +23,18 @@
 .discord-account-grid img {
   grid-row: 1/span 4;
   grid-column: 1;
+}
+
+@media screen and (max-width: 550px) {
+  .discord-account-info {
+    max-width: 100%;
+  }
+  .discord-account-info img {
+    margin-left: calc((100% - 256px) / 2);
+  }
+  .discord-account-info .account {
+    padding: 3rem 0 2rem clamp(10%, 20px + 20vw, 35%);
+  }
 }
 
 /*# sourceMappingURL=discord.css.map */

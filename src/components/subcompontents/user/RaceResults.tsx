@@ -55,7 +55,7 @@ export default function RaceResults() {
                                 <td>{d.driverName}</td>
                                 <td>{d.teamName}</td>
                                 <td>
-                                    {d.time === null ? 'DNF' : d.rank === 1 ? formatTime(d.time, d.plusLaps) : `+${formatTime(d.time - leaderTime, d.plusLaps)}`}
+                                    {d.isDSQ ? 'DSQ' : d.time === null ? 'DNF' : d.rank === 1 ? formatTime(d.time, d.plusLaps) : `+${formatTime(d.time - leaderTime, d.plusLaps)}`}
                                 </td>
                                 <td style={{whiteSpace: 'nowrap'}}>
                                     {assignPoints(d.rank, d.hasFastestLap, d.isSprint, d.time === null)}
@@ -82,7 +82,8 @@ type Driver = {
     time: number,
     hasFastestLap: boolean,
     isSprint: boolean,
-    plusLaps: number
+    plusLaps: number,
+    isDSQ: boolean
 }
 
 type Data = {

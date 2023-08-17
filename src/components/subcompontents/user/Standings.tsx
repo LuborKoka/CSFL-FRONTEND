@@ -174,6 +174,7 @@ export default function Standings() {
 type Race = {
     teamName: string,
     hasFastestLap: boolean,
+    isDSQ: boolean,
     rank: number | string,
     points: number,
     hasBeenRaced: boolean
@@ -183,6 +184,7 @@ type Race = {
 type Driver = {
     driverID: string,
     driverName: string,
+    
     isReserve: boolean,
     totalPoints: number,
     races: Race[],

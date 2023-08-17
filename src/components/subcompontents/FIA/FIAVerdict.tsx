@@ -10,6 +10,8 @@ import { faRectangleXmark } from "@fortawesome/free-regular-svg-icons"
 import { faCaretDown, faRightLong, faSquareCheck, faTriangleExclamation, faLightbulb } from "@fortawesome/free-solid-svg-icons";
 import useConfirmation from "../../../hooks/useConfirmation";
 import useErrorMessage from "../../../hooks/useErrorMessage";
+import ReactSwitch from 'react-switch'
+import { DARKBLUE } from "../../../constants";
 
 type Props = {
     setIsAddingVerdict: React.Dispatch<React.SetStateAction<boolean>>
@@ -37,7 +39,7 @@ export default function Verdict({ setIsAddingVerdict }: Props) {
 
                 <div className='user-tip'>
                     <FontAwesomeIcon icon={faLightbulb} />
-                    <span>Keď už raz odošleš rozhodnutie reportu, nebude sa dať zmeniť<br/>Keď potrebuješ odstrániť penalizáciu (napríklad za traťové limity), naklikaj tam záporné hodnoty.</span>
+                    <span>Keď už raz odošleš rozhodnutie reportu, nebude sa dať zmeniť.<br/>Keď potrebuješ odstrániť penalizáciu (napríklad za traťové limity), naklikaj tam záporné hodnoty.</span>
                     <FontAwesomeIcon icon={faLightbulb} />
                 </div>
                 <br/>
@@ -75,7 +77,7 @@ function ReportSection({ rank, from, targets, reportID }: RSProps) {
     const [height, setHeight] = useState('0px')
 
     const container = useRef<HTMLDivElement>(null)
-    const penalties = useRef<{time: number, penaltyPoints: number, driverID: string}[]>([])
+    const penalties = useRef<{time: number, penaltyPoints: number, driverID: string, isDSQ: boolean}[]>([])
     const content = useRef<HTMLTextAreaElement>(null)
 
     const [confirmation, showConfirmation] = useConfirmation()
@@ -83,19 +85,21 @@ function ReportSection({ rank, from, targets, reportID }: RSProps) {
 
     const navigate = useNavigate()
 
-    function setPenalty(time: number, points: number, driverID: string) {
+    function setPenalty(time: number, points: number, driverID: string, isDSQ: boolean) {
         const pen = penalties.current.find(p => p.driverID === driverID)
         if ( pen === undefined ) {
             penalties.current.push({
                 driverID: driverID,
                 time: time,
-                penaltyPoints: points
+                penaltyPoints: points,
+                isDSQ: isDSQ
             })
             return
         }
 
         pen.time = time
         pen.penaltyPoints = points
+        pen.isDSQ = isDSQ
     }
 
     function expand() {
@@ -110,7 +114,7 @@ function ReportSection({ rank, from, targets, reportID }: RSProps) {
     function submit(e: React.FormEvent) {
         e.preventDefault()
 
-        const pents = penalties.current.filter(p => (p.penaltyPoints !== 0 || p.time !== 0) ) //poslem len tie, ktore maju aspon jednu hodnotu rozdielnu od 0
+        const pents = penalties.current.filter(p => p.penaltyPoints !== 0 || p.time !== 0 || p.isDSQ === true ) //poslem len tie, ktore maju aspon jednu hodnotu rozdielnu od 0
         
         setIsPending(true)
         axios.post(`${URI}/report/${reportID}/verdict/`, {
@@ -166,10 +170,10 @@ function ReportSection({ rank, from, targets, reportID }: RSProps) {
                     }
             </div>
 
-            <div className='expand-verdict-container' style={{maxHeight: isExpanded ? height : '0px'}}>
+            <form className='expand-verdict-container' style={{maxHeight: isExpanded ? height : '0px'}} onSubmit={submit}>
                 <div ref={container} className='verdict-container'>
                     <div className='inchident labeled-input'>
-                        <textarea ref={content} name='verdict' />
+                        <textarea ref={content} name='verdict' required />
                         <label htmlFor='verdict'>Rozhodnutie FIA</label>
                     </div>
 
@@ -187,12 +191,12 @@ function ReportSection({ rank, from, targets, reportID }: RSProps) {
                     
                     { /* isSubmitted namiesto is pending, aby sa nedalo znova odoslat report, !nemazat! */}
                     <div className='submit-button-container'>
-                        <button className={`clickable-button ${( isSubmitted || isPending ) ? 'button-disabled' : ''}`} onClick={submit} disabled={isSubmitted} >
+                        <button type="submit" className={`clickable-button ${( isSubmitted || isPending ) ? 'button-disabled' : ''}`} disabled={isSubmitted} >
                             Odoslať
                         </button>
                     </div>
                 </div>                
-            </div>
+            </form>
 
             { confirmation }
 
@@ -205,23 +209,25 @@ function ReportSection({ rank, from, targets, reportID }: RSProps) {
 type PenaltyProps = {
     driverID: string,
     driverName: string,
-    setPenalty: (time: number, points: number, driverID: string) => void,
+    setPenalty: (time: number, points: number, driverID: string, isDSQ: boolean) => void,
 }
 
 function Penalty({ driverID, driverName, setPenalty }: PenaltyProps) {
-    const [data, setData] = useState({points: 0, time: 0})
+    const [data, setData] = useState({points: 0, time: 0, isDSQ: false})
 
     function setTime(e: React.ChangeEvent<HTMLInputElement>) {
-
-        console.log(driverID)
-        setData(p => {return {...p, time: Number(e.target.value)}})
-        setPenalty(Number(e.target.value), data.points, driverID)
+        setData(p => {return {...p, time: e.target.valueAsNumber}})
+        setPenalty(e.target.valueAsNumber, data.points, driverID, data.isDSQ)
     }
 
     function setPoints(e: React.ChangeEvent<HTMLInputElement>) {
-        console.log(e.target.value)
-        setData(p => {return {...p, points: Number(e.target.value)}})
-        setPenalty(data.time, Number(e.target.value), driverID)
+        setData(p => {return {...p, points: e.target.valueAsNumber}})
+        setPenalty(data.time, e.target.valueAsNumber, driverID, data.isDSQ)
+    }
+
+    function setIsDsq(checked: boolean) {
+        setData(p => {return {...p, isDSQ: checked}})
+        setPenalty(data.time, data.points, driverID, checked)
     }
 
 
@@ -238,6 +244,12 @@ function Penalty({ driverID, driverName, setPenalty }: PenaltyProps) {
                 <input name="penalty-points" value={data.points} className='form-input' type="number" min={0} onChange={setPoints} />
                 <label htmlFor="penalty-points">Trestné body</label>
             </div>    
+            <label className='center clickable-button' style={{columnGap: '2rem', opacity: data.isDSQ ? '1' : '.5'}}>
+                <b style={{fontSize: '20px'}}>
+                    Diskvalifikácia
+                </b>
+                <ReactSwitch onChange={setIsDsq} checked={data.isDSQ} offColor={DARKBLUE} />
+            </label>
         </div>
     )
 }

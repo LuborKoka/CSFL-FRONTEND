@@ -59,7 +59,7 @@ export default function Login({ swap }: Props) {
             }
         })
         .then((r: AxiosResponse) => {
-            const data = jwtDecode(r.data.token) as {username: string, id: string, driverID: string}
+            const data = jwtDecode(r.data.token) as {username: string, id: string, driverID: string, driverName: string}
             secureLocalStorage.setItem(storageKeyName, r.data.token)
             setUser({isLoggedIn: true, ...data, token: r.data.token, roles: r.data.roles})
             if ( redirectUrl ) navigate(redirectUrl)

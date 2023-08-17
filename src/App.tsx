@@ -44,6 +44,7 @@ type User = {
   id?: string,
   token?: string,
   driverID?: string,
+  driverName?: string,
   roles: string[]
 }
 
@@ -64,7 +65,7 @@ function App() {
 
     async function getUserData() {
       if (token !== null) {
-        const data = jwtDecode(token) as { username: string, id: string, driverID: string }
+        const data = jwtDecode(token) as { username: string, id: string, driverID: string, driverName: string }
 
         try {
           const rolesRes = await axios.get(`${URI}/roles/${data.id}/`, {

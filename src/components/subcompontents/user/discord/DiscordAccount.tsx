@@ -70,6 +70,8 @@ export default function DiscordAccount() {
         <Link className='clickable-button' to={'https://discord.com/api/oauth2/authorize?client_id=1140670852166328411&redirect_uri=http%3A%2F%2F192.168.100.22%3A3000%2Fverify-user&response_type=code&scope=identify%20guilds%20guilds.members.read'}>
             Prepojiť účet a Discord <img src={Discord} height='16px' alt="discord icon" style={{transform: 'translate(3px, 2px)'}} />
         </Link>
+
+        <br/><br/>
     </>
 
     if ( query.data?.code === 204 ) return connect
@@ -78,13 +80,15 @@ export default function DiscordAccount() {
         <>
             <h2 className='section-heading fade-in-out-border'>Môj Discord Účet</h2>
 
-            <div className='discord-account-grid'>
-                <img width='150px' src={ query.data?.data.avatar ? `https://cdn.discordapp.com/avatars/${query.data.data.discord_id}/${query.data.data.avatar}` : Discord} alt='discord avatar' />
-
-                <p><FontAwesomeIcon style={{paddingRight: '5px'}} icon={faUser} /> {query.data?.data.discord_username}</p>
-                <p><FontAwesomeIcon style={{paddingRight: '5px'}} icon={faUser} /> {query.data?.data.discord_global_name}</p>
-                <p>Prémium: {premiumType(query.data?.data.premium_type)}</p>
-            
+            <div className='discord-account-info'>            
+                <img width='256px' style={{borderRadius: '10px'}} src={ query.data?.data.avatar ? `https://cdn.discordapp.com/avatars/${query.data.data.discord_id}/${query.data.data.avatar}?size=256` : Discord} alt='discord avatar' />
+                
+                <div className='account'>
+                    <p><FontAwesomeIcon style={{paddingRight: '5px'}} icon={faUser} /> {query.data?.data.discord_username}</p>
+                    <p><FontAwesomeIcon style={{paddingRight: '5px'}} icon={faUser} /> {query.data?.data.discord_global_name}</p>
+                    <p>Prémium: {premiumType(query.data?.data.premium_type)}</p>
+                
+                </div>
             </div>
 
             <br/><br/>
@@ -137,3 +141,4 @@ function premiumType(p: number | undefined) {
             return 'Žiadne'
     }
 }
+
