@@ -8,7 +8,9 @@ export default function Auth() {
 
     return(
         <div className='auth-form'>
-            <h1>Vitaj V CSFL</h1>
+            <h2 className='section-heading fade-in-out-border'>
+                { isLogin ? 'Prihlásenie' : 'Registrácia'}
+            </h2>
             {
                 isLogin ? <Login swap={() => setIsLogin(false)}/> : <Signup swap={() => setIsLogin(true)} />
             }

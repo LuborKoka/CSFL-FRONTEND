@@ -9,6 +9,7 @@ import { faArrowRightFromBracket, faGears, faLock, faScroll } from '@fortawesome
 import { storageKeyName } from '../../constants'
 import secureLocalStorage from 'react-secure-storage'
 import useUserContext from '../../hooks/useUserContext'
+import { faUser } from '@fortawesome/free-regular-svg-icons'
 
 type SeasonType = {
     id: string,
@@ -36,7 +37,10 @@ export default function Nav() {
 
     function logOut() {
         secureLocalStorage.removeItem(storageKeyName)
-        setUser(null)
+        setUser({
+            isLoggedIn: false,
+            roles: []
+        })
         queryClient.clear()
     }
 
@@ -75,13 +79,23 @@ export default function Nav() {
                                 </div>        
                             </NavLink>
                         }
-                        <NavLink style={{position: 'relative', textDecoration: 'none'}} onClick={closeNavbar} to='/settings'>
-                            <div className='clickable-button'>
-                                <span>
-                                    <FontAwesomeIcon icon={faGears} /> Účet
-                                </span>
-                            </div>
-                        </NavLink>
+                        {
+                            user?.isLoggedIn ?
+                            <NavLink style={{position: 'relative', textDecoration: 'none'}} onClick={closeNavbar} to='/settings'>
+                                <div className='clickable-button'>
+                                    <span>
+                                        <FontAwesomeIcon icon={faGears} /> Účet
+                                    </span>
+                                </div>
+                            </NavLink> :
+                            <NavLink style={{position: 'relative', textDecoration: 'none'}} onClick={closeNavbar} to={`/auth?redirect_url=${location.pathname}`}>
+                                <div className='clickable-button'>
+                                    <span>
+                                        <FontAwesomeIcon icon={faUser} /> Prihlásiť sa
+                                    </span>
+                                </div>
+                            </NavLink>
+                        }
                         <NavLink className='clickable-button' onClick={logOut} to='/'> 
                             <span>
                                 <FontAwesomeIcon icon={faArrowRightFromBracket} /> Odhlásiť sa  
@@ -103,7 +117,7 @@ export default function Nav() {
         </nav>
 
     return(
-        location.pathname === '/' ? null : jsx
+        location.pathname === '/auth' ? null : jsx
     )
 }
 

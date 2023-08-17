@@ -3,7 +3,7 @@ import axios, { AxiosResponse, AxiosError} from 'axios'
 import { URI } from '../../../App'
 import jwtDecode from 'jwt-decode'
 import { storageKeyName } from '../../../constants'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import useErrorMessage from '../../../hooks/useErrorMessage'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -34,6 +34,9 @@ export default function Login({ swap }: Props) {
     const setUser = useUserContext()[1]
 
     const navigate = useNavigate()
+    const location = useLocation()
+    const queryParams = new URLSearchParams(location.search);
+    const redirectUrl = queryParams.get('redirect_url');
 
     const [message, showMessage] = useErrorMessage()
 
@@ -59,7 +62,7 @@ export default function Login({ swap }: Props) {
             const data = jwtDecode(r.data.token) as {username: string, id: string, driverID: string}
             secureLocalStorage.setItem(storageKeyName, r.data.token)
             setUser({isLoggedIn: true, ...data, token: r.data.token, roles: r.data.roles})
-            navigate('/welcome')
+            if ( redirectUrl ) navigate(redirectUrl)
         })
         .catch((e: unknown) => {
             showMessage(e)

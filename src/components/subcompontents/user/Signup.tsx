@@ -5,7 +5,7 @@ import jwtDecode from "jwt-decode";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useErrorMessage from "../../../hooks/useErrorMessage";
 import { storageKeyName } from "../../../constants";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -45,6 +45,9 @@ export default function Signup({ swap }: Props) {
     const [isVisibleConfirm, setIsVisibleConfirm] = useState(false)
 
     const navigate = useNavigate()
+    const location = useLocation()
+    const queryParams = new URLSearchParams(location.search);
+    const redirectUrl = queryParams.get('redirect_url');
 
     const setUser = useUserContext()[1]
 
@@ -75,7 +78,7 @@ export default function Signup({ swap }: Props) {
             const data = jwtDecode(r.data.token) as {username: string, id: string}
             secureLocalStorage.setItem(storageKeyName, r.data.token)
             setUser({isLoggedIn: true, ...data, token: r.data.token, roles: r.data.roles})
-            navigate('/welcome')
+            if ( redirectUrl ) navigate(redirectUrl)
         })
         .catch((e: unknown) => {
             showMessage(e)

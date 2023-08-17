@@ -32,17 +32,18 @@ import Rules from './components/screens/Rules';
 import secureLocalStorage from 'react-secure-storage';
 import EditRules from './components/subcompontents/admin/EditRules';
 import DiscordVerification from './components/subcompontents/user/discord/DiscordVerification';
+import Roles from './components/subcompontents/admin/Roles';
 
 export const URI = `http://192.168.100.22:8000/api`
 
 export const randomURIkey = generateRandomString(10)
 
 type User = {
+  isLoggedIn: boolean,
   username?: string,
   id?: string,
   token?: string,
   driverID?: string,
-  csrfToken: string,
   roles: string[]
 }
 
@@ -61,39 +62,23 @@ function App() {
   useEffect(() => {
     const token = secureLocalStorage.getItem(storageKeyName) as string | null //localStorage.getItem(storageKeyName)
 
-    async function getToken() {
-      try {
-        const tokenRes = await axios.get<{csrf_token: string}>(`${URI}/`)
-        return tokenRes.data.csrf_token
-      } catch (e: unknown) {
-        return ''
-      }
-    }
-
     async function getUserData() {
-      const csrfToken = await getToken()
-      
       if (token !== null) {
         const data = jwtDecode(token) as { username: string, id: string, driverID: string }
 
         try {
           const rolesRes = await axios.get(`${URI}/roles/${data.id}/`, {
             headers: {
-              Authorization: `Bearer ${token}`,
-              'X-CSRFToken': csrfToken
+              Authorization: `Bearer ${token}`
             }
           })
 
-          setUser({...data, token: token, roles: rolesRes.data.roles, csrfToken: csrfToken})
+          setUser({...data, token: token, roles: rolesRes.data.roles, isLoggedIn: true})
 
-          return
         } catch(e: unknown) {
-          setUser({ ...data, token: token, roles: [], csrfToken: csrfToken })
-          return
+          setUser({ ...data, token: token, roles: [], isLoggedIn: false })
         }
       }
-
-      setUser({csrfToken: csrfToken, roles: []})
     }
 
     
@@ -107,8 +92,8 @@ function App() {
         <Router>
           <Nav />
           <Routes>
-            <Route path='/' element={<Auth />} />
-            <Route path='/welcome' element={<Welcome />} />
+            <Route path='/' element={<Welcome />} />
+            <Route path='/auth' element={<Auth />} />
             <Route path='/rules' element={<Rules />} />
             <Route path='/settings' element={<Settings />} />
             <Route path='/verify-user' element={<DiscordVerification />} />
@@ -130,6 +115,7 @@ function App() {
 
             <Route path={`/${randomURIkey}/admin`} element={<AdminNav />}>
               <Route index element={<AdminUI />} />
+              <Route path='roles' element={<Roles />} />
               <Route path='rules' element={<EditRules />} />
               <Route path='new-season' element={<CreateSeason />} />
               <Route path='season/:seasonID' element={<EditSeason />} />
