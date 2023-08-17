@@ -79,6 +79,11 @@ export default function EditRules() {
         }
     }
 
+    function cancel() {
+        setIsEditorOpen(false)
+        if ( query.data?.rules ) setContent(query.data.rules)
+    }
+
 
     useEffect(() => {
         if ( !query.data ) return
@@ -89,7 +94,8 @@ export default function EditRules() {
     <form onSubmit={patchRules}>
         <textarea className="rules-input" value={content} onChange={updateValue} spellCheck={false} onKeyDown={save} />
 
-        <div className="submit-button-container">
+        <div className="submit-button-container single-row">
+            <button className='clickable-button' onClick={cancel}>Zrušiť</button>
             <button type="submit" className={`clickable-button ${isPending && 'button-disabled'}`}>Uložiť</button>
         </div>
     </form>
