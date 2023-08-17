@@ -6,11 +6,12 @@ import useUserContext from "../../hooks/useUserContext"
 import useSeasonDataContext from "../../hooks/useSeasonDataContext"
 import { fetchDrivers } from "../subcompontents/user/RaceOverview"
 import { useQuery } from "@tanstack/react-query"
+import { fetchSeasonDrivers } from "../screens/Season"
 
 
 
 export default function RaceNav() {
-    const { raceID } = useParams()
+    const { raceID, seasonID } = useParams()
 
     const [isAddingVerdict, setIsAddingVerdict] = useState(false)
 
@@ -18,6 +19,7 @@ export default function RaceNav() {
     const user = useUserContext()[0]
 
     const query = useQuery([`race_${raceID}_drivers_overview`], () => fetchDrivers(raceID))
+    const drivers = useQuery([`season-drivers-user-${seasonID}`], () => fetchSeasonDrivers(seasonID))
 
     function openFiaForm() {
         setIsAddingVerdict(true)
@@ -36,7 +38,13 @@ export default function RaceNav() {
                     <NavLink className='clickable-button' to={`${raceID}/overview`}>Prehľad</NavLink>
                     <NavLink className='clickable-button' to={`${raceID}/results`}>Výsledky</NavLink>
                     <NavLink className='clickable-button' to={`${raceID}/standings`}>Tabuľka</NavLink>
-                    <NavLink className='clickable-button' to={`${raceID}/reports`}>Reporty</NavLink>
+                    {
+                        user?.isLoggedIn && !drivers.data?.isEmptyLineUp && (
+                            drivers.data?.teams.some(t => t.drivers.some(d => d.id === user.driverID)) ||
+                            drivers.data?.reserves.some(r => r.id === user.driverID)
+                        ) &&
+                        <NavLink className='clickable-button' to={`${raceID}/reports`}>Reporty</NavLink>
+                    }
                     {
                         query.data?.teams.some(t => t.drivers.some(d => d.driverID === user?.driverID)) &&
                         <NavLink className='clickable-button' to={`${raceID}/new-report`}>Pridať report</NavLink>

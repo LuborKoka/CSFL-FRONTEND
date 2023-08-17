@@ -17,10 +17,8 @@ export default function Season() {
 
     const setSeason = useSeasonDataContext()[1]
 
-    const { user } = useContext(UserContext as Context<UserTypes>)
-
     const query = useQuery([`scheduled-races-${seasonID}`], () => fetchData(seasonID, setSeason))
-    const drivers = useQuery([`season-drivers-user-${seasonID}`], () => fetchSeasonDrivers(seasonID, user?.token))
+    const drivers = useQuery([`season-drivers-user-${seasonID}`], () => fetchSeasonDrivers(seasonID))
 
     const calendar = 
     <>
@@ -135,13 +133,13 @@ async function fetchData(seasonID: string | undefined, setState: React.Dispatch<
 }
 
 
-async function fetchSeasonDrivers(seasonID: string | undefined, token: string | undefined | null) {
+export async function fetchSeasonDrivers(seasonID: string | undefined) {
     type Data = {
         reserves: {
             id: string,
             name: string
         }[],
-        availableDrivers: {
+        availableDrivers: { // toto tusim ani nikde nepouzivam
             id: string,
             name: string
         }[],
@@ -157,11 +155,7 @@ async function fetchSeasonDrivers(seasonID: string | undefined, token: string | 
         }[],
         isEmptyLineUp?: true
     }
-    const res = await axios.get<Data>(`${URI}/season-drivers/${seasonID}/`, {
-        headers: {
-            Authorization: `Bearer ${insertTokenIntoHeader(token)}`
-        }
-    })
+    const res = await axios.get<Data>(`${URI}/season-drivers/${seasonID}/`)
 
     return res.data
 }
