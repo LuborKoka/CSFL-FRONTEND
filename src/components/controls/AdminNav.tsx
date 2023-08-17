@@ -2,6 +2,7 @@ import { Link, NavLink, Outlet, useLocation, useParams } from "react-router-dom"
 import { randomURIkey } from "../../App";
 import '../../styles/admin.css'
 import { useState } from "react";
+import useUserContext from "../../hooks/useUserContext";
 
 export type OutletSeason = {
     seasonName: string,
@@ -15,8 +16,12 @@ export default function AdminNav() {
     const [header, setHeader] = useState<OutletSeason>({seasonName: '', raceName: ''})
 
     const { seasonID, raceID } = useParams()
+
+    const user = useUserContext()[0]
     
     const location = useLocation()
+
+    const usersAndRolesAllowedRoles = ['Sys Admin', 'F1 Super Admin']
 
     return(
         <div className='content-container'>
@@ -48,6 +53,12 @@ export default function AdminNav() {
                             <NavLink className='clickable-button' to={`/${randomURIkey}/admin/season/${seasonID}/reserves`}>Náhradníci</NavLink>
                             <NavLink className='clickable-button' to={`/${randomURIkey}/admin/season/${seasonID}/fia`}>Nastavenie FIA</NavLink>
                         </>
+                    }
+
+                    <NavLink className='clickable-button' to={`/${randomURIkey}/admin/seasons`}>Sezóny</NavLink>
+                    {
+                        usersAndRolesAllowedRoles.some(r => user?.roles.includes(r)) &&
+                        <NavLink className='clickable-button' to={`/${randomURIkey}/admin/roles`}>Používatelia a Role</NavLink>
                     }
                     <NavLink className='clickable-button' to={`/${randomURIkey}/admin/rules`}>Upraviť pravidlá</NavLink>
                     <NavLink className='clickable-button' to={`/${randomURIkey}/admin/new-season`}>Vytvoriť sezónu</NavLink>
