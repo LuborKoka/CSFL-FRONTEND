@@ -1,21 +1,37 @@
 import { faXmarkSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { AxiosError } from "axios";
 import { useState } from "react";
 
 
 /**
- * Displays an error message for the user.
+ * Displays an error message for the user, when error is thrown by an http request.
  * 
  * @returns An array containing a JSX element representing the error message
- *          and a function to trigger the error message display. This function takes one parameter: the content of the message.
+ *          and a function to trigger the error message display. This function takes one parameter: the error (from try catch block).
  */
-export default function useErrorMessage(): [JSX.Element | null, (messageContent: string) => void] {
+export default function useErrorMessage(): [JSX.Element | null, (error: unknown) => void] {
     const [isOpen, setIsOpen] = useState(false)
     const [text, setText] = useState('')
 
-    function showMessage(messageContent: string) {
+    function showMessage(error: unknown) {
         setIsOpen(true)
-        setText(messageContent)
+        if ( error instanceof AxiosError && error.response?.data.error !== undefined ) {
+            setText(error.response.data.error)
+            return
+        } 
+
+        if ( error instanceof AxiosError && error.request ) {
+            setText('Server je momentálne nedostupný. Skús to neskôr.')
+            return
+        }
+
+        if ( error instanceof AxiosError && error.message.toLowerCase() === 'network error' ) {
+            setText('Network Error')
+            return
+        } 
+
+        setText('Niečo sa dokazilo, skús to znova.')
     }
 
     const element =

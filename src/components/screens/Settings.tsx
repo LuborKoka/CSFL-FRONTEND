@@ -9,8 +9,8 @@ export default function Settings() {
 
     return(
         <div className='section'>
-            <PasswordChange />        
             <DiscordAccount />   
+            <PasswordChange />        
         </div>
     )
 }

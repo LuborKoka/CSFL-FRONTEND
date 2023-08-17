@@ -10,6 +10,7 @@ import {ReactComponent as PaperPlane} from '../../../images/sipka.svg'
 import { AddedLink, AddedVideo } from './AddReport'
 import useConfirmation from '../../../hooks/useConfirmation'
 import { useQueryClient } from '@tanstack/react-query'
+import useErrorMessage from '../../../hooks/useErrorMessage'
 
 type Props = {
     responseData: {
@@ -38,6 +39,7 @@ export default function ReportResponse({ responseData, setResponseData, raceID }
     const queryClient = useQueryClient()
 
     const [confirmation, showConfirmation] = useConfirmation()
+    const [message, showMessage] = useErrorMessage()
 
     function closeWindow() {
         setResponseData(p => {return {...p, isActive: false}})
@@ -100,8 +102,8 @@ export default function ReportResponse({ responseData, setResponseData, raceID }
         .then(() => {
             showConfirmation(confirm)
         })
-        .catch((e: AxiosError) => {
-
+        .catch((e: unknown) => {
+            showMessage(e)
         })
         .finally(() => setIsPending(false))
     }
@@ -198,6 +200,8 @@ export default function ReportResponse({ responseData, setResponseData, raceID }
             }
 
             { confirmation }
+
+            { message }
         </>
         
     )

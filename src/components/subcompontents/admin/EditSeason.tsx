@@ -15,9 +15,6 @@ type RaceProps = {
     setSeason: React.Dispatch<React.SetStateAction<OutletSeason>>
 }
 
-type Data = {
-    races: RaceProps[]
-}
 
 
 export default function EditSeason() {

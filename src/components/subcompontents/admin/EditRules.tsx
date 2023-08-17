@@ -65,11 +65,7 @@ export default function EditRules() {
         })
         .then(() => showConfirmation())
         .catch((e: unknown ) => {
-            if (e instanceof AxiosError && e.response?.data.error !== undefined ) {
-                showMessage(e.response.data.error)
-                return
-            }
-            showMessage('Niečo sa pokazilo, skús to znova.')
+            showMessage(e)
         })
         .finally(() => setIsPending(false))
 

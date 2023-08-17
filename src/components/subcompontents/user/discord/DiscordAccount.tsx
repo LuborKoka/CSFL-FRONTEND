@@ -29,7 +29,7 @@ export default function DiscordAccount() {
         axios.delete(`${URI}/user-discord/${user?.id}/`)
         .then(r => showConfirmation(() => queryClient.invalidateQueries([`user-discord-${user?.id}`])) )
         .catch((e: unknown) => {
-
+            showMessage(e)
         })
         .finally(() => setIsPending(false))
     }
@@ -59,7 +59,7 @@ export default function DiscordAccount() {
         <br/>
 
         <p>Nič z toho však nebude fungovať, ak nebudeš 
-            <Link style={{color: WHITE, textDecoration: 'none', paddingLeft: '5px', borderBottom: `1px solid ${WHITE}`}} to='https://discord.gg/rxebdqkc'>
+            <Link style={{color: WHITE, textDecoration: 'none', paddingLeft: '5px', borderBottom: `1px solid ${WHITE}`}} to='https://discord.gg/rxebdqkc' target="_blank">
                 na našom serveri <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
             </Link>
         </p>
@@ -67,7 +67,7 @@ export default function DiscordAccount() {
         <br/><br/>
 
 
-        <Link className='clickable-button' to={'https://discord.com/api/oauth2/authorize?client_id=1140670852166328411&redirect_uri=http%3A%2F%2F192.168.100.22%3A3000%2Fverify-user&response_type=code&scope=identify%20guilds.members.read'}>
+        <Link className='clickable-button' to={'https://discord.com/api/oauth2/authorize?client_id=1140670852166328411&redirect_uri=http%3A%2F%2F192.168.100.22%3A3000%2Fverify-user&response_type=code&scope=identify%20guilds%20guilds.members.read'}>
             Prepojiť účet a Discord <img src={Discord} height='16px' alt="discord icon" style={{transform: 'translate(3px, 2px)'}} />
         </Link>
     </>
@@ -92,6 +92,8 @@ export default function DiscordAccount() {
             <button className={`clickable-button ${isPending && 'button-disabled'}`} disabled={isPending} onClick={deleteDiscordAccount}>
                 Vymazať Discord účet
             </button>
+
+            <br/><br/><br/>
 
             {
                 confirmation 

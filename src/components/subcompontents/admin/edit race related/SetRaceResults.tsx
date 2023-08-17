@@ -97,7 +97,7 @@ export default function SetRaceResults({ raceID }: ResultsProps) {
             showConfirmation()
         })
         .catch((e: unknown) => {
-
+            showMessage(e)
         })
         .finally(() => setIsPending(false))
     }
@@ -151,6 +151,7 @@ export default function SetRaceResults({ raceID }: ResultsProps) {
             </form>
 
             { confirmation }
+            { message }
         </div>
     )
 }

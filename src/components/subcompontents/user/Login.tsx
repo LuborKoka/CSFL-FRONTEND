@@ -58,16 +58,11 @@ export default function Login({ swap }: Props) {
         .then((r: AxiosResponse) => {
             const data = jwtDecode(r.data.token) as {username: string, id: string, driverID: string}
             secureLocalStorage.setItem(storageKeyName, r.data.token)
-            //localStorage.setItem(storageKeyName, JSON.stringify(r.data.token))
-            setUser((p) => {return {...p!, ...data, token: r.data.token, roles: r.data.roles} } )
+            setUser({isLoggedIn: true, ...data, token: r.data.token, roles: r.data.roles})
             navigate('/welcome')
         })
         .catch((e: unknown) => {
-            console.log(e)
-            if ( e instanceof AxiosError && e.response?.data.error !== undefined ) {
-                showMessage(e.response.data.error)
-                return
-            }
+            showMessage(e)
         })
         .finally(() => setIsPending(false))
     }

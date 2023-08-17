@@ -8,6 +8,7 @@ import SetRaceResults from "./SetRaceResults";
 import useConfirmation from "../../../../hooks/useConfirmation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLightbulb } from "@fortawesome/free-solid-svg-icons";
+import useErrorMessage from "../../../../hooks/useErrorMessage";
 
 
 export default function EditRace() {
@@ -24,6 +25,7 @@ export default function EditRace() {
     const queryClient = useQueryClient()
 
     const [confirmation, showConfirmation] = useConfirmation()
+    const [message, showMessage] = useErrorMessage()
 
 
     function setRaceDrivers(teamID: string, drivers: string[]) {
@@ -54,8 +56,8 @@ export default function EditRace() {
         .then(() => {
             showConfirmation(() => queryClient.invalidateQueries([`edit-race-${raceID}`]))
         })
-        .catch((e: AxiosError) => {
-            console.log(e)
+        .catch((e: unknown) => {
+            showMessage(e)
         })
         .finally(() => setIsPending(false))
     }
@@ -89,6 +91,7 @@ export default function EditRace() {
 
 
             { confirmation }
+            { message }
         </div>
     )
 }

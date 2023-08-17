@@ -124,12 +124,7 @@ export default function AddReport() {
             showConfirmation(() => navigate(`/seasons/${seasonID}/race/${raceID}/reports`))
         })
         .catch((e: unknown) => {
-            if (e instanceof AxiosError && e.response?.data.error !== undefined ) {
-                showMessage(e.response.data.error)
-                return
-            }
-            console.log(e)
-            showMessage('Niečo sa pokazilo. Skús to znova.')
+            showMessage(e)
         })
         .finally(() => setIsPending(false))
     }

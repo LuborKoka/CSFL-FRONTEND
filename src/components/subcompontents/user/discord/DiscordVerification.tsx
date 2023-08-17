@@ -38,11 +38,7 @@ export default function DiscordVerification() {
                 showConfirmation(() => navigate('/settings'))
             },
             onError: (error: unknown) => {
-                if (error instanceof AxiosError && error.response?.data.error !== undefined) {
-                    showMessage(error.response.data.error)
-                } else {
-                    showMessage('Niečo sa pokazilo, skús to znova.')
-                }
+                showMessage(error)
             },
         }
     );

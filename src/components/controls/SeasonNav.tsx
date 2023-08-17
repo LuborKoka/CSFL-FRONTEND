@@ -24,7 +24,7 @@ export default function SeasonNav() {
 
     return(
        //no neda sa nic robit, bude to mat ine classname podal toho, co vrati location.pathname, lebo toto ma v pici cely responzivny design
-        <div className={location.pathname.includes('/race') ? 'content-container' : 'season-with-race-cards'} /* contains all of users' content*/>
+        <div className={location.pathname.includes('/race') ? 'content-container' : 'season-with-race-cards'} /* contains all of users' content*/> 
             <div className='header-navigation'>
                 <h3>{context.seasonName}</h3>
                 <div className='breadcrumbs'>

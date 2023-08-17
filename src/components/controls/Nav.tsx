@@ -78,7 +78,7 @@ export default function Nav() {
                         <NavLink style={{position: 'relative', textDecoration: 'none'}} onClick={closeNavbar} to='/settings'>
                             <div className='clickable-button'>
                                 <span>
-                                    <FontAwesomeIcon icon={faGears} /> Nastavenia
+                                    <FontAwesomeIcon icon={faGears} /> Účet
                                 </span>
                             </div>
                         </NavLink>

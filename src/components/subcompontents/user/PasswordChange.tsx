@@ -2,6 +2,8 @@ import axios, { AxiosResponse } from "axios"
 import { URI } from "../../../App"
 import { useRef, useState } from "react"
 import useUserContext from "../../../hooks/useUserContext"
+import useConfirmation from "../../../hooks/useConfirmation"
+import useErrorMessage from "../../../hooks/useErrorMessage"
 
 
 export default function PasswordChange() {
@@ -12,6 +14,9 @@ export default function PasswordChange() {
     const newPasswordConfirm = useRef<HTMLInputElement | null>(null)
 
     const user = useUserContext()[0]
+
+    const [confirmation, showConfirmation] = useConfirmation()
+    const [message, showMessage] = useErrorMessage()
 
     function handlePasswordChange(e: React.FormEvent) {
         e.preventDefault()
@@ -26,10 +31,10 @@ export default function PasswordChange() {
             }
         })
         .then((r: AxiosResponse) => {
-            console.log(r)
+            showConfirmation()
         })
         .catch((e: unknown) => {
-            console.log(e)
+            showMessage(e)
         })
         .finally(() => {
             setIsPending(false)
@@ -59,6 +64,9 @@ export default function PasswordChange() {
                     <button className={`clickable-button ${isPending && 'button-disabled'}`} disabled={isPending} type="submit">Zmeniť heslo</button>
                 </div>
             </form>
+
+            { confirmation }
+            { message }
         </>
     )
 

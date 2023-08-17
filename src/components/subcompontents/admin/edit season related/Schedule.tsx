@@ -63,8 +63,7 @@ export default function Schedule() {
     async function deleteRace(raceID: string) {
         axios.delete(`${URI}/schedule/${seasonID}/${raceID}/`, {
             headers: {
-                Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`,
-                'X-CSRFToken': user?.csrfToken
+                Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
             }
         })
         .then(r => {
@@ -84,8 +83,7 @@ export default function Schedule() {
                 }
             }, {
                 headers: {
-                    Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`,
-                    'X-CSRFToken': user?.csrfToken
+                    Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
                 }
             })
             queryClient.invalidateQueries([`scheduled-races-${seasonID}`])
@@ -110,15 +108,14 @@ export default function Schedule() {
             }
         }, {
             headers: {
-                Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`,
-                'X-CSRFToken': user?.csrfToken
+                Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
             }
         })
         .then((r: AxiosResponse) => {
             queryClient.invalidateQueries([`scheduled-races-${seasonID}`])
             showConfirmation(() => setCreateTrackForms([]))
         })
-        .catch((e: AxiosError) => {
+        .catch((e: unknown) => {
             console.log(e)
         })
         .finally(() => setIsPendingSchedule(false))
