@@ -114,7 +114,7 @@ function App() {
             </Route>
 
             <Route path={`/${randomURIkey}/admin`} element={<AdminNav />}>
-              <Route index element={<AdminUI />} />
+              <Route path='seasons' element={<AdminUI />} />
               <Route path='roles' element={<Roles />} />
               <Route path='rules' element={<EditRules />} />
               <Route path='new-season' element={<CreateSeason />} />

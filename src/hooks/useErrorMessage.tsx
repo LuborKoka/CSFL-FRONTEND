@@ -21,11 +21,6 @@ export default function useErrorMessage(): [JSX.Element | null, (error: unknown)
             return
         } 
 
-        if ( error instanceof AxiosError && error.request ) {
-            setText('Server je momentálne nedostupný. Skús to neskôr.')
-            return
-        }
-
         if ( error instanceof AxiosError && error.message.toLowerCase() === 'network error' ) {
             setText('Network Error')
             return

@@ -9,6 +9,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import ExistingRace from "./ExistingRace";
 import useConfirmation from "../../../../hooks/useConfirmation";
 import useUserContext from "../../../../hooks/useUserContext";
+import useErrorMessage from "../../../../hooks/useErrorMessage";
 
 type RaceResponse = {
     raceID: string,
@@ -40,7 +41,7 @@ export default function Schedule() {
     const queryClient = useQueryClient()
 
     const [confirmation, showConfirmation] = useConfirmation()
-
+    const [message, showMessage] = useErrorMessage()
 
 
 
@@ -70,13 +71,14 @@ export default function Schedule() {
             queryClient.invalidateQueries([`scheduled-races-${seasonID}`])
             showConfirmation()
         })
-        .catch(e => {
+        .catch((e: unknown) => {
+            showMessage(e)
         })
     }
 
     async function patchRace(raceID: string, trackID: string, date: string) {
         try {
-            await axios.patch(`${URI}/schedule/${seasonID}/${raceID}/`, {
+            await axios.put(`${URI}/schedule/${seasonID}/${raceID}/`, {
                 params: {
                     trackID: trackID,
                     date: date
@@ -91,6 +93,7 @@ export default function Schedule() {
             showConfirmation()
             return true
         } catch (e: unknown) {
+            showMessage(e)
             return false
         }
     }
@@ -156,6 +159,7 @@ export default function Schedule() {
             }
 
             { confirmation }
+            { message }
         </div>
     )
 }

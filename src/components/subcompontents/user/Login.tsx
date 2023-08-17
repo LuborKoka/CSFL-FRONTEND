@@ -63,6 +63,7 @@ export default function Login({ swap }: Props) {
             secureLocalStorage.setItem(storageKeyName, r.data.token)
             setUser({isLoggedIn: true, ...data, token: r.data.token, roles: r.data.roles})
             if ( redirectUrl ) navigate(redirectUrl)
+            else navigate('/not-found')
         })
         .catch((e: unknown) => {
             showMessage(e)

@@ -71,7 +71,7 @@ export default function Nav() {
                     <ul>
                         {
                             user?.roles.some(r => allowedRoles.includes(r)) &&
-                            <NavLink style={{position: 'relative', textDecoration: 'none'}} onClick={closeNavbar} to={`/${randomURIkey}/admin`}>
+                            <NavLink style={{position: 'relative', textDecoration: 'none'}} onClick={closeNavbar} to={`/${randomURIkey}/admin/seasons`}>
                                 <div className='clickable-button'>
                                     <span>
                                         <FontAwesomeIcon icon={faLock} /> F1 Admin
@@ -96,11 +96,14 @@ export default function Nav() {
                                 </div>
                             </NavLink>
                         }
-                        <NavLink className='clickable-button' onClick={logOut} to='/'> 
-                            <span>
-                                <FontAwesomeIcon icon={faArrowRightFromBracket} /> Odhlásiť sa  
-                            </span>
-                        </NavLink>
+                        {
+                            user?.isLoggedIn &&
+                            <NavLink className='clickable-button' onClick={logOut} to='/'> 
+                                <span>
+                                    <FontAwesomeIcon icon={faArrowRightFromBracket} /> Odhlásiť sa  
+                                </span>
+                            </NavLink>
+                        }
                     </ul>
                 </div>
             </div>

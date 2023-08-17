@@ -118,6 +118,7 @@
     padding: 3rem 2rem;
     box-shadow: 0 0 10px rgba($white, .3);
     margin-left: .5rem;
+    min-width: 225px;
 
     ul {
         @include flexColumn();
