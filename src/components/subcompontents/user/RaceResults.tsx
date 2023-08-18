@@ -101,16 +101,16 @@ function formatTime(input: number, laps: number): string {
     if ( laps > 0 ) {
         switch(laps) {
             case 1:
-                return '+1 kolo'
+                return '1 kolo'
             case 2:
-                return '+2 kolá'
+                return '2 kolá'
             case 3:
-                return '+3 kolá'
+                return '3 kolá'
             case 4:
-                return '+4 kolá'
+                return '4 kolá'
             
             default:
-                return `+${laps} kôl`
+                return `${laps} kôl`
         }
     }
 
