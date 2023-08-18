@@ -17,7 +17,7 @@
 .message-container {
   position: fixed;
   inset: 0;
-  z-index: 10;
+  z-index: 12;
   backdrop-filter: blur(1px);
   display: flex;
   align-items: center;
@@ -31,7 +31,7 @@
   min-height: 100px;
   border-radius: 5px;
   position: relative;
-  color: #001010;
+  color: #000606;
   padding: 0.5rem 1rem;
   animation-delay: 0.1s;
   animation: expand-from-center 0.5s ease-out;

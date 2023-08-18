@@ -61,7 +61,7 @@ export default function Standings() {
                                 query.data?.data.races.map(r => 
                                 <th key={r.id} >
                                     <div className='flag-box'>
-                                        <img alt='flag' style={{objectFit: 'cover', width: '100%', height: '100%'}}   src={`${URI}/media/${r.flag}/`} />                                   
+                                        <img alt='flag' style={{objectFit: 'cover', width: '100%', height: '100%', borderRadius: '2px'}}   src={`${URI}/media/${r.flag}/`} />                                   
                                     </div>
                                 </th>)
                             }

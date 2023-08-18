@@ -59,7 +59,7 @@ export default function DiscordAccount() {
         <br/>
 
         <p>Nič z toho však nebude fungovať, ak nebudeš 
-            <Link style={{color: WHITE, textDecoration: 'none', paddingLeft: '5px', borderBottom: `1px solid ${WHITE}`}} to='https://discord.gg/rxebdqkc' target="_blank">
+            <Link style={{color: WHITE, textDecoration: 'none', paddingLeft: '5px', borderBottom: `1px solid ${WHITE}`}} to='https://discord.gg/rDd2YB5bbg' target="_blank">
                 na našom serveri <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
             </Link>
         </p>

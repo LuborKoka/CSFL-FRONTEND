@@ -96,12 +96,12 @@ export default function AddReport() {
             return
         }
 
-        if ( !user?.id  ) {
+        if ( !user?.isLoggedIn  ) {
             showMessage('Musíš sa prihlásiť.')
             return
         }
 
-        report.current = {...report.current, from_driver: user.id, video: links.map(l => l.url)}
+        report.current = {...report.current, from_driver: user.id!, video: links.map(l => l.url)}
 
         setIsPending(true)
 

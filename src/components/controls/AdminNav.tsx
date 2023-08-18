@@ -76,7 +76,7 @@ export default function AdminNav() {
 function lastLink(pathname: string): JSX.Element | null {
     if ( pathname.includes('/drivers') ) return <>{'>'} <Link className='link' to={pathname}>Tímové dvojice</Link></>
 
-    if ( pathname.includes('/schedule')) return <>{'>'} <Link className='link' to={pathname}>Kalendár</Link> </>   
+    if ( pathname.includes('/schedule')) return <>{'>'} <Link className='link' to={pathname}>Upraviť Kalendár</Link> </>   
     
     if ( pathname.includes('/reserves')) return <>{'>'} <Link className='link' to={pathname}>Náhradníci</Link> </>
 

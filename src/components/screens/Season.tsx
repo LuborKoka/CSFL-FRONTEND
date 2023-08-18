@@ -9,15 +9,12 @@ import { Link, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUpRightFromSquare, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { RED } from "../../constants";
-import useSeasonDataContext from "../../hooks/useSeasonDataContext";
 
 
 export default function Season() {
     const { seasonID } = useParams()
 
-    const setSeason = useSeasonDataContext()[1]
-
-    const query = useQuery([`scheduled-races-${seasonID}`], () => fetchData(seasonID, setSeason))
+    const query = useQuery([`scheduled-races-${seasonID}`], () => fetchData(seasonID))
     const drivers = useQuery([`season-drivers-user-${seasonID}`], () => fetchSeasonDrivers(seasonID))
 
     const calendar = 
@@ -115,7 +112,7 @@ export default function Season() {
 
 
 
-async function fetchData(seasonID: string | undefined, setState: React.Dispatch<React.SetStateAction<{seasonName: string, reportID: string}>>) {
+export async function fetchData(seasonID: string | undefined) {
     type Data = {
         seasonName: string,
         races: {
@@ -128,7 +125,6 @@ async function fetchData(seasonID: string | undefined, setState: React.Dispatch<
         }[]
     }
     const res = await axios.get<Data>(`${URI}/schedule/${seasonID}/`)
-    setState(p => {return {...p, seasonName: res.data.seasonName}})
     return res.data
 }
 

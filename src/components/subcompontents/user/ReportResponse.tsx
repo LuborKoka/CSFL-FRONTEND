@@ -11,6 +11,7 @@ import { AddedLink, AddedVideo } from './AddReport'
 import useConfirmation from '../../../hooks/useConfirmation'
 import { useQueryClient } from '@tanstack/react-query'
 import useErrorMessage from '../../../hooks/useErrorMessage'
+import useUserContext from '../../../hooks/useUserContext'
 
 type Props = {
     responseData: {
@@ -32,7 +33,7 @@ export default function ReportResponse({ responseData, setResponseData, raceID }
 
     const [isPending, setIsPending] = useState(false)
 
-    const user = useContext(UserContext as Context<UserTypes>)
+    const user = useUserContext()[0]
 
     const race = useOutletContext<RaceContext>()[0]
 
@@ -82,8 +83,13 @@ export default function ReportResponse({ responseData, setResponseData, raceID }
 
         setIsPending(true)
 
+        if ( !user?.isLoggedIn ) {
+            showMessage('Musíš sa prihlásiť.')
+            return
+        }
+
         const report = {
-            from_driver: user.user?.id,
+            from_driver: user?.id!,
             inchident: content.current!.value,
             video: links.map(l => l.url)
         }
@@ -109,8 +115,8 @@ export default function ReportResponse({ responseData, setResponseData, raceID }
     }
 
     const form = 
-    <div className='pop-up-bg' onClick={closeWindow} >
-        <div className='pop-up-content' onClick={(e) => e.stopPropagation()}>
+    <div className='pop-up-bg' onPointerDown={closeWindow} >
+        <div className='pop-up-content' onPointerDown={(e) => e.stopPropagation()}>
             <div>
                 <div className='sticky-heading'>
                     <h2 className='header-with-time section-heading fade-in-out-border'>
@@ -188,7 +194,7 @@ export default function ReportResponse({ responseData, setResponseData, raceID }
 
             </div>
             <div className='submit-button-container'>
-                    <button className='clickable-button' onClick={submitReportResponse}>Odpovedať</button>
+                    <button className={`clickable-button ${isPending && 'button-disabled'}`} onClick={submitReportResponse}>Odpovedať</button>
                 </div>
         </div>
     </div>

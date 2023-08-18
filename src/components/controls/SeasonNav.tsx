@@ -1,8 +1,9 @@
 import { Link, Outlet, useLocation, useParams } from "react-router-dom";
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useQuery } from "@tanstack/react-query";
 import { fetchDrivers } from "../subcompontents/user/RaceOverview";
 import useUserContext from "../../hooks/useUserContext";
+import { fetchData } from "../screens/Season";
 
 type Data = {
     seasonName: string,
@@ -21,19 +22,26 @@ export default function SeasonNav() {
     const location = useLocation()
 
     const query = useQuery([`race_${raceID}_drivers_overview`], () => fetchDrivers(raceID))
+    const season = useQuery([`scheduled-races-${seasonID}`], () => fetchData(seasonID))
+
+    useEffect(() => {
+        setContext(p => {
+            return {...p, seasonName: season.data?.seasonName || ''}
+        })
+    }, [season.data])
 
     return(
        //no neda sa nic robit, bude to mat ine classname podal toho, co vrati location.pathname, lebo toto ma v pici cely responzivny design
         <div className={location.pathname.includes('/race') ? 'content-container' : 'season-with-race-cards'} /* contains all of users' content*/> 
             <div className='header-navigation'>
-                <h3>{context.seasonName}</h3>
+                <h3>{season.data?.seasonName}</h3>
                 <div className='breadcrumbs'>
                     <Link className='link' to={'/'}>Úvod</Link>
                     <Link className='link' to={`/seasons/${seasonID}`}>{'> Prehľad ročníka'}</Link>
                     {
                         location.pathname.includes('/race') ?
                        <> {'>'}
-                        <Link className='link' to={`/seasons/${seasonID}/race/${raceID}`}>{query.data?.raceName}</Link> </>
+                        <Link className='link' to={`/seasons/${seasonID}/race/${raceID}/overview`}>{query.data?.raceName}</Link> </>
                     :
                     null
                     }
