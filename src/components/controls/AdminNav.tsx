@@ -49,7 +49,7 @@ export default function AdminNav() {
                         seasonID === undefined ? null :
                         <>
                             <NavLink className='clickable-button' to={`/${randomURIkey}/admin/season/${seasonID}/drivers`}>Tímové dvojice</NavLink>
-                            <NavLink className='clickable-button' to={`/${randomURIkey}/admin/season/${seasonID}/schedule`}>Kalendár</NavLink>
+                            <NavLink className='clickable-button' to={`/${randomURIkey}/admin/season/${seasonID}/schedule`}>Upraviť Kalendár</NavLink>
                             <NavLink className='clickable-button' to={`/${randomURIkey}/admin/season/${seasonID}/reserves`}>Náhradníci</NavLink>
                             <NavLink className='clickable-button' to={`/${randomURIkey}/admin/season/${seasonID}/fia`}>Nastavenie FIA</NavLink>
                         </>
