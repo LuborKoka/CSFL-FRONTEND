@@ -8,7 +8,7 @@ import { useState } from "react";
  * Displays an error message for the user, when error is thrown by an http request.
  * 
  * @returns An array containing a JSX element representing the error message
- *          and a function to trigger the error message display. This function takes one parameter: the error (from try catch block).
+ *          and a function to trigger the error message display. This function takes one parameter: the error (from try catch block) or a text message.
  */
 export default function useErrorMessage(): [JSX.Element | null, (error: unknown) => void] {
     const [isOpen, setIsOpen] = useState(false)
@@ -16,6 +16,12 @@ export default function useErrorMessage(): [JSX.Element | null, (error: unknown)
 
     function showMessage(error: unknown) {
         setIsOpen(true)
+
+        if ( typeof error === 'string' ) {
+            setText(error)
+            return
+        }
+
         if ( error instanceof AxiosError && error.response?.data.error !== undefined ) {
             setText(error.response.data.error)
             return
