@@ -15,6 +15,7 @@ export default function Rules() {
     
     return(
         <article id="markdown" className="section">
+            <div className='empty-header'></div>
             <br/><br/>
             <div className='header-with-time section-heading fade-in-out-border'>
                 <h2>Pravidlá</h2>

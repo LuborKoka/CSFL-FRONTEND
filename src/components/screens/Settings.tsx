@@ -10,7 +10,7 @@ export default function Settings() {
 
     return(
         <div className='section'>
-            <div style={{position: 'fixed', top: '0', width: '100vw', zIndex: '1', backgroundColor: DARKBLUE, height: '65px'}}></div>
+            <div className='empty-header'></div>
             <br/><br/>
             <h2 className='section-heading fade-in-out-border'>Účet</h2>
             <ul>
