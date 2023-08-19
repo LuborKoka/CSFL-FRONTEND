@@ -10,6 +10,7 @@ import { storageKeyName } from '../../constants'
 import secureLocalStorage from 'react-secure-storage'
 import useUserContext from '../../hooks/useUserContext'
 import { faUser } from '@fortawesome/free-regular-svg-icons'
+import { useSwipeable } from 'react-swipeable'
 
 type SeasonType = {
     id: string,
@@ -20,6 +21,11 @@ type SeasonType = {
 
 export default function Nav() {
     const [isOpen, setIsOpen] = useState(false)
+
+    const handlers = useSwipeable({
+        onSwipedRight: () => setIsOpen(true),
+        onSwipedLeft: () => setIsOpen(false)
+    })
 
     const location = useLocation()
 
@@ -46,7 +52,7 @@ export default function Nav() {
 
 
     const jsx = 
-        <nav className={`main-navigation ${isOpen ? 'nav-active' : ''}`}>
+        <nav className={`main-navigation ${isOpen ? 'nav-active' : ''}`} {...handlers}>
             <div className='navbar'>
                 <div className="league-options">
                     <ul>
@@ -116,7 +122,7 @@ export default function Nav() {
                 </button>
             </div>
             {/*fills the rest of the page, on mobile on click outside navbar to close the navbar*/}
-            <div style={isOpen ? navFill.active : navFill.inactive} onClick={closeNavbar}></div>
+            <div style={{zIndex: '-1', height: '100%', position: 'fixed', width: isOpen ? '100vw' : '100%'}} onClick={closeNavbar}></div>
         </nav>
 
     return(
@@ -132,15 +138,4 @@ async function fetchSeasons() {
     }
     const res = await axios.get<data>(`${URI}/seasons/`)
     return res.data
-}
-
-
-const navFill = {
-    active: {
-        zIndex: '-1',
-        position: 'fixed' as 'fixed',
-        height: '100%',
-        width: '100vw'
-    },
-    inactive: {position: 'fixed' as 'fixed'}
 }
