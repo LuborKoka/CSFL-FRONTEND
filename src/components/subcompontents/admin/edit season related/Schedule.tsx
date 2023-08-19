@@ -143,7 +143,7 @@ export default function Schedule() {
             {
                 createTrackForms.length === 0 ? null :
                 <div className='submit-button-container'>
-                    <button className={`clickable-button ${isPendingSchedule ? 'button-disabled' : ''}`} disabled={isPendingSchedule} onClick={submitSchedule}>Create Schedule</button>
+                    <button className={`clickable-button ${isPendingSchedule ? 'button-disabled' : ''}`} disabled={isPendingSchedule} onClick={submitSchedule}>Pridať veľké ceny</button>
                 </div>
             }
 

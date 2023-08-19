@@ -1,6 +1,6 @@
 import { faHandMiddleFinger, faPoo } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import Image from '../../images/notFound.png'
+import Image from '../../images/notFound.gif'
 
 export function NotFound() {
     return(

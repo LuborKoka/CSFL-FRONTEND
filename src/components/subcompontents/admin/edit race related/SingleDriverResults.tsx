@@ -28,7 +28,8 @@ export default function SingleDriverResult({ driverID, driverName, color, time, 
 
     return(
         <div>
-            <div className='labeled-input'>
+            <br/>
+            <div className='labeled-input' style={{marginTop: '10px'}}>
                 <input name={driverName} className='form-input' type="text" required value={resultTime}
                 style={{color: color, boxShadow: `0 0 10px 5px ${color}`}}  onChange={handleChange} />
             
