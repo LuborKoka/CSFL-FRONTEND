@@ -94,7 +94,7 @@ export default function EditTeamDrivers({ color, id, name, signed, options }: Pr
         <div>
             <div className='labeled-input'>
                 <Select name={name} isDisabled={isDisabled} isMulti value={values} styles={selectMultiValueStyles(color)} 
-                onChange={handleChange} options={[...values, ...options]} closeMenuOnSelect={false} placeholder={isDisabled ? '' : 'Select...'} />
+                onChange={handleChange} options={[...signed.map(d => {return {value: d.id, label: d.name}}), ...options]} closeMenuOnSelect={false} placeholder={isDisabled ? '' : 'Select...'} />
                 <label htmlFor={name} style={{color: color, transform: 'translate(-2%, -120%) scale(.9)', padding: '2px 5px'}}>
                     {name}
                 </label>
