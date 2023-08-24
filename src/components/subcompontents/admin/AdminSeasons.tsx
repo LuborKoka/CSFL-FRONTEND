@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { URI, UserContext, UserTypes, insertTokenIntoHeader, randomURIkey } from '../../../App';
-import { Link, NavLink, useOutletContext } from 'react-router-dom';
+import { Link, useOutletContext } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { AdminOutletContext, OutletSeason } from '../../controls/AdminNav';
 import { useContext, Context} from 'react'

@@ -1,5 +1,5 @@
-import { DARKBLUE } from "../../constants";
 import useUserContext from "../../hooks/useUserContext";
+import NameChange from "../subcompontents/user/NameChange";
 import PasswordChange from "../subcompontents/user/PasswordChange";
 import DiscordAccount from "../subcompontents/user/discord/DiscordAccount";
 
@@ -19,6 +19,7 @@ export default function Settings() {
             </ul>
             <br/><br/>
               
+            <NameChange />
             <PasswordChange />     
             <DiscordAccount />    
         </div>

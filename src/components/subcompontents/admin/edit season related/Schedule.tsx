@@ -1,6 +1,6 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
-import React, { useContext, useState, useRef, Context } from "react";
-import { URI, UserContext, UserTypes, generateRandomString, insertTokenIntoHeader } from "../../../../App";
+import axios, { AxiosResponse } from "axios";
+import React, { useState, useRef} from "react";
+import { URI, generateRandomString, insertTokenIntoHeader } from "../../../../App";
 import CreateRace from "./CreateRace";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLightbulb } from "@fortawesome/free-solid-svg-icons";
@@ -10,12 +10,6 @@ import ExistingRace from "./ExistingRace";
 import useConfirmation from "../../../../hooks/useConfirmation";
 import useUserContext from "../../../../hooks/useUserContext";
 import useErrorMessage from "../../../../hooks/useErrorMessage";
-
-type RaceResponse = {
-    raceID: string,
-    raceName: string,
-    date: string
-}
 
 
 export type Race = {

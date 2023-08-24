@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import axios, { AxiosResponse, AxiosError} from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import { URI } from '../../../App'
 import jwtDecode from 'jwt-decode'
 import { storageKeyName } from '../../../constants'
@@ -17,7 +17,7 @@ const schema = z.object({
     }).max(50, {
         message: 'Meno musí mať najviac 50 znakov.'
     }),
-    password: z.string().min(7, {
+    password: z.string().min(8, {
         message: 'Heslo musí mať aspoň 8 znakov.'
     })
 })
@@ -54,7 +54,7 @@ export default function Login({ swap }: Props) {
 
         axios.post(`${URI}/login/`, {
             params: {
-                username: data.username,
+                username: data.username.toLowerCase().trim(),
                 password: data.password
             }
         })

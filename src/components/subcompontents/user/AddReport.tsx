@@ -1,13 +1,12 @@
-import React, { useState, useRef, useContext, Context } from "react";
-import axios, { AxiosError, AxiosResponse } from "axios";
-import { URI, UserContext, UserTypes, generateRandomString, insertTokenIntoHeader } from "../../../App";
+import React, { useState, useRef } from "react";
+import axios, { AxiosResponse } from "axios";
+import { URI, generateRandomString, insertTokenIntoHeader } from "../../../App";
 import Select, { MultiValue, StylesConfig, ActionMeta } from 'react-select';
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLightbulb, faPaperclip, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { DARKBLUE, RED, WHITE } from "../../../constants";
-import PaperPlane from '../../../images/sipka.svg'
 import useConfirmation from "../../../hooks/useConfirmation";
 import useErrorMessage from "../../../hooks/useErrorMessage";
 import useUserContext from "../../../hooks/useUserContext";

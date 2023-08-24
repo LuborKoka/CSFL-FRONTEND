@@ -1,6 +1,5 @@
 import axios from "axios";
-import React, { Context, useContext } from "react";
-import { URI, UserContext, UserTypes, insertTokenIntoHeader } from "../../App";
+import { URI } from "../../App";
 import { useQuery } from '@tanstack/react-query'
 import Race from "../subcompontents/user/Race";
 import '../../styles/seasons.css'
@@ -14,8 +13,8 @@ import { RED } from "../../constants";
 export default function Season() {
     const { seasonID } = useParams()
 
-    const query = useQuery([`scheduled-races-${seasonID}`], () => fetchData(seasonID))
-    const drivers = useQuery([`season-drivers-user-${seasonID}`], () => fetchSeasonDrivers(seasonID))
+    const query = useQuery([`scheduled-races-${seasonID}`], () => fetchData(seasonID), {staleTime: Infinity})
+    const drivers = useQuery([`season-drivers-user-${seasonID}`], () => fetchSeasonDrivers(seasonID), { staleTime: Infinity })
 
     const calendar = 
     <>

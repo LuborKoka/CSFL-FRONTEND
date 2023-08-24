@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Auth from './components/screens/Auth';
 import Reports from './components/screens/Reports';
 import Nav from './components/controls/Nav';
@@ -33,8 +33,9 @@ import secureLocalStorage from 'react-secure-storage';
 import EditRules from './components/subcompontents/admin/EditRules';
 import DiscordVerification from './components/subcompontents/user/discord/DiscordVerification';
 import Roles from './components/subcompontents/admin/Roles';
+import WifeBeater from './components/subcompontents/admin/wife_btear/WifeBeater';
 
-export const URI = `http://192.168.100.22:8000/api`
+export const URI = `http://192.168.100.22/api`
 
 export const randomURIkey = generateRandomString(10)
 
@@ -127,6 +128,8 @@ function App() {
 
               <Route path='season/:seasonID/race/:raceID' element={<EditRace />} />
             </Route>
+
+            <Route path={`/${randomURIkey}/wife-beater`} element={<WifeBeater />} />
 
             <Route path='*' element={<NotFound />} />
             <Route path='/forbidden' element={<Forbidden />} />

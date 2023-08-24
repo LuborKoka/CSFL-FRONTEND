@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios from "axios";
 import React, { useContext, useRef, useState, Context } from "react";
 import { useParams } from "react-router-dom";
 import { URI, UserContext, UserTypes, insertTokenIntoHeader } from "../../../../App";

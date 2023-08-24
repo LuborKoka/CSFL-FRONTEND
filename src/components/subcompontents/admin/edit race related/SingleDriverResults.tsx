@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react"
-import { DARKBLUE } from "../../../../constants"
 
 type Props = {
     driverID: string,

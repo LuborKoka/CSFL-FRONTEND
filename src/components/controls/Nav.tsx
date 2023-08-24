@@ -1,11 +1,11 @@
-import React, { useState, useContext, Context } from 'react'
+import React, { useState } from 'react'
 import { useLocation, NavLink } from 'react-router-dom'
 import '../../styles/navigation.css'
 import axios from 'axios'
-import { URI, UserContext, UserTypes, randomURIkey } from '../../App'
+import { URI, randomURIkey } from '../../App'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRightFromBracket, faGears, faLock, faScroll } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRightFromBracket, faGears, faHome, faLock, faScroll } from '@fortawesome/free-solid-svg-icons'
 import { storageKeyName } from '../../constants'
 import secureLocalStorage from 'react-secure-storage'
 import useUserContext from '../../hooks/useUserContext'
@@ -56,6 +56,12 @@ export default function Nav() {
             <div className='navbar'>
                 <div className="league-options">
                     <ul>
+                        <NavLink style={{position: 'relative', textDecoration: 'none'}} onClick={closeNavbar} to='/'>
+                            <div className='clickable-button'>
+                                <span><FontAwesomeIcon icon={faHome} flip='horizontal' /> Domov</span>
+                            </div>
+                        </NavLink>
+
                         <NavLink style={{position: 'relative', textDecoration: 'none'}} onClick={closeNavbar} to='/rules'>
                             <div className='clickable-button'>
                                 <span><FontAwesomeIcon icon={faScroll} flip='horizontal' /> Pravidlá</span>
@@ -75,6 +81,16 @@ export default function Nav() {
 
                 <div className="account-options">
                     <ul>
+                        {
+                            user?.roles.some(r => r === 'Sys Admin') &&
+                            <NavLink style={{position: 'relative', textDecoration: 'none'}} onClick={closeNavbar} to={`/${randomURIkey}/wife-beater`}>
+                                <div className='clickable-button'>
+                                    <span>
+                                        <FontAwesomeIcon icon={faLock} /> Wife Beater
+                                    </span>
+                                </div>        
+                            </NavLink> 
+                        }
                         {
                             user?.roles.some(r => allowedRoles.includes(r)) &&
                             <NavLink style={{position: 'relative', textDecoration: 'none'}} onClick={closeNavbar} to={`/${randomURIkey}/admin/seasons`}>
@@ -122,7 +138,7 @@ export default function Nav() {
                 </button>
             </div>
             {/*fills the rest of the page, on mobile on click outside navbar to close the navbar*/}
-            <div style={{zIndex: '-1', height: '100%', position: 'fixed', width: isOpen ? '100vw' : '100%'}} onClick={closeNavbar}></div>
+            <div className='swipeable' style={{zIndex: '-1', height: '100%', position: 'fixed', width: isOpen ? '100vw' : '100%'}} onClick={closeNavbar}></div>
         </nav>
 
     return(

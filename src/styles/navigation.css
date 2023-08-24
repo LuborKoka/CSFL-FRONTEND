@@ -1024,6 +1024,9 @@
   .main-navigation {
     box-shadow: 0 2px 15px rgba(239, 239, 239, 0.3);
   }
+  .swipeable {
+    display: none;
+  }
 }
 @media screen and (max-width: 1000px) {
   .hamburger-position {

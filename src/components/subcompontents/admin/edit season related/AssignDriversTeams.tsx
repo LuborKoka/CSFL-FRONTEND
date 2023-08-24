@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import EditTeamDrivers from './EditTeamDrivers';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLightbulb } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Forbidden } from '../../../controls/BadReq';
 
 // potom upravit tu logiku pre ligy s uz priradenymi jazdcami do timov

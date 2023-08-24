@@ -68,7 +68,7 @@ export default function Signup({ swap }: Props) {
 
         axios.post(`${URI}/signup/`, {
             params: {
-                username: data.username,
+                username: data.username.toLowerCase().trim(),
                 password: data.password,
                 passwordConfirm: data.confirmPassword,
                 raceName: data.raceName
@@ -77,7 +77,7 @@ export default function Signup({ swap }: Props) {
         .then(r => {
             const data = jwtDecode(r.data.token) as {username: string, id: string, driverName: string, driverID: string}
             secureLocalStorage.setItem(storageKeyName, r.data.token)
-            setUser({isLoggedIn: true, ...data, token: r.data.token, roles: r.data.roles})
+            setUser({isLoggedIn: true, ...data, token: r.data.token, roles: []})
             if ( redirectUrl ) navigate(redirectUrl)
             else navigate('/not-found')
         })

@@ -1,9 +1,8 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { URI } from "../../../App";
 import '../../../styles/verdict.css'
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
-import { RaceContext } from "../../controls/SeasonNav";
+import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRectangleXmark } from "@fortawesome/free-regular-svg-icons"
@@ -20,7 +19,7 @@ type Props = {
 export default function Verdict({ setIsAddingVerdict }: Props) {
     const { raceID } = useParams()
 
-    const query = useQuery([`race_reports_FIA_${raceID}`], () => fetchReports(raceID))
+    const query = useQuery([`race_reports_FIA_${raceID}`], () => fetchReports(raceID), {staleTime: Infinity})
 
 
     function closeWindow() {
@@ -83,8 +82,6 @@ function ReportSection({ rank, from, targets, reportID }: RSProps) {
     const [confirmation, showConfirmation] = useConfirmation()
     const [message, showMessage] = useErrorMessage()
 
-    const navigate = useNavigate()
-
     function setPenalty(time: number, points: number, driverID: string, isDSQ: boolean) {
         const pen = penalties.current.find(p => p.driverID === driverID)
         if ( pen === undefined ) {
@@ -123,7 +120,7 @@ function ReportSection({ rank, from, targets, reportID }: RSProps) {
                 content: content.current!.value
             }
         })
-        .then((r: AxiosResponse) => {
+        .then(() => {
             showConfirmation(confirm)
         })
         .catch((e: unknown) => {
@@ -173,17 +170,17 @@ function ReportSection({ rank, from, targets, reportID }: RSProps) {
             <form className='expand-verdict-container' style={{maxHeight: isExpanded ? height : '0px'}} onSubmit={submit}>
                 <div ref={container} className='verdict-container'>
                     <div className='inchident labeled-input'>
-                        <textarea ref={content} name='verdict' required />
+                        <textarea ref={content} name='verdict' required readOnly={isSubmitted} />
                         <label htmlFor='verdict'>Rozhodnutie FIA</label>
                     </div>
 
                     <div className={`verdict-drivers-container`}>
-                        <Penalty driverName={from.name} driverID={from.id} setPenalty={setPenalty} />
+                        <Penalty driverName={from.name} driverID={from.id} setPenalty={setPenalty} isSubmitted={isSubmitted} />
 
                         {
                             targets.map(t => 
                                 t.driverID === 'hra' ? null :
-                                <Penalty driverID={t.driverID} driverName={t.driverName} key={t.driverID} setPenalty={setPenalty} />    
+                                <Penalty driverID={t.driverID} driverName={t.driverName} key={t.driverID} setPenalty={setPenalty} isSubmitted={isSubmitted} />    
                             )
                         }
 
@@ -210,9 +207,10 @@ type PenaltyProps = {
     driverID: string,
     driverName: string,
     setPenalty: (time: number, points: number, driverID: string, isDSQ: boolean) => void,
+    isSubmitted: boolean
 }
 
-function Penalty({ driverID, driverName, setPenalty }: PenaltyProps) {
+function Penalty({ driverID, driverName, setPenalty, isSubmitted }: PenaltyProps) {
     const [data, setData] = useState({points: 0, time: 0, isDSQ: false})
 
     function setTime(e: React.ChangeEvent<HTMLInputElement>) {
@@ -226,6 +224,7 @@ function Penalty({ driverID, driverName, setPenalty }: PenaltyProps) {
     }
 
     function setIsDsq(checked: boolean) {
+        if ( isSubmitted ) return
         setData(p => {return {...p, isDSQ: checked}})
         setPenalty(data.time, data.points, driverID, checked)
     }
@@ -237,14 +236,14 @@ function Penalty({ driverID, driverName, setPenalty }: PenaltyProps) {
             <span><b>{driverName}</b></span>
 
             <div className='labeled-input'>
-                <input name="time-penalty" value={data.time} className='form-input' type="number" onChange={setTime} />
+                <input name="time-penalty" value={data.time} className='form-input' type="number" onChange={setTime} readOnly={isSubmitted} />
                 <label htmlFor="time-penalty">Časová penalizácia</label>
             </div>
             <div className='labeled-input'>
-                <input name="penalty-points" value={data.points} className='form-input' type="number" min={0} onChange={setPoints} />
+                <input name="penalty-points" value={data.points} className='form-input' type="number" min={0} onChange={setPoints} readOnly={isSubmitted} />
                 <label htmlFor="penalty-points">Trestné body</label>
             </div>    
-            <label className='center clickable-button' style={{columnGap: '2rem', opacity: data.isDSQ ? '1' : '.5'}}>
+            <label className='center clickable-button' style={{columnGap: '2rem', transition: 'opacity .2s', opacity: data.isDSQ ? '1' : '.5', cursor: isSubmitted ? 'default' : 'pointer'}}>
                 <b style={{fontSize: '20px'}}>
                     Diskvalifikácia
                 </b>

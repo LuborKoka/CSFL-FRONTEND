@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Discord from '../../../../images/discord.svg'
 import useUserContext from "../../../../hooks/useUserContext";
 import axios from "axios";
-import { URI } from "../../../../App";
+import { URI, insertTokenIntoHeader } from "../../../../App";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { WHITE } from "../../../../constants";
 import '../../../../styles/discord.css'
@@ -26,7 +26,11 @@ export default function DiscordAccount() {
 
     function deleteDiscordAccount() {
         setIsPending(true)
-        axios.delete(`${URI}/user-discord/${user?.id}/`)
+        axios.delete(`${URI}/user-discord/${user?.id}/`, {
+            headers: {
+                Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
+            }
+        })
         .then(r => showConfirmation(() => queryClient.invalidateQueries([`user-discord-${user?.id}`])) )
         .catch((e: unknown) => {
             showMessage(e)
@@ -67,7 +71,7 @@ export default function DiscordAccount() {
         <br/><br/>
 
 
-        <Link className='clickable-button' to={'https://discord.com/api/oauth2/authorize?client_id=1140670852166328411&redirect_uri=http%3A%2F%2F192.168.100.22%3A3000%2Fverify-user&response_type=code&scope=identify%20guilds%20guilds.members.read'}>
+        <Link className='clickable-button' to={'https://discord.com/api/oauth2/authorize?client_id=1140670852166328411&redirect_uri=https%3A%2F%2Fcsfl.cz%2Fverify-user&response_type=code&scope=identify%20guilds%20guilds.members.read'}>
             Prepojiť účet a Discord <img src={Discord} height='16px' alt="discord icon" style={{transform: 'translate(3px, 2px)'}} />
         </Link>
 

@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import useUserContext from "../../../../hooks/useUserContext"
 import '../../../../styles/loader.css'
 import axios, { AxiosError } from "axios"
-import { URI } from "../../../../App"
+import { URI, insertTokenIntoHeader } from "../../../../App"
 import useConfirmation from "../../../../hooks/useConfirmation"
 import useErrorMessage from "../../../../hooks/useErrorMessage"
 import { useEffect } from "react"
@@ -29,6 +29,10 @@ export default function DiscordVerification() {
                 params: {
                     code: code,
                     userID: user?.id
+                }
+            }, {
+                headers: {
+                    Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
                 }
             })
             return res.data

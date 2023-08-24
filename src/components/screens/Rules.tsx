@@ -4,11 +4,10 @@ import remarkGfm from 'remark-gfm'
 import { URI } from "../../App";
 import { useQuery } from "@tanstack/react-query";
 import '../../styles/rules.css'
-import { timestampToDateTime } from "../subcompontents/user/Report";
 
 
 export default function Rules() { 
-    const query = useQuery(['rules'], fetchRules)
+    const query = useQuery(['rules'], fetchRules, { staleTime: Infinity })
 
     if ( query.data === undefined ) 
         return <ReactMarkdown>'# Nepodarilo sa načítať pravidlá.'</ReactMarkdown>
