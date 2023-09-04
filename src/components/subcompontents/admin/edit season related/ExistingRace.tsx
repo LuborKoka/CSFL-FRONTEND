@@ -64,7 +64,8 @@ export default function ExistingRace({ id, date, raceName, patchRace, deleteRace
     <>
         <div className='new-race'>  
             <Select placeholder='Vyber veľkú cenu' styles={selectSingleValueStyles()} options={options} value={track} onChange={handleRaceInput} />
-            <div className='date-time-picker'>
+            <br/>
+            <div className='date-time-picker' style={{height: '50px'}}>
                 <input onChange={handleInput} className='input-date' type='datetime-local' value={newDate} />
                 <FontAwesomeIcon icon={faCaretDown} />
             </div>

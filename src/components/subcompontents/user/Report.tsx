@@ -116,6 +116,26 @@ function ResponseList({ responses, setOpen, rank }: ResListProps) {
         setOpen(false)
     }
 
+    if ( responses.length === 0 ) return(
+        <div className='pop-up-bg'>
+            <div className='pop-up-content'>
+                <div className='sticky-heading'>
+                    <h2 className='section-heading header-with-time fade-in-out-border'>
+                        {`Odpovede k reportu #${rank}`}
+                        <FontAwesomeIcon onClick={closeWindow} className='close-icon' icon={faRectangleXmark} />
+                    </h2>
+                </div>
+
+
+                <br/><br/>
+
+                <h2 className='section-heading' style={{textAlign: 'center'}}>
+                    Zatiaľ tu nič nie je.
+                </h2>
+            </div>
+        </div>
+    )
+
     return(
         <div className='pop-up-bg' onPointerDown={closeWindow}>
             <div className='pop-up-content' onPointerDown={(e) => e.stopPropagation()}>

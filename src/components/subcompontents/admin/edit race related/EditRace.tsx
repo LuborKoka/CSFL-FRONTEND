@@ -7,8 +7,9 @@ import DriversSelect from "./DriversSelect";
 import SetRaceResults from "./SetRaceResults";
 import useConfirmation from "../../../../hooks/useConfirmation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLightbulb } from "@fortawesome/free-solid-svg-icons";
+import { faExclamationTriangle, faLightbulb } from "@fortawesome/free-solid-svg-icons";
 import useErrorMessage from "../../../../hooks/useErrorMessage";
+import { RED } from "../../../../constants";
 
 
 export default function EditRace() {
@@ -63,7 +64,7 @@ export default function EditRace() {
     }
 
     return(
-        <div>
+        <>
             <h2>{query.data?.raceName}</h2>
             <h3>{query.data?.date}</h3>
 
@@ -75,6 +76,17 @@ export default function EditRace() {
                 <FontAwesomeIcon icon={faLightbulb} />
             </div>
             <br/><br/>
+            {
+                query.data?.is_empty &&
+                <>
+                    <h2 className='section-heading fade-in-out-border' style={{textAlign: 'center'}}> 
+                        <FontAwesomeIcon icon={faExclamationTriangle} style={{color: RED, margin: '0 2rem'}} />
+                        Súpiska ešte nie je uložená.
+                        <FontAwesomeIcon icon={faExclamationTriangle} style={{color: RED, margin: '0 2rem'}} />
+                    </h2>
+                    <br/>
+                </>
+            }
             <form onSubmit={submitRaceDrivers}>
                 {
                     query.data?.teams.map(t => {
@@ -92,7 +104,7 @@ export default function EditRace() {
 
             { confirmation }
             { message }
-        </div>
+        </>
     )
 }
 
@@ -118,7 +130,8 @@ type Team = {
 type Data = {
     raceName: string,
     date: string,
-    teams: Team[]
+    teams: Team[],
+    is_empty: boolean
 }
 
 

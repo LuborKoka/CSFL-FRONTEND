@@ -107,6 +107,17 @@
     }
 }
 
+.empty-header-item {
+    position: relative;
+
+    &::after {
+        position: absolute;
+        content: '';
+        inset: -2px 0 0 0;
+        background-color: $darkblue;
+    }
+}
+
 .team-border {
     border-color: transparent;
     position: relative;

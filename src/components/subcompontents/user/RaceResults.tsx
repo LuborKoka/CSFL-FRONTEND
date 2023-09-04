@@ -19,7 +19,7 @@ export default function RaceResults() {
         setLeaderTime(query.data.results[0].time)
     }, [query])
 
-    if ( query.data?.results.length === 0) {
+    if ( query.data?.results.length === 0 || query.data?.has_been_raced === false ) {
         return(
             <>
                 <br/><br/>
@@ -87,7 +87,8 @@ type Driver = {
 }
 
 type Data = {
-    results: Driver[]
+    results: Driver[],
+    has_been_raced: boolean
 }
 
 

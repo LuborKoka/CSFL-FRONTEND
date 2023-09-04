@@ -80,6 +80,16 @@
   padding-right: 10px;
 }
 
+.empty-header-item {
+  position: relative;
+}
+.empty-header-item::after {
+  position: absolute;
+  content: "";
+  inset: -2px 0 0 0;
+  background-color: #000606;
+}
+
 .team-border {
   border-color: transparent;
   position: relative;

@@ -59,7 +59,7 @@ export default function Roles() {
         axios.patch(`${URI}/admins/users-roles/`, {
             params: {
                 user_id: value?.value,
-                role: 'F1 Admin'
+                role: query.data?.data.roles.find(r => r.role_name === 'F1 Admin')!.role_id
             }
         }, {
             headers: {
@@ -135,6 +135,10 @@ async function fetchUsers(token: string | undefined) {
                 role_id: string,
                 role_name: string
             }[]
+        }[],
+        roles: {
+            role_id: string,
+            role_name: string
         }[]
     }
 

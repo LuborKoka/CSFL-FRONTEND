@@ -26,6 +26,35 @@ export default function ReportVerdict({ verdict, penalties, setOpen, rank, from,
         setOpen(false)
     }
 
+    if ( verdict === null ) return(
+        <div className='pop-up-bg'>
+            <div className='pop-up-content'>
+                <div className="sticky-heading">
+                    <h2 className="header-with-time section-heading fade-in-out-border">
+                        {`Rozhodnutie reportu #${rank}`}
+                        <FontAwesomeIcon onClick={closeWindow} className='close-icon' icon={faRectangleXmark} />
+                    </h2>
+                </div>
+
+
+                <span className='single-row' style={{columnGap: '15px'}}>
+                    {from}
+                    <FontAwesomeIcon style={{transform: 'translateY(10%)'}} icon={faRightLong} />
+                    {
+                        targets.map( (t, i) => //zvazit este nejaky marker pre nahlasenych
+                            <span key={`reported_player${i}`} className='reported-player'><FontAwesomeIcon icon={faTriangleExclamation} /> {t.name}</span>
+                        )
+                    }
+                </span> 
+                <br/><br/>
+
+                <h2 className="section-heading" style={{textAlign: 'center'}}>
+                    Rozhodnutie ešte nebolo zverejnené
+                </h2>
+            </div>
+        </div>
+    )
+
     return(
         <div className='pop-up-bg' onPointerDown={closeWindow}>
             <div className='pop-up-content' onPointerDown={(e) => e.stopPropagation()}>

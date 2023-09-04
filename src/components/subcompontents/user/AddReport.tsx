@@ -115,10 +115,11 @@ export default function AddReport() {
 
         axios.post(`${URI}/races/${raceID}/reports/`, formData, {
             headers: {
-                "Content-Type": 'multipart/form-data'
+                "Content-Type": 'multipart/form-data',
+                'Authorization': `Bearer ${insertTokenIntoHeader(user.token)}`
             }
         })
-        .then((r: AxiosResponse) => {
+        .then(() => {
             queryClient.invalidateQueries([`race_${raceID}_reports`])
             showConfirmation(() => navigate(`/seasons/${seasonID}/race/${raceID}/reports`))
         })

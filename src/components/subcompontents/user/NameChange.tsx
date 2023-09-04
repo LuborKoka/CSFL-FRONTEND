@@ -60,7 +60,7 @@ export default function NameChange() {
 
     return(
         <>
-            <h2 className='section-heading fade-in-out-border'>Zmeniť si verejné meno</h2>
+            <h2 className='section-heading fade-in-out-border'>Zmena Verejného Mena</h2>
 
             <form onSubmit={submit} name="name change">
                 <div className="labeled-input">

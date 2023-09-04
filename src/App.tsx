@@ -35,7 +35,7 @@ import DiscordVerification from './components/subcompontents/user/discord/Discor
 import Roles from './components/subcompontents/admin/Roles';
 import WifeBeater from './components/subcompontents/admin/wife_btear/WifeBeater';
 
-export const URI = `http://192.168.100.22/api`
+export const URI =  'http://192.168.100.22:8000/api' //`https://ciernacicina69.pythonanywhere.com/api`
 
 export const randomURIkey = generateRandomString(10)
 
@@ -62,7 +62,7 @@ function App() {
   const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
-    const token = secureLocalStorage.getItem(storageKeyName) as string | null //localStorage.getItem(storageKeyName)
+    const token = secureLocalStorage.getItem(storageKeyName) as string | null
 
     async function getUserData() {
       if (token !== null) {
@@ -110,9 +110,6 @@ function App() {
                 <Route path=':raceID/new-report' element={<AddReport />} />
 
               </Route>
-              {/*<Route path=':seasonID/race/:raceID' element={<RaceDetails />} />
-              <Route path=':seasonID/race/:raceID/reports' element={<Reports />} />
-  <Route path=':seasonID/race/:raceID/results' element={<RaceResults />} />*/}
             </Route>
 
             <Route path={`/${randomURIkey}/admin`} element={<AdminNav />}>
@@ -133,9 +130,6 @@ function App() {
 
             <Route path='*' element={<NotFound />} />
             <Route path='/forbidden' element={<Forbidden />} />
-            {/* <Route path={`/${randomURIkey}/admin`} element={<AdminUI />} />
-            <Route path={`/${randomURIkey}/admin/season/:seasonID`} element={<EditSeason />} />
-<Route path={`/${randomURIkey}/admin/season/:seasonID/race/:raceID`} element={<EditRace />} />*/}
           </Routes>
         </Router>
       </QueryClientProvider>

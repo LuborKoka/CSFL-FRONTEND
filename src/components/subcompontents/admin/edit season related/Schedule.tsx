@@ -108,12 +108,12 @@ export default function Schedule() {
                 Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
             }
         })
-        .then((r: AxiosResponse) => {
+        .then(() => {
             queryClient.invalidateQueries([`scheduled-races-${seasonID}`])
             showConfirmation(() => setCreateTrackForms([]))
         })
         .catch((e: unknown) => {
-            console.log(e)
+            showMessage(e)
         })
         .finally(() => setIsPendingSchedule(false))
     }

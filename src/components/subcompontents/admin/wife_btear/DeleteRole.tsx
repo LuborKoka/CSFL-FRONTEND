@@ -71,7 +71,7 @@ export default function DeleteRole() {
 
                 <br/>
 
-                <div className='button-container'>
+                <div className='submit-button-container'>
                     <button type="submit" className={`clickable-button ${isPending && 'button-disabled'}`}>
                         Uložiť
                     </button>

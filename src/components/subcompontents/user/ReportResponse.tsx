@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { URI, generateRandomString } from '../../../App'
+import { URI, generateRandomString, insertTokenIntoHeader } from '../../../App'
 import axios from 'axios'
 import { useOutletContext } from 'react-router-dom'
 import { RaceContext } from '../../controls/SeasonNav'
@@ -101,7 +101,8 @@ export default function ReportResponse({ responseData, setResponseData, raceID }
 
         axios.post(`${URI}/report/${race.reportID}/response/`, form, {
             headers: {
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${insertTokenIntoHeader(user.token)}`
             }
         })
         .then(() => {

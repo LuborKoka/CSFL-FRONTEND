@@ -1,6 +1,6 @@
-import React, { useState, useContext, Context } from "react";
-import axios, { AxiosError } from "axios";
-import { URI, UserContext, UserTypes } from "../../../App";
+import { useState } from "react";
+import axios from "axios";
+import { URI } from "../../../App";
 import jwtDecode from "jwt-decode";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,11 +19,11 @@ const schema = z.object({
     }).max(50, {
         message: 'Meno musí mať najviac 50 znakov'
     }),
-    password: z.string().min(8, {
+    password: z.string().min(7, {
         message: 'Heslo musí mať aspoň 8 znakov'
     }),
     confirmPassword: z.string(),
-    raceName: z.string().min(8, {
+    raceName: z.string().min(7, {
         message: 'Verejné meno musí obsahovať aspoň 8 znakov.'
     }).max(50, {
         message: 'Verejné meno nesmie mať viac ako 50 znakov.'

@@ -26,6 +26,8 @@ export default function Standings() {
         })
     }
 
+    console.log(query.data?.data)
+
     if ( query.data?.code === 204 ) {
         return(
             <>
@@ -56,7 +58,7 @@ export default function Standings() {
                 <table className="table standings-table">
                     <thead>
                         <tr>
-                            <th></th><th style={{textAlign: 'left', paddingLeft: '8px'}}>Meno</th>
+                            <th className="empty-header-item"></th><th style={{textAlign: 'left', paddingLeft: '8px'}}>Meno</th>
                             {
                                 query.data?.data.races.map(r => 
                                 <th key={r.id} >
@@ -81,9 +83,9 @@ export default function Standings() {
                                         
                                         <td key={`${d.driverID}, race${i}`}>
                                             <div className="switcher-visible">
-                                                <div className={`switcher-container ${ !isChecked && 'switcher-container-rank'}`}>
+                                                <div style={{color: getTextColor(r.rank)}} className={`switcher-container ${ !isChecked && 'switcher-container-rank'}`}>
                                                     <div className={`switcher-item-${isChecked ? 'active' : 'inactive'}`}>{r.points}</div>
-                                                    <div style={{color: getTextColor(r.rank)}} className={`switcher-item-${isChecked ? 'inactive' : 'active'}`}>{r.rank}</div>
+                                                    <div className={`switcher-item-${isChecked ? 'inactive' : 'active'}`}>{r.rank}</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -137,7 +139,7 @@ export default function Standings() {
                 <table className='table standings-table'>
                     <thead>
                         <tr>
-                            <th></th>
+                            <th className="empty-header-item"></th>
                             <th style={{textAlign: 'left', paddingLeft: '8px'}}>Meno</th>
                             {
                                 query.data?.data.races.map((r, i) => 

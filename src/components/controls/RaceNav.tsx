@@ -41,7 +41,8 @@ export default function RaceNav() {
                     {
                         user?.isLoggedIn && !drivers.data?.isEmptyLineUp && (
                             drivers.data?.teams.some(t => t.drivers.some(d => d.id === user.driverID)) ||
-                            drivers.data?.reserves.some(r => r.id === user.driverID)
+                            drivers.data?.reserves.some(r => r.id === user.driverID) ||
+                            user.roles.some(r => r === `${context[0].seasonName}fia`)
                         ) &&
                         <NavLink className='clickable-button' to={`${raceID}/reports`}>Reporty</NavLink>
                     }

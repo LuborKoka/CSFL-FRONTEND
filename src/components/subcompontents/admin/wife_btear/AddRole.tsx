@@ -69,7 +69,7 @@ export default function AddRole() {
                     
                 <br/>
 
-                <div className='button-container'>
+                <div className='submit-button-container'>
                     <button type="submit" className={`clickable-button ${isPending && 'button-disabled'}`}>
                         Uložiť
                     </button>
