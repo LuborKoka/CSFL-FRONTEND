@@ -45,7 +45,7 @@ export default function ExistingRace({ id, date, raceName, patchRace, deleteRace
     }
 
     const icons =
-    <div className='single-row top-right' style={{columnGap: '1rem', fontSize: '20px'}}>
+    <div className='single-row top-right' style={{columnGap: '1rem', fontSize: '20px', top: '1rem'}}>
         <FontAwesomeIcon icon={faPenToSquare} className='change-icon' onClick={() => setIsChanging(true)} />
         <FontAwesomeIcon className='close-icon' icon={faTrashAlt} onClick={() => deleteRace(id)} />
     </div>
