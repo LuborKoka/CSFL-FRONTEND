@@ -9,6 +9,7 @@ import '../../styles/newReport.css'
 import '../../styles/report.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faThumbsUp } from "@fortawesome/free-solid-svg-icons"
+import Loader from "../reusableCompontents/Loader"
 
 
 export default function Reports() {
@@ -22,6 +23,13 @@ export default function Reports() {
 
     const query = useQuery([`race_${raceID}_reports`], () => fetchReports(raceID))
 
+    if ( query.isLoading) return(
+        <>
+            <h1 className='section-heading fade-in-out-border'>Reporty</h1>
+            <Loader type='reports' />
+        </>
+    )
+
     if ( query.data?.reports.length === 0 ) {
         return(
             <>
@@ -34,11 +42,12 @@ export default function Reports() {
         )
     }
 
+
     return(
         <>
             <h1 className='section-heading fade-in-out-border'>Reporty</h1>
             {
-                query.data?.reports.slice().reverse().map(r =>/* toten setter musi ist dovnutra komponentu, tam uz mam aj tak kontext na reportID, ktory treba nastavit */ 
+                query.data?.reports.slice().reverse().map(r =>/* toten setter musi ist dovnutra komponentu, tam uz mam aj tak kontext na reportID, ktory treba nastavit */                    
                     <Report key={r.reportID} {...r} setResponseData={setResponseData} />
                 )
             }

@@ -5,6 +5,7 @@ import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { RED } from '../../../constants';
+import Loader from '../../reusableCompontents/Loader';
 
 
 
@@ -12,6 +13,8 @@ export default function RaceOverview() {
     const { raceID } = useParams()
 
     const query = useQuery([`race_${raceID}_drivers_overview`], () => fetchDrivers(raceID))
+
+    if ( query.isLoading ) return <Loader type='race overview' />
 
     if ( query.data?.teams.length === 0 ) return(
         <>

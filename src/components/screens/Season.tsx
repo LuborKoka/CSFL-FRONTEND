@@ -8,6 +8,7 @@ import { Link, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUpRightFromSquare, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { RED } from "../../constants";
+import Loader from "../reusableCompontents/Loader";
 
 
 export default function Season() {
@@ -16,6 +17,8 @@ export default function Season() {
     const query = useQuery([`scheduled-races-${seasonID}`], () => fetchData(seasonID), {staleTime: Infinity})
     const drivers = useQuery([`season-drivers-user-${seasonID}`], () => fetchSeasonDrivers(seasonID), { staleTime: Infinity })
 
+    if ( query.isLoading || drivers.isLoading ) return <Loader type='season' />
+    
     const calendar = 
     <>
         <div className='section-heading fade-in-out-border header-with-time'>
@@ -62,13 +65,13 @@ export default function Season() {
                         <div className='fade-in-out-border' style={{display: 'inline-grid', placeContent: 'center flex-start', rowGap: '1rem', fontSize: '1.2rem', minWidth: '160px'}}>
                             <b style={{whiteSpace: 'nowrap'}}>
                                 {
-                                    t.drivers.length >= 1 ? <b style={{textShadow: `2px 2px 3px ${t.color}`}}>{t.drivers[0].name}</b> : null
+                                    t.drivers.length >= 1 && <b style={{textShadow: `2px 2px 3px ${t.color}`}}>{t.drivers[0].name}</b>
                                 } 
                             </b>
                             
                             <b style={{whiteSpace: 'nowrap'}}> 
                                 {
-                                    t.drivers.length === 2 ? <b style={{textShadow: `2px 2px 3px ${t.color}`}}>{t.drivers[1].name}</b> : null
+                                    t.drivers.length === 2 && <b style={{textShadow: `2px 2px 3px ${t.color}`}}>{t.drivers[1].name}</b>
                                 } 
                             </b>       
                         </div>

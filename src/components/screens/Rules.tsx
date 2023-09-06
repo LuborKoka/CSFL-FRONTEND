@@ -4,13 +4,18 @@ import remarkGfm from 'remark-gfm'
 import { URI } from "../../App";
 import { useQuery } from "@tanstack/react-query";
 import '../../styles/rules.css'
+import Loader from "../reusableCompontents/Loader";
 
 
 export default function Rules() { 
     const query = useQuery(['rules'], fetchRules, { staleTime: Infinity })
 
+    if ( query.isLoading ) return <Loader type='rules' />
+
     if ( query.data === undefined ) 
         return <ReactMarkdown>'# Nepodarilo sa načítať pravidlá.'</ReactMarkdown>
+
+    
     
     return(
         <article id="markdown" className="section">

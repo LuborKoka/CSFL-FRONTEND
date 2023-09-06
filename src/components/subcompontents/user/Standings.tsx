@@ -6,6 +6,7 @@ import { useState, useTransition } from 'react'
 import { RED, WHITE } from "../../../constants"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons"
+import Loader from "../../reusableCompontents/Loader"
 
 
 
@@ -26,7 +27,13 @@ export default function Standings() {
         })
     }
 
-    console.log(query.data?.data)
+    if ( query.isLoading ) return(
+        <>
+            <h2 className="section-heading fade-in-out-border">Tabuľka priebežného poradia</h2>
+            <Loader type='standings' />
+        </>
+        
+    )
 
     if ( query.data?.code === 204 ) {
         return(

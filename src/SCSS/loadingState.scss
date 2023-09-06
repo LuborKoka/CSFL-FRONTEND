@@ -1,0 +1,170 @@
+@import 'mixin.scss';
+
+$initialOpacity: .20;
+
+.loader-heading {
+    width: 200px;
+    height: 3rem;
+    border-radius: 10px;
+    background-color: rgba($white, .8);
+    box-shadow: 0 0 15px rgba($white, .4); 
+}
+
+.loader-table { 
+    $newOpacity: $initialOpacity + .1;
+
+    margin-bottom: 3rem;
+
+    .header div {
+        background-color: rgba($white, 1) !important;
+    }
+    
+    .row {
+        display: grid;
+        width: 100%;
+        height: 2rem;
+        grid-template-columns: repeat(4, 1fr);
+        column-gap: .5%;
+        margin-top: .3rem;
+
+
+        div {
+            inset: 0;
+            opacity: .25;
+            border-radius: 5px;
+            animation: breathing 2s infinite;
+        }
+        
+        
+        & div:nth-child(2) {
+            animation-delay: .333s;
+        }
+
+        & div:nth-child(3) {
+            animation-delay: .666s;
+        }
+
+        & div:nth-child(4) {
+            animation-delay: 1s;
+        }
+    }
+
+    .row:nth-child(2n) div {
+        background-color: rgba($white, $newOpacity);
+    }
+
+    .row:nth-child(2n + 1) div {
+        background-color: rgba($white, $initialOpacity);
+    }
+}
+
+
+.white {
+    background-color: $white;
+    opacity: $initialOpacity;
+}
+
+
+.loader-report {
+    .header-with-time div {
+        width: clamp(100px, 25vw, 30%);
+        height: 2.5rem;
+        border-radius: 10px;  
+    }
+
+    .single-row div {
+        width: 50px;
+        height: 1.5rem;
+        border-radius: 7.5px;
+    }
+
+    .input {
+        width: 100%;
+        height: 4rem;
+        border-radius: 15px;
+        margin-top: 3rem;
+    }
+
+
+}
+
+
+.loader-card {
+    border-radius: 10px;
+    display: inline-block;
+    margin: .5rem;
+}
+
+.team-logo-loader {
+    width: clamp(150px, 25vw, 300px);
+    height: calc(clamp(150px, 25vw, 300px) * (3 / 5));
+    border-radius: 15px;
+    transform: translateX(.5rem);
+}
+
+.loader-team-member {
+    width: 150px;
+    height: 2rem;
+    border-radius: 7.5px;
+}
+
+.loader-rule-heading {
+    border-radius: 7.5px;
+    width: min(200px, 40%);
+    height: 2rem;
+    display: block;
+}
+
+.loader-rule-item {
+    width: min(500px, 100%);
+    height: 1.5rem;
+    border-radius: 5px;
+    margin: .5rem 0;
+    list-style-type: none;
+}
+
+
+.animation {
+    animation: breathing 2s infinite;
+    //animation: pulsing 2s infinite;
+    //animation: shadow 2s infinite;
+}
+
+@keyframes breathing {
+    $newOpacity: $initialOpacity + .1;
+    0% {
+        opacity: $initialOpacity;
+    }
+    50% {
+        opacity: $newOpacity;
+    }
+    100% {
+        opacity: $initialOpacity;
+    }
+}
+
+@keyframes pulsing {
+    0% {
+        transform: scale(1)
+    }
+    50% {
+        transform: scale(1.02)
+    }
+    100% {
+        transform: scale(1)
+    }
+}
+
+@keyframes shadow {
+    0% {
+        box-shadow: 0 0 10px 0px $white;
+    }
+    50% {
+        box-shadow: 0 0 10px 2px $white;
+    }
+    100% {
+        box-shadow: 0 0 10px 0px $white;
+    }
+}
+
+

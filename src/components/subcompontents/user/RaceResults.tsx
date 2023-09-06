@@ -6,6 +6,7 @@ import { URI } from '../../../App';
 import { faClock, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { RED, WHITE } from '../../../constants';
+import Loader from '../../reusableCompontents/Loader';
 
 export default function RaceResults() {
     const [leaderTime, setLeaderTime] = useState(0)
@@ -18,6 +19,14 @@ export default function RaceResults() {
         if ( !query || !query.data || query.data.results.length === 0 ) return
         setLeaderTime(query.data.results[0].time)
     }, [query])
+
+    if ( query.isLoading ) return(
+        <>
+            <h2 className='section-heading fade-in-out-border'>Výsledky pretekov</h2>
+
+            <Loader type='results' />
+        </>
+    )   
 
     if ( query.data?.results.length === 0 || query.data?.has_been_raced === false ) {
         return(

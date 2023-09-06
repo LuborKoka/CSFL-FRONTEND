@@ -12,7 +12,7 @@ type Props = {
     setResponseData: React.Dispatch<React.SetStateAction<{isActive: boolean, rank: number, from: string, targets: {name: string, id: string}[]}>>,
 } & ReportType
 
-export default function Report({ rank, verdict, penalties, reportID, videos, content, createdAt, from, targets, setResponseData, responses }: Props ) {
+export default function Report({ rank, verdict, penalties, reportID, videos, content, createdAt, from, targets, setResponseData, responses }: Props) {
     const setRaceContext = useRaceContext()[1]
     const [isViewingResponses, setIsViewingResponses] = useState(false)
     const [isViewingVerdict, setIsViewingVerdict] = useState(false)
@@ -104,6 +104,7 @@ export default function Report({ rank, verdict, penalties, reportID, videos, con
     </>
     )
 }
+
 
 type ResListProps = {
     responses: ReportResponseProps[],
