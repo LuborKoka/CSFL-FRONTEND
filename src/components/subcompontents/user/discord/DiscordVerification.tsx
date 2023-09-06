@@ -56,14 +56,12 @@ export default function DiscordVerification() {
 
     return(
         <div className='center'>
-            <span className='loader'></span>
-
             {
-                confirmation
+                mutation.isLoading && <span className='loader'></span>
             }
 
             {
-                message
+                [confirmation, message]
             }
         </div>
     )
