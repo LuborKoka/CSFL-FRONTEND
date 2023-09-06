@@ -27,13 +27,14 @@ import jwtDecode from 'jwt-decode';
 import { storageKeyName } from './constants';
 import { Forbidden, NotFound } from './components/controls/BadReq';
 import RaceOverview from './components/subcompontents/user/RaceOverview';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import Rules from './components/screens/Rules';
 import secureLocalStorage from 'react-secure-storage';
 import EditRules from './components/subcompontents/admin/EditRules';
 import DiscordVerification from './components/subcompontents/user/discord/DiscordVerification';
 import Roles from './components/subcompontents/admin/Roles';
 import WifeBeater from './components/subcompontents/admin/wife_btear/WifeBeater';
+import useErrorMessage from './hooks/useErrorMessage';
 
 export const URI =  'http://192.168.100.22:8000/api' //`https://ciernacicina69.pythonanywhere.com/api`
 
@@ -61,6 +62,8 @@ export const UserContext = createContext<UserTypes | null>(null)
 function App() {
   const [user, setUser] = useState<User | null>(null)
 
+  const [message, showMessage] = useErrorMessage()
+
   useEffect(() => {
     const token = secureLocalStorage.getItem(storageKeyName) as string | null
 
@@ -78,6 +81,10 @@ function App() {
           setUser({...data, token: token, roles: rolesRes.data.roles, isLoggedIn: true})
 
         } catch(e: unknown) {
+          if ( e instanceof AxiosError && e.code === '403' ) {
+            showMessage(e)
+            return
+          }
           setUser({ ...data, token: token, roles: [], isLoggedIn: false })
         }
       }
@@ -85,7 +92,7 @@ function App() {
 
     
     getUserData()
-
+    //eslint-disable-next-line
   }, [setUser])
 
   return (
@@ -133,6 +140,9 @@ function App() {
           </Routes>
         </Router>
       </QueryClientProvider>
+      {
+        message
+      }
     </UserContext.Provider>
   )
 }
