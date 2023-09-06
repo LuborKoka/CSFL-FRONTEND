@@ -47,7 +47,7 @@
     position: relative;
     padding: 1rem 2rem;
     cursor: pointer;
-    width: 350px;
+    width: min(350px, 100%);
     min-height: 200px;
 }
 
