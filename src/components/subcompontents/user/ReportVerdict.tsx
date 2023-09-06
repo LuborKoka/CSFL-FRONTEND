@@ -1,6 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import  { faClock as Clock, faCircleExclamation, faRightLong, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import  { faClock as faRightLong, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { faRectangleXmark, faClock } from '@fortawesome/free-regular-svg-icons'
 import exclamation from '../../../images/exclamation.svg'
 
@@ -81,23 +81,30 @@ export default function ReportVerdict({ verdict, penalties, setOpen, rank, from,
                     <label>Rozhodnutie FIA</label>
                 </div>
                 
-                <h2 className='fade-in-out-border section-heading'>
-                    Penalizácie
-                </h2>               
-                
-                <ul style={{paddingLeft: '1rem'}}>
-                    {
-                        penalties.map(p => 
-                        <div className='penalty-driver-layout' key={p.driverID}>
-                            <b>{p.driverName}</b>
-                            <span><FontAwesomeIcon icon={faClock} /> {getSecondsString(p.time)}</span>
-                            <span style={{gridColumn: '2', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', columnGap: '5px'}} >
-                                <img alt="exclamation point icon" src={exclamation} height='16px'/> {getPointsString(p.penaltyPoints)}
-                            </span>
-                        </div>)
-                    }
+                {
+                    penalties.length > 0 &&
 
-                </ul>
+                    <>
+                        <h2 className='fade-in-out-border section-heading'>
+                            Penalizácie
+                        </h2>               
+                        
+                        
+                        <ul style={{paddingLeft: '1rem'}}>
+                            {
+                                penalties.map(p => 
+                                <div className='penalty-driver-layout' key={p.driverID}>
+                                    <b>{p.driverName}</b>
+                                    <span><FontAwesomeIcon icon={faClock} /> {getSecondsString(p.time)}</span>
+                                    <span style={{gridColumn: '2', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', columnGap: '5px'}} >
+                                        <img alt="exclamation point icon" src={exclamation} height='16px'/> {getPointsString(p.penaltyPoints)}
+                                    </span>
+                                </div>)
+                            }
+
+                        </ul>
+                    </>
+                }
 
                 
                     
