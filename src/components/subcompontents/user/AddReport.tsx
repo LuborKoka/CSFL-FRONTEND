@@ -252,9 +252,9 @@ type LinkProps = {
 
 export function AddedLink({ url, id, deleteVideo}: LinkProps) {
     return(
-        <div className='form-input' style={{width: '100%', paddingRight: '2.5rem'}}>
+        <div className='form-input' style={{paddingRight: '2.5rem'}}>
             <Link style={{color: WHITE, fontSize: '16px'}} target="_blank" to={url}>{url}</Link>
-            <FontAwesomeIcon icon={faTrashAlt} onClick={() => deleteVideo(id)}  className="icon-delete center-right" />
+            <FontAwesomeIcon icon={faTrashAlt} onClick={() => deleteVideo(id)}  className="icon-delete top-right" style={{top: '.5rem'}} />
         </div>
     )
 }
@@ -267,9 +267,9 @@ type VideoProps = {
 
 export function AddedVideo({ name, id, deleteVideo}: VideoProps) {
     return(
-        <div className='form-input' style={{width: '100%', paddingRight: '1.5rem'}}>
+        <div className='form-input' style={{paddingRight: '1.5rem'}}>
             <span style={{color: WHITE, fontSize: '16px'}}>{name}</span>
-            <FontAwesomeIcon icon={faTrashAlt} onClick={() => deleteVideo(id)} className='icon-delete center-right' />
+            <FontAwesomeIcon icon={faTrashAlt} onClick={() => deleteVideo(id)} className='icon-delete top-right' style={{top: '.5rem'}}/>
         </div>
     )
 }
