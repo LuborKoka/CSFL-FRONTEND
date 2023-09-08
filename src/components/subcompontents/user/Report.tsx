@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, forwardRef, ForwardedRef } from "react";
 import { ReportResponseProps, ReportType } from "../../screens/Reports";
 import ReportVideo from "./ReportVideo";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,7 +12,7 @@ type Props = {
     setResponseData: React.Dispatch<React.SetStateAction<{isActive: boolean, rank: number, from: string, targets: {name: string, id: string}[]}>>,
 } & ReportType
 
-export default function Report({ rank, verdict, penalties, reportID, videos, content, createdAt, from, targets, setResponseData, responses }: Props) {
+function Report({ rank, verdict, penalties, reportID, videos, content, createdAt, from, targets, setResponseData, responses }: Props, ref: ForwardedRef<HTMLDivElement>) {
     const setRaceContext = useRaceContext()[1]
     const [isViewingResponses, setIsViewingResponses] = useState(false)
     const [isViewingVerdict, setIsViewingVerdict] = useState(false)
@@ -30,7 +30,7 @@ export default function Report({ rank, verdict, penalties, reportID, videos, con
 
     return( 
     <>
-        <div className='report-card fade-in-out-border'>
+        <div className='report-card fade-in-out-border' ref={ref}>
             <div className='header-with-time'>
                 <h2>Report #{rank}</h2>
                 <span>{timestampToDateTime(createdAt)}</span>
@@ -104,6 +104,9 @@ export default function Report({ rank, verdict, penalties, reportID, videos, con
     </>
     )
 }
+
+
+export default forwardRef(Report)
 
 
 type ResListProps = {

@@ -1,8 +1,8 @@
-import React, { useState } from "react"
+import React, { RefObject, createRef, useEffect, useRef, useState } from "react"
 import axios from "axios"
 import { URI } from "../../App"
 import { useQuery } from "@tanstack/react-query"
-import { useParams } from "react-router-dom"
+import { useLocation, useParams } from "react-router-dom"
 import Report from "../subcompontents/user/Report"
 import ReportResponse from "../subcompontents/user/ReportResponse"
 import '../../styles/newReport.css'
@@ -18,10 +18,40 @@ export default function Reports() {
     //disappears in a puff of smoke. I'm sure you can think of situations where this would be appropriate and satisfying. 
     //The reverse is also pretty impressive. https://youtu.be/y8-F5-2EIcg
     const [responseData, setResponseData] = useState({isActive: false, rank: 0, from: '', targets: [{name: '', id: ''}]})
-    
+
+    const reportRefs = useRef<RefObject<HTMLDivElement>[]>([])
+        
     const { raceID } = useParams()
+    const hash = useLocation().hash
 
     const query = useQuery([`race_${raceID}_reports`], () => fetchReports(raceID))
+
+    if ( query.data && query.data.reports.length !== reportRefs.current.length) {
+        reportRefs.current = Array(query.data?.reports.length).fill(null).map((_, i) => reportRefs.current[i] || createRef<HTMLDivElement>())
+    }
+
+    
+    useEffect(() => {
+        if ( !hash ) return
+
+        const index = parseInt(hash.substring(1))
+        
+        if ( isNaN(index) ) return
+
+        const target = (reportRefs.current as any).toReversed().at(index - 1) //apparently, the toReversed method doesnt exist on an array according to ts       
+
+        async function scroll() {
+            if ( !target ) return
+            await new Promise(r => setTimeout(r, 100))
+            target.current?.scrollIntoView({behavior: 'smooth'})
+        }
+
+        scroll()
+        
+
+        //eslint-disable-next-line
+    }, [hash, reportRefs.current])
+
 
     if ( query.isLoading) return(
         <>
@@ -47,8 +77,8 @@ export default function Reports() {
         <>
             <h1 className='section-heading fade-in-out-border'>Reporty</h1>
             {
-                query.data?.reports.slice().reverse().map(r =>/* toten setter musi ist dovnutra komponentu, tam uz mam aj tak kontext na reportID, ktory treba nastavit */                    
-                    <Report key={r.reportID} {...r} setResponseData={setResponseData} />
+                query.data?.reports.slice().reverse().map((r, i) =>/* toten setter musi ist dovnutra komponentu, tam uz mam aj tak kontext na reportID, ktory treba nastavit */                    
+                    <Report key={r.reportID} {...r} setResponseData={setResponseData} ref={reportRefs.current[i]} />
                 )
             }
             <ReportResponse responseData={responseData} setResponseData={setResponseData} raceID={raceID} />
