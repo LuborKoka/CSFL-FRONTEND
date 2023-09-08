@@ -35,10 +35,10 @@ export default function RaceOverview() {
                 Súpiska
             </h2>
             {
-                query.data?.teams.map(t => 
-                    <div className='team-members fade-in-out-border'  key={t.teamName}>
-                        <img src={`${URI}/media/${t.logo}/`} alt={t.teamName} className='team-logo' loading='lazy'/>
-                        <div style={{display: 'inline-grid', placeContent: 'center flex-start', rowGap: '1rem', fontSize: '1.2rem', minWidth: '160px'}}>
+                query.data?.teams.map((t, i) => 
+                    <div className='team-members fade-in-out-border content-fade-in'  key={t.teamName} style={{color: t.color}}>
+                        <img style={{animationDelay: `${50*i}ms`}} src={`${URI}/media/${t.logo}/`} alt={t.teamName} className='team-logo' loading='lazy'/>
+                        <div style={{animationDelay: `${50*i}ms` ,display: 'inline-grid', placeContent: 'center flex-start', rowGap: '1rem', fontSize: '1.2rem', minWidth: '160px'}}>
                             <b style={{whiteSpace: 'nowrap'}}>
                                 {
                                     t.drivers.length >= 1 ? <b>{t.drivers[0].driverName}</b> : null
@@ -66,7 +66,8 @@ export async function fetchDrivers(id: string | undefined) {
             id: string,
             name: string,
             teamName: string,
-            logo: string
+            logo: string,
+            color: string
         }[]
     }
     const res = await axios.get<Data>(`${URI}/races/${id}/drivers/`)
@@ -77,9 +78,10 @@ export async function fetchDrivers(id: string | undefined) {
     }
 
     type TeamData = {
-        teamName: string;
-        logo: string;
-        drivers: TeamDriver[];
+        teamName: string,
+        logo: string,
+        color: string,
+        drivers: TeamDriver[]
       }
 
     const driversData = res.data.drivers
@@ -98,6 +100,7 @@ export async function fetchDrivers(id: string | undefined) {
             teamsMap[teamName] = {
             teamName,
             logo: d.logo,
+            color: d.color,
             drivers: [driverObj]
             }
         }

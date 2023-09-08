@@ -32,7 +32,7 @@ type LinkProps = {
 
 function SeasonLink({ id, name, setSeason }: LinkProps) {
     return(
-        <Link className='tiltable-card link' to={`/${randomURIkey}/admin/season/${id}`} style={{margin: '2rem'}} onClick={() => setSeason(p => {return {...p, seasonName: name}})}>
+        <Link className='tiltable-card link' to={`/${randomURIkey}/admin/season/${id}`} style={{margin: '2rem', width: 'min(200px, 100%)'}} onClick={() => setSeason(p => {return {...p, seasonName: name}})}>
             <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
             <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
             <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>

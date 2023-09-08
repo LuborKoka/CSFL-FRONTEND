@@ -1,6 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import  { faClock as faRightLong, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import  { faRightLong, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { faRectangleXmark, faClock } from '@fortawesome/free-regular-svg-icons'
 import exclamation from '../../../images/exclamation.svg'
 

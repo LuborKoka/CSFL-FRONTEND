@@ -59,19 +59,20 @@ export default function Season() {
 
         <div className='team-members-grid'>
             {
-                drivers.data?.teams.map(t => 
-                    <div className='team-members'  key={t.id}>
-                        <img src={`${URI}/media/${t.image}/`} alt={t.name} className='team-logo' loading="lazy"/>
-                        <div className='fade-in-out-border' style={{display: 'inline-grid', placeContent: 'center flex-start', rowGap: '1rem', fontSize: '1.2rem', minWidth: '160px'}}>
+                drivers.data?.teams.map((t, i) => 
+                    <div className='team-members fade-in-out-border content-fade-in'  key={t.id} style={{color: t.color}}>
+                        <img style={{animationDelay: `${50*i}ms`}} src={`${URI}/media/${t.image}/`} alt={t.name} className='team-logo' loading="lazy"/>
+                        <div style={{animationDelay: `${50*i}ms`, display: 'inline-grid', placeContent: 'center flex-start', rowGap: '1rem', fontSize: '1.2rem', minWidth: '160px'}}>
+
                             <b style={{whiteSpace: 'nowrap'}}>
                                 {
-                                    t.drivers.length >= 1 && <b style={{textShadow: `2px 2px 3px ${t.color}`}}>{t.drivers[0].name}</b>
+                                    t.drivers.length >= 1 && <b>{t.drivers[0].name}</b>
                                 } 
                             </b>
                             
                             <b style={{whiteSpace: 'nowrap'}}> 
                                 {
-                                    t.drivers.length === 2 && <b style={{textShadow: `2px 2px 3px ${t.color}`}}>{t.drivers[1].name}</b>
+                                    t.drivers.length === 2 && <b>{t.drivers[1].name}</b>
                                 } 
                             </b>       
                         </div>

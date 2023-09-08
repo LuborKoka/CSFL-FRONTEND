@@ -135,7 +135,7 @@ export default function Loader({ type }: Props) {
                 <h2 className='section-heading fade-in-out-border'>Kalendár</h2>
 
                 {
-                    cards(6)
+                    cards(9)
                 }
                 
                 <h2 className='section-heading fade-in-out-border'>Súpiska</h2>

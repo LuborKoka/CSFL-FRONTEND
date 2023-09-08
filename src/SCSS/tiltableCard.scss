@@ -6,6 +6,7 @@
     display: inline-grid;
     grid-template: repeat(5, 1fr) / repeat(5, 1fr);
     margin-bottom: 1rem;
+    width: min(350px, 100%);
     
 
     .content {

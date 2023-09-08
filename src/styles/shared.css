@@ -114,7 +114,7 @@
   bottom: 0;
   width: 100%;
   height: 0.6px;
-  background-image: linear-gradient(to right, #000606, #EFEFEF, #EFEFEF, #000606);
+  background-image: linear-gradient(to right, transparent, currentColor, currentColor, transparent);
 }
 
 .auto-grid {

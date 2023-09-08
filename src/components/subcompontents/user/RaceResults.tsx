@@ -42,9 +42,9 @@ export default function RaceResults() {
     }
 
     return(
-        <div style={{display: 'grid', overflowX: 'auto'}}>
+        <div style={{display: 'grid'}}>
             <h2 className='section-heading fade-in-out-border'>Výsledky pretekov</h2>
-            <table className='table' id='race-results-table'>
+            <table className='table content-fade-in' id='race-results-table'>
                 <thead className='table-header'>
                     <tr>
                         <th></th>
@@ -57,16 +57,16 @@ export default function RaceResults() {
                 <tbody id='race-results'>
                 {
                     //SELECT NOW() < race.date AS race_took_place a mam vyriesene tie nuly
-                    query?.data?.results.map(d => {
+                    query?.data?.results.map((d, i) => {
                         return(
                             <tr key={d.driverID}>
-                                <td>{d.rank}.</td>
-                                <td>{d.driverName}</td>
-                                <td>{d.teamName}</td>
-                                <td>
+                                <td style={{animationDelay: `${25*i}ms`}}>{d.rank}.</td>
+                                <td style={{animationDelay: `${25*i}ms`}}>{d.driverName}</td>
+                                <td style={{animationDelay: `${25*i}ms`}}>{d.teamName}</td>
+                                <td style={{animationDelay: `${25*i}ms`}}>
                                     {d.isDSQ ? 'DSQ' : d.time === null ? 'DNF' : d.rank === 1 ? formatTime(d.time, d.plusLaps) : `+${formatTime(d.time - leaderTime, d.plusLaps)}`}
                                 </td>
-                                <td style={{whiteSpace: 'nowrap'}}>
+                                <td style={{whiteSpace: 'nowrap', animationDelay: `${25*i}ms`}}>
                                     {assignPoints(d.rank, d.hasFastestLap, d.isSprint, d.time === null)}
                                     {d.hasFastestLap ? <FontAwesomeIcon 
                                     style={{color: 'purple', marginLeft: '5px', backgroundColor: WHITE, borderRadius: '50%'}} icon={faClock} /> 

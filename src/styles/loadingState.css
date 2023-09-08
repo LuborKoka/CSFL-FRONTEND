@@ -98,6 +98,11 @@
   list-style-type: none;
 }
 
+.content-fade-in td, .content-fade-in div, .content-fade-in span, .content-fade-in h3, .content-fade-in h2, .content-fade-in img, .content-fade-in svg {
+  opacity: 0;
+  animation: content-fade-in 1s forwards;
+}
+
 .animation {
   animation: breathing 2s infinite;
 }
@@ -133,6 +138,16 @@
   }
   100% {
     box-shadow: 0 0 10px 0px #EFEFEF;
+  }
+}
+@keyframes content-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
