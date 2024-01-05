@@ -148,9 +148,23 @@
 
 .switch-container {
     max-width: 200px;
-    column-gap: 10px;
-    span {
+    column-gap: 5px;
+    .box {
         font-weight: bold;
+        width: 50%;
+        color: $darkblue;
+        border-radius: 5px;
+        padding: 8px 0;
+        cursor: pointer;
+        transition: box-shadow .2s;
+    }
+
+    .active {
+        background-color: $white;
+    }
+
+    .inactive {
+        background-color: rgba($white, .7);
     }
 }
 
@@ -216,6 +230,17 @@ input:checked + .slider:before {
 
     &-inactive {
         opacity: 0;
+    }
+}
+
+.underlined {
+    position: relative;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0 20%;
+        border-bottom: 1px solid currentColor;
     }
 }
 
@@ -301,4 +326,11 @@ input:checked + .slider:before {
     width: 35px;
     height: 22.5px;
     margin: 0 2.5px;
+}
+
+
+@media (hover:hover) {
+    .switch-container .box:hover {
+        box-shadow: 0 0 2px 1px inset rgba($darkblue, .8);
+    }
 }

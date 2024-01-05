@@ -7,6 +7,7 @@ import { RED, WHITE } from "../../../constants"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons"
 import Loader from "../../reusableCompontents/Loader"
+import SectionHeading from "../../reusableCompontents/SectionHeading"
 
 
 
@@ -14,6 +15,7 @@ import Loader from "../../reusableCompontents/Loader"
 export default function Standings() {
     const { seasonID } = useParams()
     const [isChecked, setIsChecked] = useState(false)
+    const [isPoints, setIsPoints] = useState(false)
 
     const query = useQuery([`season_standings_${seasonID}`], () => fetchStandings(seasonID))
 
@@ -21,15 +23,16 @@ export default function Standings() {
 
     const startTransition = useTransition()[1]
 
-    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    function handleChange(val: boolean) {
+        setIsChecked(val)
         startTransition(() => {
-            setIsChecked(e.target.checked)
+            setIsPoints(val)
         })
     }
 
     if ( query.isLoading ) return(
         <>
-            <h2 className="section-heading fade-in-out-border">Tabuľka priebežného poradia</h2>
+            <SectionHeading>Tabuľka priebežného poradia</SectionHeading>
             <Loader type='standings' />
         </>
         
@@ -50,19 +53,16 @@ export default function Standings() {
     }
 
     return(
-        <div className={ `${!location.pathname.includes('/race') && 'section'}`}>
-            <h2 className="section-heading fade-in-out-border">Tabuľka priebežného poradia jazdcov</h2>
-            <div className='center switch-container section-heading fade-in-out-border'>
-                <span style={{cursor: 'pointer'}} onClick={() => setIsChecked(false)}>Poradie</span>
-                <label className="switch">
-                    <input type="checkbox" checked={isChecked} onChange={handleChange} />
-                    <span className="slider round"></span>
-                </label>
-                <span style={{cursor: 'pointer'}} onClick={() => setIsChecked(true)}>Body</span>
+        <div className={ `${!location.pathname.includes('/race') ? 'section' : ''}`}>
+            <SectionHeading sectionHeading>Tabuľka priebežného poradia jazdcov</SectionHeading>
+            <div className="section-heading center switch-container">
+                <span className={`box center ${isChecked ? 'in' : ''}active`} onClick={() => handleChange(false)}>Poradie</span>
+                <span className={`box center ${isChecked ? '' : 'in'}active`} onClick={() => handleChange(true)}>Body</span>
             </div>
 
+
             <div className="overflow-y">
-                <table className="table standings-table">
+                <table className="table standings-table content-fade-in">
                     <thead>
                         <tr>
                             <th className="empty-header-item"></th><th style={{textAlign: 'left', paddingLeft: '8px'}}>Meno</th>
@@ -80,19 +80,19 @@ export default function Standings() {
 
                     <tbody>
                     {
-                        query.data?.data.drivers.map((d, i) => {
+                        query.data?.data.drivers.map((d, index) => {
                             return(
-                                <tr key={d.driverID}>
-                                    <td>{i+1}.</td>
+                                <tr key={d.driverID} style={{animationDelay: `${25*index}ms`}}>
+                                    <td>{index+1}.</td>
                                     <td className='team-border' style={{whiteSpace: "nowrap", borderColor: d.color, paddingLeft: '8px'}}>{d.driverName}</td> {/* i wanna target this element on tr hover */}
                                     {d.races.map((r, i) => 
                                         r.hasBeenRaced ?
                                         
                                         <td key={`${d.driverID}, race${i}`}>
                                             <div className="switcher-visible">
-                                                <div style={{color: getTextColor(r.rank)}} className={`switcher-container ${ !isChecked && 'switcher-container-rank'}`}>
-                                                    <div className={`switcher-item-${isChecked ? 'active' : 'inactive'}`}>{r.points}</div>
-                                                    <div className={`switcher-item-${isChecked ? 'inactive' : 'active'}`}>{r.rank}</div>
+                                                <div style={{color: getTextColor(r.rank)}} className={`switcher-container ${ !isPoints && 'switcher-container-rank'}`}>
+                                                    <div className={`switcher-item-${isPoints ? 'active' : 'inactive'} ${typeof r.rank === 'number' && r.rank < 4 ? 'underlined' : ''}`}>{r.points}</div>
+                                                    <div className={`switcher-item-${isPoints ? 'inactive' : 'active'} ${typeof r.rank === 'number' && r.rank < 4 ? 'underlined' : ''}`}>{r.rank}</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -112,8 +112,8 @@ export default function Standings() {
             
 
             <br/><br/>
-            <h2 className='section-heading fade-in-out-border'>Tabuľka priebežného poradia konštruktérov</h2>
-            <table className="table team-standings-table">
+            <SectionHeading sectionHeading>Tabuľka priebežného poradia konštruktérov</SectionHeading>
+            <table className="table team-standings-table content-fade-in">
                 <thead>
                     <tr>
                         <th></th><th>Tím</th><th>Body</th>
@@ -138,12 +138,10 @@ export default function Standings() {
             </table>
 
             <br/><br/>
-            <h2 className="section-heading fade-in-out-border">
-                Tabuľka trestných bodov
-            </h2>
+            <SectionHeading sectionHeading>Tabuľka trestných bodov</SectionHeading>
 
             <div className="overflow-y">
-                <table className='table standings-table'>
+                <table className='table standings-table content-fade-in'>
                     <thead>
                         <tr>
                             <th className="empty-header-item"></th>
@@ -182,6 +180,27 @@ export default function Standings() {
                     </tbody>
                 </table>
             </div>
+
+            <section id='markdown' style={{margin: '2rem 0'}}>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Hranice trestov</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Kvalifikačný ban</td>
+                            <td>7TB</td>
+                        </tr>
+                        <tr>
+                            <td>Závodný ban</td>
+                            <td>15TB</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
         </div>
     )
 }
