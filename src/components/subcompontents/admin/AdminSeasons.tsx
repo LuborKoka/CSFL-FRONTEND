@@ -4,6 +4,7 @@ import { Link, useOutletContext } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { AdminOutletContext, OutletSeason } from '../../controls/AdminNav';
 import { useContext, Context} from 'react'
+import CreateSeason from './edit season related/CreateSeason';
 
 
 export default function AdminSeasons() {
@@ -14,13 +15,17 @@ export default function AdminSeasons() {
     const setSeason = (useOutletContext() as AdminOutletContext)[1]
 
     return(
-        <div id='seasons'>
-            {
-                query.data?.seasons.map(s => 
-                    <SeasonLink key={s.id} {...s} setSeason={setSeason} />    
-                )
-            }
-        </div>
+        <>
+            <div id='seasons' style={{paddingBottom: '5rem'}}>
+                {
+                    query.data?.seasons.map(s => 
+                        <SeasonLink key={s.id} {...s} setSeason={setSeason} />    
+                    )
+                }
+            </div>
+
+            <CreateSeason />
+        </>
     )
 }
 

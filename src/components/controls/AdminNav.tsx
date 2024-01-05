@@ -61,7 +61,6 @@ export default function AdminNav() {
                         <NavLink className='clickable-button' to={`/${randomURIkey}/admin/roles`}>Používatelia a Role</NavLink>
                     }
                     <NavLink className='clickable-button' to={`/${randomURIkey}/admin/rules`}>Upraviť pravidlá</NavLink>
-                    <NavLink className='clickable-button' to={`/${randomURIkey}/admin/new-season`}>Vytvoriť sezónu</NavLink>
                 </ul>
             </nav>
 
