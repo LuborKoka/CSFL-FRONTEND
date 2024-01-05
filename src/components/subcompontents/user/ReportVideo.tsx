@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react"
 import { URI } from "../../../App"
 import { Link } from "react-router-dom"
+import { WHITE } from "../../../constants"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faDownload } from "@fortawesome/free-solid-svg-icons"
+import useErrorMessage from "../../../hooks/useErrorMessage"
 
 type Online = {
     isOnline: true,
@@ -22,6 +26,31 @@ export default function ReportVideo(props: Props) {
 
     const container = useRef<HTMLDivElement>(null)
 
+    const [message, showMessage] = useErrorMessage()
+
+
+    function download() {
+        fetch(`${URI}/media/${props.url}/?download=true`, {
+            method: 'GET',
+        })
+        .then( res => {
+            if ( res.status !== 200 ) throw new Error(res.statusText)
+            return res.blob()
+        })
+        .then( blob => {
+            const url = window.URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = `image.${props.url.split('.').at(-1)}`
+            document.body.appendChild(a)
+            a.click()
+            a.remove()
+        })
+        .catch( e => {
+            showMessage(e)
+        })
+    }
+
     //treba nejako ojebat
     //ojebane
     useEffect(() => {
@@ -41,8 +70,13 @@ export default function ReportVideo(props: Props) {
 
 
     if ( !props.isOnline ) {
+
         return props.isImage ?
-            <div>
+            <div style={{position: 'relative'}}>
+                { message }
+                <div className="hoverable-icon" onClick={download}>
+                    <FontAwesomeIcon icon={faDownload} style={{color: WHITE}} />
+                </div>
                 <img src={`${URI}/media/${props.url}/`} alt="File Not Found" width='100%' height='100%' style={{objectFit: 'contain'}}/>
             </div>
             :
@@ -65,7 +99,9 @@ export default function ReportVideo(props: Props) {
 
     //toto potrebujem este dokoncit, nejak vedla zobrazit ten link ako <a href={url} target='_blank'></a> alebo take nieco
     return(
-        <Link to={props.url} className="link">{props.url}</Link>
+        <>
+            <Link to={props.url} target="_blank" style={{color: WHITE, gridColumn: '1 / -1'}} className="link">{props.url}</Link>
+        </>
     )
 }
 
