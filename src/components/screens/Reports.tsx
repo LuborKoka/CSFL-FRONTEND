@@ -10,6 +10,7 @@ import '../../styles/report.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faThumbsUp } from "@fortawesome/free-solid-svg-icons"
 import Loader from "../reusableCompontents/Loader"
+import SectionHeading from "../reusableCompontents/SectionHeading"
 
 
 export default function Reports() {
@@ -22,6 +23,7 @@ export default function Reports() {
     const reportRefs = useRef<RefObject<HTMLDivElement>[]>([])
         
     const { raceID } = useParams()
+    const params = new URLSearchParams(useLocation().search)
     const hash = useLocation().hash
 
     const query = useQuery([`race_${raceID}_reports`], () => fetchReports(raceID))
@@ -32,9 +34,8 @@ export default function Reports() {
 
     
     useEffect(() => {
-        if ( !hash ) return
-
-        const index = parseInt(hash.substring(1))
+        const index = Number(params.get('report')) || Number(hash.substring(1))
+        if ( !index ) return
         
         if ( isNaN(index) ) return
 
@@ -50,12 +51,12 @@ export default function Reports() {
         
 
         //eslint-disable-next-line
-    }, [hash, reportRefs.current])
+    }, [params, reportRefs.current, hash])
 
 
     if ( query.isLoading) return(
         <>
-            <h1 className='section-heading fade-in-out-border'>Reporty</h1>
+            <SectionHeading sectionHeading>Reporty</SectionHeading>
             <Loader type='reports' />
         </>
     )
@@ -64,10 +65,10 @@ export default function Reports() {
         return(
             <>
                 <br/><br/>
-                <h2 className='section-heading fade-in-out-border' style={{textAlign: 'center'}}> 
+                <SectionHeading sectionHeading style={{textAlign: 'center'}}>
                     Žiadne reporty
                     <FontAwesomeIcon icon={faThumbsUp} style={{ margin: '0 2rem'}} />
-                </h2>
+                </SectionHeading>
             </>
         )
     }
@@ -75,7 +76,7 @@ export default function Reports() {
 
     return(
         <>
-            <h1 className='section-heading fade-in-out-border'>Reporty</h1>
+            <SectionHeading sectionHeading>Reporty</SectionHeading>
             {
                 query.data?.reports.slice().reverse().map((r, i) =>/* toten setter musi ist dovnutra komponentu, tam uz mam aj tak kontext na reportID, ktory treba nastavit */                    
                     <Report key={r.reportID} {...r} setResponseData={setResponseData} ref={reportRefs.current[i]} />
@@ -132,7 +133,8 @@ export type ReportType = {
         driverID: string,
         driverName: string,
         time: number,
-        penaltyPoints: number
+        penaltyPoints: number,
+        isDSQ: boolean
     }[],
     rank: number
 }
