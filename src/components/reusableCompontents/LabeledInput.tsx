@@ -23,17 +23,22 @@ function LabeledInput({ label, htmlFor, withToggleVisible = false, error, ...pro
 
     return (
         <div className='labeled-input'>
+            <div style={{position: 'relative'}}>
+                {
+                    withToggleVisible ? 
+                    <input className='form-input' {...props} ref={ref} type={isVisible ? 'text' : 'password'} /> :
+                    <input className='form-input' {...props} ref={ref}  />
+                }
+            <label htmlFor={htmlFor}>{label}</label>
+
             {
-                withToggleVisible ? 
-                <input className='form-input' {...props} ref={ref} type={isVisible ? 'text' : 'password'} /> :
-                <input className='form-input' {...props} ref={ref}  />
+                withToggleVisible ?
+                <FontAwesomeIcon className='center-right' icon={isVisible ? faEye : faEyeSlash} onClick={() => setIsVisible(p => !p)} style={{position: 'absolute'}} /> :
+                null
             }
-          <label htmlFor={htmlFor}>{label}</label>
-          {
-            withToggleVisible ?
-            <FontAwesomeIcon className='center-right' icon={isVisible ? faEye : faEyeSlash} onClick={() => setIsVisible(p => !p)} style={{position: 'absolute'}} /> :
-            null
-          }
+            </div>
+            
+          
           {/*needs fixing */error && <p className='input-error'>{error as string}</p>}
         </div>
       )
