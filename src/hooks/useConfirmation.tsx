@@ -13,7 +13,9 @@ export default function useConfirmation(): [JSX.Element | null, (callback?: () =
     const [isShown, setIsShown] = useState(false)
 
 
-    //takes an optional parameter, function what they want to do after the confirmation sign disappears
+    /**
+     * @param callback a function what you want to call after the confirmation sign disappears
+     */
     async function showConfirmation(callback?: () => any ) {
         setIsShown(true)
         await new Promise(r => setTimeout(r, 1900))

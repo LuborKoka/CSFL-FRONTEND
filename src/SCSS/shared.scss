@@ -58,7 +58,6 @@
     position: relative;
     outline: none;
     background-color: transparent;
-    border: none;
     color: rgba($white, .9);
     cursor: pointer;
     font-size: 20px;
@@ -74,6 +73,32 @@
     background-color: $white;
     color: $darkblue;
 }
+
+.submit-button-container {
+    width: 100%;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 10px;
+
+    .clickable-button {
+        font-size: 2rem;
+    }
+}
+
+.inline-clickable-button, .inline-clickable-button-active {
+    position: relative;
+    outline: none;
+    background-color: transparent;
+    color: rgba($white, .9);
+    font-size: 40px;
+    padding: 0 20px;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    transition: border .2s transform .4s;
+}
+
 
 .rotate-180 {
     transform: rotate(-180deg)
@@ -292,6 +317,12 @@
 
     .close-icon {
         color: $red;
+    }
+
+    .submit-button-container {
+        .clickable-button {
+            border: 1px solid $white;
+        }
     }
 }
 

@@ -187,15 +187,14 @@
 
 
     .breadcrumbs {
-        display: flex;
-        column-gap: 5px;
-
         max-width: 100%;
 
         .link {
             display: inline-block;
             color: $white;
             font-size: 1rem;
+            white-space: nowrap;
+            margin-right: 5px;
         }
     }
 }

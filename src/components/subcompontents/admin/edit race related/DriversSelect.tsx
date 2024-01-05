@@ -22,19 +22,10 @@ type Team = {
     }[]
 }
 
-type Data = {
-    raceName: string,
-    date: string,
-    teams: Team[],
-    reserves: {
-        id: string,
-        name: string
-    }[]
-}
 
-type DriversSelectProps = (Team & {setDrivers: (teamID: string, drivers: string[]) => void} ) 
+type DriversSelectProps = (Team & {setDrivers: (teamID: string, drivers: string[]) => void} ) & {isDisabled: boolean}
 
-export default function DriversSelect({ teamID, teamName, drivers, allOptions, setDrivers, color }: DriversSelectProps ) {
+export default function DriversSelect({ teamID, teamName, drivers, allOptions, setDrivers, color, isDisabled }: DriversSelectProps ) {
     const [value, setValue] = useState<{value: string, label: string}[]>([])
     const [options, setOptions] = useState<{value: string, label: string}[]>([])
 
@@ -63,7 +54,7 @@ export default function DriversSelect({ teamID, teamName, drivers, allOptions, s
     return(
         <div style={{padding: '1.5rem 0'}}>
             <div className='labeled-input' key={teamID}>
-                <Select name={teamName} value={value} isMulti styles={selectMultiValueStyles(color)} placeholder={null} options={options} onChange={updateValue} />
+                <Select isDisabled={isDisabled} name={teamName} value={value} isMulti styles={selectMultiValueStyles(color)} placeholder={null} options={options} onChange={updateValue} />
                 <label htmlFor={teamName} style={{color: color, transform: 'translate(-2%, -120%) scale(.9)', padding: '2px 5px'}}>
                     {teamName}
                 </label>

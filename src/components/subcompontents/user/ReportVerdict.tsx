@@ -1,6 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import  { faRightLong, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import  { faRightLong, faSkullCrossbones, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { faRectangleXmark, faClock } from '@fortawesome/free-regular-svg-icons'
 import exclamation from '../../../images/exclamation.svg'
 
@@ -10,7 +10,8 @@ type Props = {
         driverID: string,
         driverName: string,
         time: number,
-        penaltyPoints: number
+        penaltyPoints: number,
+        isDSQ: boolean
     }[],
     setOpen: React.Dispatch<React.SetStateAction<boolean>>,
     rank: number,
@@ -37,15 +38,15 @@ export default function ReportVerdict({ verdict, penalties, setOpen, rank, from,
                 </div>
 
 
-                <span className='single-row' style={{columnGap: '15px'}}>
+                <div>
                     {from}
-                    <FontAwesomeIcon style={{transform: 'translateY(10%)'}} icon={faRightLong} />
+                    <FontAwesomeIcon style={{transform: 'translateY(10%)', margin: '0 15px'}} icon={faRightLong} />
                     {
                         targets.map( (t, i) => //zvazit este nejaky marker pre nahlasenych
                             <span key={`reported_player${i}`} className='reported-player'><FontAwesomeIcon icon={faTriangleExclamation} /> {t.name}</span>
                         )
                     }
-                </span> 
+                </div> 
                 <br/><br/>
 
                 <h2 className="section-heading" style={{textAlign: 'center'}}>
@@ -95,10 +96,17 @@ export default function ReportVerdict({ verdict, penalties, setOpen, rank, from,
                                 penalties.map(p => 
                                 <div className='penalty-driver-layout' key={p.driverID}>
                                     <b>{p.driverName}</b>
-                                    <span><FontAwesomeIcon icon={faClock} /> {getSecondsString(p.time)}</span>
-                                    <span style={{gridColumn: '2', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', columnGap: '5px'}} >
-                                        <img alt="exclamation point icon" src={exclamation} height='16px'/> {getPointsString(p.penaltyPoints)}
-                                    </span>
+                                     {
+                                        p.isDSQ ?
+                                        <span><FontAwesomeIcon icon={faSkullCrossbones} /> Diskvalifikácia</span> :
+                                        <>
+                                            <span><FontAwesomeIcon icon={faClock} /> {getSecondsString(p.time)}</span>
+                                            <span style={{gridColumn: '2', display: 'flex', alignItems: 'center', justifyContent: 'flex-start', columnGap: '5px'}} >
+                                                <img alt="exclamation point icon" src={exclamation} height='16px'/> {getPointsString(p.penaltyPoints)}
+                                            </span>
+                                        </>
+                                     }
+                                    
                                 </div>)
                             }
 
@@ -116,7 +124,7 @@ export default function ReportVerdict({ verdict, penalties, setOpen, rank, from,
 
 
 function getSecondsString(time: number) {
-    const sign = time < 0 ? '' : '+'
+    const sign = time < 0 ? '-' : '+'
     const amount = Math.abs(time)
 
     if ( amount === 1 ) return `${sign}${amount} sekunda`

@@ -1,3 +1,5 @@
+import { faCaretDown } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useState, useEffect } from "react"
 
 type Props = {
@@ -5,10 +7,11 @@ type Props = {
     color: string,
     time: string | null,
     driverName: string,
+    isDisabled: boolean,
     saveResult: (driverID: string, resultTime: string, plusLaps: number) => void
 }
 
-export default function SingleDriverResult({ driverID, driverName, color, time, saveResult}: Props) {
+export default function SingleDriverResult({ driverID, driverName, color, time, isDisabled, saveResult}: Props) {
     const [resultTime, setResultTime] = useState(time || '')
     const [plusLaps, setPlusLaps] = useState(0)
 
@@ -28,8 +31,8 @@ export default function SingleDriverResult({ driverID, driverName, color, time, 
     return(
         <div>
             <br/>
-            <div className='labeled-input' style={{marginTop: '10px'}}>
-                <input name={driverName} className='form-input' type="text" required value={resultTime}
+            <div className='labeled-input single-row' style={{marginTop: '10px'}}>
+                <input name={driverName} className='form-input' type="text" required value={isDisabled ? '' : resultTime} readOnly={isDisabled}
                 style={{color: color, boxShadow: `0 0 10px 5px ${color}`}}  onChange={handleChange} />
             
                 <label style={{color: color}} htmlFor={driverName}>{driverName}</label>
@@ -37,7 +40,7 @@ export default function SingleDriverResult({ driverID, driverName, color, time, 
 
             <br/>
             <div className='labeled-input' style={{marginTop: '10px'}}>
-                <input type='number' name={`${driverName}plus-laps`} className='form-input' min={0} 
+                <input type='number' name={`${driverName}plus-laps`} className='form-input' min={0} readOnly={isDisabled}
                 style={{color: color, boxShadow: `0 0 10px 5px ${color}`}} value={plusLaps} onChange={handlePlusLapsChange}  />
 
                 <label style={{color: color}} htmlFor={`${driverName}plus-laps`}>Kolá pozadu</label>

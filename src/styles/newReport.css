@@ -107,21 +107,7 @@
   opacity: 1;
 }
 
-.submit-button-container {
-  width: 100%;
-  padding: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.submit-button-container .clickable-button {
-  font-size: 2rem;
-}
-
 @media (hover: none) {
-  .submit-button-container .clickable-button {
-    border: 1px solid #EFEFEF;
-  }
   #custom-input {
     border: 1px solid #EFEFEF;
   }

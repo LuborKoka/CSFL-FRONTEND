@@ -28,14 +28,14 @@ export default function EditSeason() {
     
 
     return(
-        <div>
+        <>
             {
                 query.data?.races.map(r => {
                     return <RaceBox {...r} key={r.id} setSeason={setSeason} />
                 })
             }
             
-        </div>
+        </>
     )
 }
 
@@ -46,7 +46,7 @@ function RaceBox({ id, raceName, date, isSprint, setSeason}: RaceProps) {
     }
 
     return(
-        <Link className='tiltable-card link' style={{margin: '2rem'}} to={`race/${id}`} onClick={setBreadcrumbs}>
+        <Link className='tiltable-card link' style={{width: 'calc(min(350px, 100%) - 3rem)', margin: '2rem 1.5rem'}} to={`race/${id}`} onClick={setBreadcrumbs}>
             <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
             <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
             <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>

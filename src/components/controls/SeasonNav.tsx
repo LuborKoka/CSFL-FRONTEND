@@ -38,10 +38,9 @@ export default function SeasonNav() {
                     <Link className='link' to={`/seasons/${seasonID}`}>Prehľad ročníka</Link>
                     {
                         location.pathname.includes('/race') ?
-                       <> {'>'}
-                        <Link className='link' to={`/seasons/${seasonID}/race/${raceID}/overview`}>{query.data?.raceName}</Link> </>
-                    :
-                    null
+                        <Link className='link' to={`/seasons/${seasonID}/race/${raceID}/overview`}>{'> '}{query.data?.raceName}</Link>
+                        :
+                        null
                     }
                     {
                         lastLink(location.pathname)
@@ -58,13 +57,13 @@ export default function SeasonNav() {
 
 
 function lastLink(pathname: string): JSX.Element | null {
-    if ( pathname.includes('/new-report') ) return <>{'>'} <Link className='link' to={pathname}>Pridať report</Link></>
+    if ( pathname.includes('/new-report') ) return <Link className='link' to={pathname}>{'>'} Pridať report</Link>
 
-    if ( pathname.includes('/reports')) return <>{'>'} <Link className='link' to={pathname}>Reporty</Link> </>
+    if ( pathname.includes('/reports')) return <Link className='link' to={pathname}>{'>'} Reporty</Link>
 
-    if ( pathname.includes('/results') ) return <>{'>'} <Link className='link' to={pathname}>Výsledky</Link></>
+    if ( pathname.includes('/results') ) return <Link className='link' to={pathname}>{'>'} Výsledky</Link>
 
-    if ( pathname.includes('/standings') ) return <>{'>'} <Link className='link' to={pathname}>Tabuľka</Link> </>
+    if ( pathname.includes('/standings') ) return <Link className='link' to={pathname}>{'>'} Tabuľka</Link>
 
     
 

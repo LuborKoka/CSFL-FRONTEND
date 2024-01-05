@@ -18,7 +18,6 @@ import AddReport from './components/subcompontents/user/AddReport';
 import './styles/shared.css'
 import './styles/confirmation.css'
 import AdminNav from './components/controls/AdminNav';
-import CreateSeason from './components/subcompontents/admin/edit season related/CreateSeason';
 import CreateSchedule from './components/subcompontents/admin/edit season related/Schedule';
 import AssignDriversTeams from './components/subcompontents/admin/edit season related/AssignDriversTeams';
 import AddReserves from './components/subcompontents/admin/edit season related/AddReserves';
@@ -123,7 +122,6 @@ function App() {
               <Route path='seasons' element={<AdminUI />} />
               <Route path='roles' element={<Roles />} />
               <Route path='rules' element={<EditRules />} />
-              <Route path='new-season' element={<CreateSeason />} />
               <Route path='season/:seasonID' element={<EditSeason />} />
               <Route path='season/:seasonID/drivers' element={<AssignDriversTeams />} />
               <Route path='season/:seasonID/schedule' element={<CreateSchedule />} />

@@ -7,6 +7,9 @@ type Props = {
     type: 'results' | 'standings' | 'reports' | 'season' | 'race overview' | 'rules'
 }
 
+/**
+ * A loading state animation for the season page and race subpages.
+ */
 export default function Loader({ type }: Props) {
     function table(n_rows: number, key?: string | number) {
         const tableRows: JSX.Element[] = []

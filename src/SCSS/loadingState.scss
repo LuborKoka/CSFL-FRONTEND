@@ -124,10 +124,17 @@ $initialOpacity: .20;
 }
 
 .content-fade-in {
-    td, div, span, h3, h2, img, svg {
+    > div, span, h3, h2, > img, svg, tbody tr {
         opacity: 0;
         animation: content-fade-in 1s forwards;
     }
+
+    /*thead {
+        div, tr, img {
+            opacity: 1;
+            animation: none;
+        }
+    }*/
 }
 
 
@@ -150,6 +157,7 @@ $initialOpacity: .20;
     }
 }
 
+// pulsing a shadow su aktualne nepouzivane, nechal som to tu len ako alternativu
 @keyframes pulsing {
     0% {
         transform: scale(1)
@@ -178,10 +186,10 @@ $initialOpacity: .20;
 @keyframes content-fade-in {
     from {
         opacity: 0;
-        transform: translateY(4px);
+        //transform: translateY(4px);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        //transform: translateY(0);
     }
 }
