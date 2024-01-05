@@ -7,6 +7,8 @@ import React, { useState } from "react"
 import { selectSingleValueStyles } from "./edit season related/CreateRace"
 import useConfirmation from "../../../hooks/useConfirmation"
 import useErrorMessage from "../../../hooks/useErrorMessage"
+import SectionHeading from "../../reusableCompontents/SectionHeading"
+import ClickableButton from "../../reusableCompontents/ClickableButton"
 
 export default function Roles() {
     const [value, setValue] = useState<{label: string, value: string} | null>(null)
@@ -88,7 +90,7 @@ export default function Roles() {
 
     return(
         <>
-        <h2 className='section-heading fade-in-out-border'>Pridať rolu F1 Admina</h2>
+        <SectionHeading sectionHeading>Pridať rolu F1 Admina</SectionHeading>
         <form onSubmit={submitNewAdmin}>
             <Select value={value} required onChange={handleNewAdminChange} styles={selectSingleValueStyles()}
             options={
@@ -97,13 +99,13 @@ export default function Roles() {
                 })}
              />
             <div className='submit-button-container single-row'>
-                <button className='clickable-button' onClick={cancelNewAdmin}>Zrušiť</button>
-                <button type="submit" className={`clickable-button ${isPending && 'button-disabled'}`}>Uložiť</button>
+                <ClickableButton onClick={cancelNewAdmin}>Zrušiť</ClickableButton>
+                <ClickableButton type='submit' disabled={isPending}>Uložiť</ClickableButton>
             </div>
         </form>
 
 
-        <h2 className='section-heading fade-in-out-border'>Odobrať rolu F1 Admina</h2>
+        <SectionHeading sectionHeading>Odobrať rolu F1 Admina</SectionHeading>
         <form onSubmit={submitDelAdmin}>
             <Select value={delValue} required styles={selectSingleValueStyles()} onChange={handleDelAdminChange} 
             options={
@@ -112,12 +114,12 @@ export default function Roles() {
                 })}
             />
             <div className='submit-button-container single-row'>
-                <button className='clickable-button' onClick={cancelDelAdmin}>Zrušiť</button>
-                <button type="submit" className={`clickable-button ${isPendingDel && 'button-disabled'}`}>Uložiť</button>
+                <ClickableButton onClick={cancelDelAdmin}>Zrušiť</ClickableButton>
+                <ClickableButton type='submit' disabled={isPendingDel}>Uložiť</ClickableButton>
             </div>
         </form>
 
-        { confirmation } { message }
+        { [confirmation, message] }
         </>
     )
 }

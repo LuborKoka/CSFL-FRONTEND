@@ -10,6 +10,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import secureLocalStorage from 'react-secure-storage'
 import useUserContext from '../../../hooks/useUserContext'
+import ClickableButton from '../../reusableCompontents/ClickableButton'
+import LabeledInput from '../../reusableCompontents/LabeledInput'
 
 const schema = z.object({
     username: z.string().min(4, {
@@ -35,8 +37,8 @@ export default function Login({ swap }: Props) {
 
     const navigate = useNavigate()
     const location = useLocation()
-    const queryParams = new URLSearchParams(location.search);
-    const redirectUrl = queryParams.get('redirect_url');
+    const queryParams = new URLSearchParams(location.search)
+    const redirectUrl = queryParams.get('redirect_url')
 
     const [message, showMessage] = useErrorMessage()
 
@@ -73,20 +75,10 @@ export default function Login({ swap }: Props) {
     return(
         <>  
             <form name="Login Form" onSubmit={handleSubmit((d) => handleLogin(d as LoginCredentials))}>
-                <div className='labeled-input'>
-                    <input className='form-input' required type="text" autoFocus {...register('username')} />
-                    <label htmlFor='username'>Prihlasovacie meno</label>
-                    {errors.username?.message && <p className='input-error'>{errors.username?.message as string}</p>}
-                </div>
+                <LabeledInput label='Prihlasovacie meno' htmlFor='username' {...register('username')} required autoFocus type='text' error={errors.username?.message} />
+                <LabeledInput label='Heslo' htmlFor='password' {...register('password')} required withToggleVisible error={errors.password?.message} />
                 
-                <div className='labeled-input'>
-                    <input {...register('password')} className='form-input' required type="password" />
-                    <label htmlFor='password'>Heslo</label>
-                    
-                    {errors.password?.message && <p className='input-error'>{errors.password?.message as string}</p>}
-                </div>
-                
-                <button className={`clickable-button ${isPending ? 'button-disabled' : ''}`} disabled={isPending} type="submit">Prihlásiť sa</button>
+                <ClickableButton disabled={isPending} type='submit'>Prihlásiť sa</ClickableButton>
             </form>
             <p className='form-swap'>Nemáš ešte účet? <span onClick={swap}>Zaregistruj sa</span></p>
 

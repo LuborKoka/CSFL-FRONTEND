@@ -6,6 +6,8 @@ import { URI, insertTokenIntoHeader } from "../../../App"
 import useUserContext from "../../../hooks/useUserContext"
 import useConfirmation from "../../../hooks/useConfirmation"
 import useErrorMessage from "../../../hooks/useErrorMessage"
+import SectionHeading from "../../reusableCompontents/SectionHeading"
+import ClickableButton from "../../reusableCompontents/ClickableButton"
 
 
 
@@ -60,7 +62,7 @@ export default function NameChange() {
 
     return(
         <>
-            <h2 className='section-heading fade-in-out-border'>Zmena Verejného Mena</h2>
+            <SectionHeading sectionHeading>Zmena Verejného Mena</SectionHeading>
 
             <form onSubmit={submit} name="name change">
                 <div className="labeled-input">
@@ -74,11 +76,8 @@ export default function NameChange() {
                     <FontAwesomeIcon className='center-right' icon={isVisible ? faEye : faEyeSlash} onClick={() => setIsVisible(p => !p)} style={{position: 'absolute'}} />
                 </div>
 
-                <div className="submit-button-container">
-                    <button className={`clickable-button ${isPending && 'button-disabled'}`} type='submit'>
-                        Uložiť
-                    </button>
-                </div>
+
+                <ClickableButton withContainer disabled={isPending} type='submit'>Uložiť</ClickableButton>
 
             </form>
 

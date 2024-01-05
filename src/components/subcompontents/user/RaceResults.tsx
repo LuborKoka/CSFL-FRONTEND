@@ -7,6 +7,7 @@ import { faClock, faExclamationTriangle } from '@fortawesome/free-solid-svg-icon
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { RED, WHITE } from '../../../constants';
 import Loader from '../../reusableCompontents/Loader';
+import SectionHeading from '../../reusableCompontents/SectionHeading';
 
 export default function RaceResults() {
     const [leaderTime, setLeaderTime] = useState(0)
@@ -39,11 +40,11 @@ export default function RaceResults() {
                 </h2>
             </>
         )
-    }
+   }
 
     return(
         <div style={{display: 'grid'}}>
-            <h2 className='section-heading fade-in-out-border'>Výsledky pretekov</h2>
+            <SectionHeading sectionHeading>Výsledky pretekov</SectionHeading>
             <table className='table content-fade-in' id='race-results-table'>
                 <thead className='table-header'>
                     <tr>
@@ -59,14 +60,14 @@ export default function RaceResults() {
                     //SELECT NOW() < race.date AS race_took_place a mam vyriesene tie nuly
                     query?.data?.results.map((d, i) => {
                         return(
-                            <tr key={d.driverID}>
-                                <td style={{animationDelay: `${25*i}ms`}}>{d.rank}.</td>
-                                <td style={{animationDelay: `${25*i}ms`}}>{d.driverName}</td>
-                                <td style={{animationDelay: `${25*i}ms`}}>{d.teamName}</td>
-                                <td style={{animationDelay: `${25*i}ms`}}>
+                            <tr key={d.driverID} style={{animationDelay: `${25*i}ms`}}>
+                                <td>{d.rank}.</td>
+                                <td>{d.driverName}</td>
+                                <td>{d.teamName}</td>
+                                <td>
                                     {d.isDSQ ? 'DSQ' : d.time === null ? 'DNF' : d.rank === 1 ? formatTime(d.time, d.plusLaps) : `+${formatTime(d.time - leaderTime, d.plusLaps)}`}
                                 </td>
-                                <td style={{whiteSpace: 'nowrap', animationDelay: `${25*i}ms`}}>
+                                <td style={{whiteSpace: 'nowrap'}}>
                                     {assignPoints(d.rank, d.hasFastestLap, d.isSprint, d.time === null)}
                                     {d.hasFastestLap ? <FontAwesomeIcon 
                                     style={{color: 'purple', marginLeft: '5px', backgroundColor: WHITE, borderRadius: '50%'}} icon={faClock} /> 

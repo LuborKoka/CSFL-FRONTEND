@@ -1,15 +1,17 @@
 import React, { useState, useRef } from "react";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { URI, generateRandomString, insertTokenIntoHeader } from "../../../App";
 import Select, { MultiValue, StylesConfig, ActionMeta } from 'react-select';
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLightbulb, faPaperclip, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faPaperclip, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { DARKBLUE, RED, WHITE } from "../../../constants";
 import useConfirmation from "../../../hooks/useConfirmation";
 import useErrorMessage from "../../../hooks/useErrorMessage";
 import useUserContext from "../../../hooks/useUserContext";
+import UserTip from "../../reusableCompontents/UserTip";
+import SectionHeading from "../../reusableCompontents/SectionHeading";
 
 type Driver = {
     name: string,
@@ -149,18 +151,15 @@ export default function AddReport() {
                     { isEmptyText && <p className='input-error'>Popis inchidentu musí mať aspoň 20 znakov.</p>}
                 </div>
 
-                <h2 className='fade-in-out-border'>
-                    <FontAwesomeIcon icon={faPaperclip} /> Prílohy 
-                </h2>
+                <SectionHeading>
+                    <FontAwesomeIcon icon={faPaperclip} /> Prílohy
+                </SectionHeading>
 
                 { isEmptyVideo && <p className='input-error' style={{marginTop: '-1rem'}}>Potrebujeme od teba aspoň jednu prílohu.</p>}
 
-                <div className='user-tip' style={{zIndex: '0'}}>
-                    <FontAwesomeIcon icon={faLightbulb} />
-                    <span>Na videá odporúčam použiť online platformy (youtube, streamable etc.). Všetkým (aj sebe) tým ušetríš kus dát.</span>
-                    <FontAwesomeIcon icon={faLightbulb} />
-                </div>
-                <br/>
+                <UserTip style={{marginBottom: '1.5rem', zIndex: '0'}}>
+                    Na videá odporúčam použiť online platformy (youtube, streamable etc.). Všetkým (aj sebe) tým ušetríš kus dát.
+                </UserTip>
                 
                 <div className='two-columns fade-in-out-border'>
                     <div >

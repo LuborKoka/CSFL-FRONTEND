@@ -5,10 +5,11 @@ import { useQuery } from '@tanstack/react-query'
 import Select, { SingleValue } from 'react-select'
 import { selectSingleValueStyles } from '../edit season related/CreateRace'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLightbulb } from '@fortawesome/free-solid-svg-icons'
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
 import useConfirmation from '../../../../hooks/useConfirmation'
 import SingleDriverResult from './SingleDriverResults'
 import useErrorMessage from '../../../../hooks/useErrorMessage'
+import UserTip from '../../../reusableCompontents/UserTip'
 
 type Results = {
     results: {
@@ -31,6 +32,7 @@ type ResultsProps = {
 
 export default function SetRaceResults({ raceID }: ResultsProps) {
     const [isPending, setIsPending] = useState(false)
+    const [isDisabledEditing, setIsDisabledEditing] = useState(true)
     const [fastestLapDriver, setFastestLapDriver] = useState<{label: string, value: string} | null>(null)
 
     const { user } = useContext(UserContext as Context<UserTypes>)
@@ -94,7 +96,7 @@ export default function SetRaceResults({ raceID }: ResultsProps) {
             }
         })
         .then(() => {
-            showConfirmation()
+            showConfirmation(() => setIsDisabledEditing(true))
         })
         .catch((e: unknown) => {
             showMessage(e)
@@ -109,49 +111,52 @@ export default function SetRaceResults({ raceID }: ResultsProps) {
             setFastestLapDriver({label: query.data.fastestLap.driverName, value: query.data.fastestLap.driverID})
     }, [query.data])
 
+    const buttons =
+    <div className='submit-button-container'>
+        <button className='clickable-button' type='reset' onClick={() => setIsDisabledEditing(true)}>Zrušiť</button>
+        <button className={`clickable-button ${isPending ? 'button-disabled' : ''}`} disabled={isPending} type="submit">Odoslať výsledky</button>
+    </div>
+
+
     return(
         <div>
 
-            <div className='user-tip'>
-                <FontAwesomeIcon icon={faLightbulb} />
-                <span>Čas víťaza zadávaj vo formáte MM:SS:msmsms. Časy ostatných prepíš ako rozostup od víťaza, vždy vo formáte +rozostup, vpodstate opíš výslednú tabuľku z hry.</span>
-                <FontAwesomeIcon icon={faLightbulb} />
-            </div>
+            <UserTip style={{marginBottom: '1.5rem'}}>
+                Čas víťaza zadávaj vo formáte MM:SS:msmsms. Časy ostatných prepíš ako rozostup od víťaza, vždy vo formáte +rozostup, vpodstate opíš výslednú tabuľku z hry.
+            </UserTip>
 
-            <br/>
-            <div className='user-tip'>
-                <FontAwesomeIcon icon={faLightbulb} />
-                <span>Ak nedokončil preteky, napíš tam dnf (nie je to case-sensitive).</span>
-                <FontAwesomeIcon icon={faLightbulb} />
-            </div>
+            <UserTip>Ak jazdec nedokončil preteky, napíš tam dnf (nie je to case-sensitive).</UserTip>
 
+            <form onSubmit={submit} style={{position: 'relative'}}>
+                <div className='top-right' style={{top: '1rem', fontSize: '20px'}}>
+                    <FontAwesomeIcon icon={faPenToSquare} className='change-icon' onClick={() => setIsDisabledEditing(p => !p)} />
+                </div>
 
-            <form onSubmit={submit}>
                 <div className='auto-grid' style={{padding: '2rem 1rem', gap: '1rem 2rem'}}>
                     {
                         query.data?.drivers.map(d => 
-                            <SingleDriverResult {...d} driverID={d.id} driverName={d.name} key={d.id} saveResult={saveDriverResult} /> 
+                            <SingleDriverResult {...d} driverID={d.id} driverName={d.name} isDisabled={isDisabledEditing} key={d.id} saveResult={saveDriverResult} /> 
                         )
                     }
                 </div>
                 
                 
-                <div className='labeled-input' style={{padding: '0 1rem'}}>
-                    <Select required placeholder='Hľadať' styles={selectSingleValueStyles()} onChange={handleFastestLapChange} value={fastestLapDriver}
+                <div className='labeled-input' style={{padding: '0 1rem', marginTop: '1rem'}}>
+                    <Select required placeholder='Hľadať' styles={selectSingleValueStyles()} onChange={handleFastestLapChange} value={fastestLapDriver} isDisabled={isDisabledEditing}
                     options={query.data === undefined ? [] : query.data.drivers.map(d => {return {label: d.name, value: d.id}})} name='fl-owner' />
                     <label style={{transform: 'translate(-.2rem, -1.5rem) scale(.8)'}} htmlFor='fl-owner'>Majiteľ najrýchlejšieho kola</label>
                 </div>
 
+                {
+                    isDisabledEditing ? null : buttons
+                }
                 
-                <div className='submit-button-container'>
-                    <button className={`clickable-button ${isPending ? 'button-disabled' : ''}`} disabled={isPending} type="submit">Odoslať výsledky</button>
-                </div>
-
                 
             </form>
 
-            { confirmation }
-            { message }
+            {[
+                confirmation, message
+            ]}
         </div>
     )
 }

@@ -4,6 +4,8 @@ import axios, { AxiosResponse, AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import useConfirmation from "../../../../hooks/useConfirmation";
 import { useQueryClient } from "@tanstack/react-query";
+import SectionHeading from "../../../reusableCompontents/SectionHeading";
+import ClickableButton from "../../../reusableCompontents/ClickableButton";
 
 export default function CreateSeason() {
     const [isPending, setIsPending] = useState(false)
@@ -49,20 +51,15 @@ export default function CreateSeason() {
 
     return(
         <>
-            <h2 className='section-heading fade-in-out-border'>
-                Vytvorenie novej sezóny
-            </h2>
+            <SectionHeading sectionHeading>Vytvorenie novej sezóny</SectionHeading>
 
             <form onSubmit={submitNewSeason}>
-                
                 <div className='labeled-input'>
                     <input name='season-name' className='form-input' ref={name} type="text" required />
                     <label htmlFor="season-name">Meno novej sezóny</label>
                 </div>
 
-                <div className='submit-button-container'>
-                    <button className={`clickable-button ${isPending ? 'button-disabled' : ''}`} disabled={isPending} type="submit">Vytvoriť sezónu</button>
-                </div>
+                <ClickableButton withContainer disabled={isPending} type="submit">Vytvoriť sezónu</ClickableButton>
             </form>
 
             { confirmation }

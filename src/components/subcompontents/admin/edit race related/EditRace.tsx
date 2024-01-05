@@ -7,13 +7,16 @@ import DriversSelect from "./DriversSelect";
 import SetRaceResults from "./SetRaceResults";
 import useConfirmation from "../../../../hooks/useConfirmation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExclamationTriangle, faLightbulb } from "@fortawesome/free-solid-svg-icons";
+import { faExclamationTriangle, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import useErrorMessage from "../../../../hooks/useErrorMessage";
 import { RED } from "../../../../constants";
+import SectionHeading from "../../../reusableCompontents/SectionHeading";
+import UserTip from "../../../reusableCompontents/UserTip";
 
 
 export default function EditRace() {
     const [isPending, setIsPending] = useState(false)
+    const [isDisabledEditing, setIsDisabledEditing] = useState(true)
 
     const raceDrivers = useRef<{teamID: string, drivers: string[]}[]>([])
 
@@ -43,6 +46,12 @@ export default function EditRace() {
 
     function submitRaceDrivers(e: React.FormEvent) {
         e.preventDefault()
+
+        function confirm() {
+            setIsDisabledEditing(true)
+            queryClient.invalidateQueries([`edit-race-${raceID}`])
+        }
+
         setIsPending(true)
         
         axios.post(`${URI}/admins/edit-race/${raceID}/drivers/`, {
@@ -55,7 +64,7 @@ export default function EditRace() {
             }
         })
         .then(() => {
-            showConfirmation(() => queryClient.invalidateQueries([`edit-race-${raceID}`]))
+            showConfirmation(confirm)
         })
         .catch((e: unknown) => {
             showMessage(e)
@@ -63,47 +72,54 @@ export default function EditRace() {
         .finally(() => setIsPending(false))
     }
 
+
+    const buttons = 
+    <div className='submit-button-container'>
+        <button className='clickable-button' type='reset' onClick={() => setIsDisabledEditing(true)}>Zrušiť</button>
+        <button className={`clickable-button ${isPending && 'button-disabled'}`} disabled={isPending} type="submit">Uložiť</button>
+    </div>
+
     return(
         <>
-            <h2>{query.data?.raceName}</h2>
-            <h3>{query.data?.date}</h3>
+            <SectionHeading sectionHeading withoutFade>{query.data?.raceName}</SectionHeading>
 
-            <h2 className='section-heading fade-in-out-border'>Jazdci pretekov</h2>
+            <SectionHeading sectionHeading>Jazdci pretekov</SectionHeading>
 
-            <div className='user-tip'>
-                <FontAwesomeIcon icon={faLightbulb} />
-                <span>Dávaj si pozor, aby si nezaklikol jedného jazdca do viacerých tímov naraz.</span>
-                <FontAwesomeIcon icon={faLightbulb} />
-            </div>
-            <br/><br/>
+            <UserTip style={{marginBottom: '2rem'}} >Dávaj si pozor, aby si nezaklikol jedného jazdca do viacerých tímov naraz.</UserTip>
             {
                 query.data?.is_empty &&
                 <>
                     <h2 className='section-heading fade-in-out-border' style={{textAlign: 'center'}}> 
                         <FontAwesomeIcon icon={faExclamationTriangle} style={{color: RED, margin: '0 2rem'}} />
-                        Súpiska ešte nie je uložená.
+                        Súpiska na túto veľkú cenu ešte nie je uložená.
                         <FontAwesomeIcon icon={faExclamationTriangle} style={{color: RED, margin: '0 2rem'}} />
                     </h2>
                     <br/>
                 </>
             }
-            <form onSubmit={submitRaceDrivers}>
+            <form onSubmit={submitRaceDrivers} style={{position: 'relative'}}>
+                <div className='top-right' style={{fontSize: '20px'}}>
+                    <FontAwesomeIcon icon={faPenToSquare} className='change-icon' onClick={() => setIsDisabledEditing(p => !p)} />
+                </div>
                 {
                     query.data?.teams.map(t => {
-                        return <DriversSelect {...t} setDrivers={setRaceDrivers} key={t.teamID} />
+                        return <DriversSelect {...t} setDrivers={setRaceDrivers} key={t.teamID} isDisabled={isDisabledEditing} />
                     })
                 }
-                <div className='submit-button-container'>
-                <button className='clickable-button' disabled={isPending} type="submit">Uložiť</button>
-                </div>
+
+                {
+                    isDisabledEditing ? <br/> : buttons
+                }
+                
             </form>
 
             <h2 className='section-heading fade-in-out-border'>Výsledky pretekov</h2>
             <SetRaceResults raceID={raceID} />
+            
 
-
-            { confirmation }
-            { message }
+            {[
+                confirmation, message
+            ]}
         </>
     )
 }

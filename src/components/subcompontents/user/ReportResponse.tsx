@@ -4,13 +4,15 @@ import axios from 'axios'
 import { useOutletContext } from 'react-router-dom'
 import { RaceContext } from '../../controls/SeasonNav'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPaperclip, faRightLong, faTriangleExclamation, faLightbulb } from '@fortawesome/free-solid-svg-icons'
+import { faPaperclip, faRightLong, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { faRectangleXmark } from '@fortawesome/free-regular-svg-icons'
 import { AddedLink, AddedVideo } from './AddReport'
 import useConfirmation from '../../../hooks/useConfirmation'
 import { useQueryClient } from '@tanstack/react-query'
 import useErrorMessage from '../../../hooks/useErrorMessage'
 import useUserContext from '../../../hooks/useUserContext'
+import SectionHeading from '../../reusableCompontents/SectionHeading'
+import UserTip from '../../reusableCompontents/UserTip'
 
 type Props = {
     responseData: {
@@ -25,7 +27,6 @@ type Props = {
 
 export default function ReportResponse({ responseData, setResponseData, raceID }: Props) {
     const content = useRef<HTMLTextAreaElement>(null)
-    const video = useRef<HTMLInputElement>(null)
 
     const [files, setFiles] = useState<{id: string, file: File}[]>([])
     const [links, setLinks] = useState<{url: string, id: string}[]>([])
@@ -141,17 +142,15 @@ export default function ReportResponse({ responseData, setResponseData, raceID }
                     <textarea name='inchident' ref={content}/>
                     <label htmlFor='inchident' style={{left: '.5rem'}}>Tvoja odpoveď</label>
                 </div>
-
-                <h2 className='fade-in-out-border section-heading'>
-                    <FontAwesomeIcon icon={faPaperclip} /> Prílohy
-                </h2>
                 
-                <div className='user-tip'>
-                    <FontAwesomeIcon icon={faLightbulb} />
-                    <span>Na videá odporúčam použiť online platformy (youtube, streamable etc.). Všetkým (aj sebe) tým ušetríš kus dát.</span>
-                    <FontAwesomeIcon icon={faLightbulb} />
-                </div>
-                <br/>
+                <SectionHeading sectionHeading>
+                    <FontAwesomeIcon icon={faPaperclip} /> Prílohy
+                </SectionHeading>
+
+                
+                <UserTip style={{marginBottom: '1.5rem'}}>
+                    Na videá odporúčam použiť online platformy (youtube, streamable etc.). Všetkým (aj sebe) tým ušetríš kus dát.
+                </UserTip>
 
                 <div className='two-columns '>
                     <div >

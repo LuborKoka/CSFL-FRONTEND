@@ -7,6 +7,7 @@ import { faRectangleXmark } from '@fortawesome/free-regular-svg-icons'
 import FIA from '../../../images/logo_Fia.svg' 
 import ReportVerdict from "./ReportVerdict";
 import useRaceContext from "../../../hooks/useRaceContext";
+import SectionHeading from "../../reusableCompontents/SectionHeading";
 
 type Props = {
     setResponseData: React.Dispatch<React.SetStateAction<{isActive: boolean, rank: number, from: string, targets: {name: string, id: string}[]}>>,
@@ -23,30 +24,32 @@ function Report({ rank, verdict, penalties, reportID, videos, content, createdAt
     }
 
     function openVerdict() {
-        //setIsAddingVerdict(true)
-        //setRaceContext(p => {return {...p, reportID: reportID}})
         setIsViewingVerdict(true)
     }
 
     return( 
     <>
         <div className='report-card fade-in-out-border' ref={ref}>
-            <div className='header-with-time'>
-                <h2>Report #{rank}</h2>
-                <span>{timestampToDateTime(createdAt)}</span>
-            </div>
+            <SectionHeading withTime withoutFade time={timestampToDateTime(createdAt)}>Report #{rank}</SectionHeading>
+            
+
+            {
+            /*<div className='top-right' style={{top: '0'}}>
+                <FontAwesomeIcon icon={faTrashAlt} className='close-icon' style={{fontSize: '20px'}} />
+            </div>*/
+            }
 
             <br/><br/>
 
-            <span className='single-row' style={{columnGap: '15px'}}>
+            <div >
                 {from.name}
-                <FontAwesomeIcon style={{transform: 'translateY(10%)'}} icon={faRightLong} />
+                <FontAwesomeIcon style={{transform: 'translateY(10%)', margin: '0 15px'}} icon={faRightLong} />
                 {
                     targets.map( (t, i) => //zvazit este nejaky marker pre nahlasenych
                         <span key={`reported_player${i}`} className='reported-player'><FontAwesomeIcon icon={faTriangleExclamation} /> {t.name}</span>
                     )
                 }
-            </span>
+            </div>
             <div className='labeled-input' style={{marginTop: '3rem'}}>
                 <p className='text-content'>{content}</p>
                 <label>Inchident</label>
@@ -57,9 +60,13 @@ function Report({ rank, verdict, penalties, reportID, videos, content, createdAt
                 <FontAwesomeIcon icon={faPaperclip} /> Prílohy
             </h3>
 
-            <div className='auto-grid'>
+            {
+                videos.online.filter(v => !v.embed).map((v, i) => <ReportVideo isOnline {...v} key={`${reportID}_${i}`} />)
+            }
+
+            <div className='auto-grid' style={{marginTop: '2rem'}}>
                 {
-                    videos.online.map((v, i) => <ReportVideo isOnline {...v} key={`${reportID}_${i}`} />)
+                    videos.online.filter(v => v.embed).map((v, i) => <ReportVideo isOnline {...v} key={`${reportID}_${i}`} />)
                 }
 
                 {
@@ -89,7 +96,6 @@ function Report({ rank, verdict, penalties, reportID, videos, content, createdAt
                 </span>
             </div>
 
-
             {/*<ReportVerdict verdict={verdict} penalties={penalties} />*/}
         </div>
 
@@ -100,7 +106,6 @@ function Report({ rank, verdict, penalties, reportID, videos, content, createdAt
             {
                 isViewingVerdict ? <ReportVerdict targets={targets} from={from.name} rank={rank} verdict={verdict} penalties={penalties} setOpen={setIsViewingVerdict} /> : null
             }
-
     </>
     )
 }
@@ -164,11 +169,8 @@ function ResponseList({ responses, setOpen, rank }: ResListProps) {
 function Response({ driverName, id, videos, content, createdAt }: ReportResponseProps) {
 
     return(
-        <div className='report-response fade-in-out-border' style={{padding: '0 1rem', position: 'relative', paddingBottom: '2rem'}}>
-            <div className='header-with-time'>
-                <h2>{driverName}</h2>
-                <span>{timestampToDateTime(createdAt)}</span>
-            </div>
+        <div className='fade-in-out-border' style={{padding: '0 1rem', position: 'relative', paddingBottom: '2rem', marginBottom: '2rem'}}>
+            <SectionHeading withoutFade withTime time={timestampToDateTime(createdAt)}>{driverName}</SectionHeading>
             <br/>
             <div className='labeled-input'>
                 <p className='text-content'>{content}</p>
@@ -176,14 +178,21 @@ function Response({ driverName, id, videos, content, createdAt }: ReportResponse
             </div>
 
             <br/><br/>
-
+            
             {
-                videos.online.map((v, i) => <ReportVideo isOnline {...v} key={`${id}_${i}`} />)
+                videos.online.filter(v => !v.embed).map((v, i) => <ReportVideo isOnline {...v} key={`${id}_${i}`} />)
             }
 
-            {
-                videos.local.map((v, i) => <ReportVideo isOnline={false} key={`${id}_local${i}`} {...v} />)
-            }
+
+            <div className="auto-grid" style={{marginTop: '2rem'}}>
+                {
+                    videos.online.filter(v => v.embed).map((v, i) => <ReportVideo isOnline {...v} key={`${id}_${i}`} />)
+                }
+
+                {
+                    videos.local.map((v, i) => <ReportVideo isOnline={false} key={`${id}_local${i}`} {...v} />)
+                }
+            </div>
         </div>
     )
 }

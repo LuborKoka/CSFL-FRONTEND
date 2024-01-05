@@ -6,11 +6,12 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRectangleXmark } from "@fortawesome/free-regular-svg-icons"
-import { faCaretDown, faRightLong, faSquareCheck, faTriangleExclamation, faLightbulb } from "@fortawesome/free-solid-svg-icons";
+import { faCaretDown, faRightLong, faSquareCheck, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import useConfirmation from "../../../hooks/useConfirmation";
 import useErrorMessage from "../../../hooks/useErrorMessage";
 import ReactSwitch from 'react-switch'
 import { DARKBLUE } from "../../../constants";
+import UserTip from "../../reusableCompontents/UserTip";
 
 type Props = {
     setIsAddingVerdict: React.Dispatch<React.SetStateAction<boolean>>
@@ -36,12 +37,9 @@ export default function Verdict({ setIsAddingVerdict }: Props) {
                     </h2>
                 </div>
 
-                <div className='user-tip'>
-                    <FontAwesomeIcon icon={faLightbulb} />
-                    <span>Keď už raz odošleš rozhodnutie reportu, nebude sa dať zmeniť.<br/>Keď potrebuješ odstrániť penalizáciu (napríklad za traťové limity), naklikaj tam záporné hodnoty.</span>
-                    <FontAwesomeIcon icon={faLightbulb} />
-                </div>
-                <br/>
+                <UserTip style={{marginBottom: '1.5rem'}}>
+                    Keď už raz odošleš rozhodnutie reportu, nebude sa dať zmeniť.<br/>Keď potrebuješ odstrániť penalizáciu (napríklad za traťové limity), naklikaj tam záporné hodnoty.
+                </UserTip>
 
                 {
                     query.data?.reports.map(r => 

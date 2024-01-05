@@ -1,4 +1,3 @@
-import { useState } from "react";
 import axios from "axios";
 import { URI } from "../../../App";
 import jwtDecode from "jwt-decode";
@@ -8,10 +7,11 @@ import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import useErrorMessage from "../../../hooks/useErrorMessage";
 import { storageKeyName } from "../../../constants";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import secureLocalStorage from "react-secure-storage";
 import useUserContext from "../../../hooks/useUserContext";
+import ClickableButton from "../../reusableCompontents/ClickableButton";
+import LabeledInput from "../../reusableCompontents/LabeledInput";
+import { useState } from "react";
 
 const schema = z.object({
     username: z.string().min(4, {
@@ -23,7 +23,7 @@ const schema = z.object({
         message: 'Heslo musí mať aspoň 8 znakov'
     }),
     confirmPassword: z.string(),
-    raceName: z.string().min(7, {
+    raceName: z.string().min(8, {
         message: 'Verejné meno musí obsahovať aspoň 8 znakov.'
     }).max(50, {
         message: 'Verejné meno nesmie mať viac ako 50 znakov.'
@@ -41,13 +41,11 @@ type SignupCredentials = z.infer<typeof schema>
 
 export default function Signup({ swap }: Props) {
     const [isPending, setIsPending] = useState(false)
-    const [isVisible, setIsVisible] = useState(false)
-    const [isVisibleConfirm, setIsVisibleConfirm] = useState(false)
 
     const navigate = useNavigate()
     const location = useLocation()
-    const queryParams = new URLSearchParams(location.search);
-    const redirectUrl = queryParams.get('redirect_url');
+    const queryParams = new URLSearchParams(location.search)
+    const redirectUrl = queryParams.get('redirect_url')
 
     const setUser = useUserContext()[1]
 
@@ -56,14 +54,12 @@ export default function Signup({ swap }: Props) {
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isLoading },
       } = useForm({
         resolver: zodResolver(schema),
       });
     
     function handleSignUp(data: SignupCredentials) {
-        //  !!bacha, aby novy raceName nepojebal uz existujuci link driver-user!!
-
         setIsPending(true)
 
         axios.post(`${URI}/signup/`, {
@@ -90,29 +86,12 @@ export default function Signup({ swap }: Props) {
     return(
         <>
             <form name="Sign Up Form" onSubmit={handleSubmit((d) => handleSignUp(d as SignupCredentials))}>
-                <div className='labeled-input'>
-                    <input {...register('username')} className='form-input' required type="text" autoFocus />
-                    <label htmlFor='username'>Prihlasovacie meno</label>
-                    {errors.username?.message && <p className='input-error'>{errors.username?.message as string}</p>}
-                </div>
-                <div className='labeled-input'>
-                    <input {...register('password')} className='form-input' required type={isVisible ? 'text' : 'password'} />
-                    <label htmlFor='password'>Heslo</label>
-                    <FontAwesomeIcon className='center-right' icon={isVisible ? faEye : faEyeSlash} onClick={() => setIsVisible(p => !p)} style={{position: 'absolute'}} />
-                    {errors.password?.message && <p className='input-error'>{errors.password?.message as string}</p>}
-                </div>
-                <div className='labeled-input'>
-                    <input {...register('confirmPassword')} className='form-input' required type={isVisibleConfirm ? 'text' : 'password'} />
-                    <label htmlFor='confirmPassword'>Zopakuj heslo</label>
-                    <FontAwesomeIcon className='center-right' icon={isVisibleConfirm ? faEye : faEyeSlash} onClick={() => setIsVisibleConfirm(p => !p)} style={{position: 'absolute'}} />
-                    {errors.confirmPassword?.message && <p className='input-error'>{errors.confirmPassword?.message as string}</p>}
-                </div>
-                <div className='labeled-input'>
-                    <input {...register('raceName')} className='form-input' required type="text" />
-                    <label htmlFor='raceName'>Verejné meno</label>
-                    {errors.raceName?.message && <p className='input-error'>{errors.raceName?.message as string}</p>}
-                </div>
-                <button className={`clickable-button ${isPending ? 'button-disabled' : ''}`} type="submit" disabled={isPending}>Registrovať sa</button>
+                <LabeledInput label="Prihlasovacie meno" htmlFor="username" {...register('username')} required type="text" autoFocus error={errors.username?.message} />
+                <LabeledInput label="Heslo" htmlFor="password" {...register('password')} type='password' withToggleVisible error={errors.password?.message} required/>
+                <LabeledInput label="Zopakuj heslo" htmlFor="confirmPassword" type='password' {...register('confirmPassword')} error={errors.confirmPassword?.message} withToggleVisible required/>
+                <LabeledInput label="Verejné meno" htmlFor="raceName" {...register('raceName')} required type="text" error={errors.raceName?.message} />
+                
+                <ClickableButton type='submit' disabled={isPending}>Registrovať sa</ClickableButton>
             </form>
             <p className='form-swap'>Už máš účet? <span onClick={swap}>Prihlás sa</span></p>
 

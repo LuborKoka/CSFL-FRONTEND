@@ -5,6 +5,7 @@ import { URI } from "../../App";
 import { useQuery } from "@tanstack/react-query";
 import '../../styles/rules.css'
 import Loader from "../reusableCompontents/Loader";
+import SectionHeading from "../reusableCompontents/SectionHeading";
 
 
 export default function Rules() { 
@@ -13,7 +14,7 @@ export default function Rules() {
     if ( query.isLoading ) return <Loader type='rules' />
 
     if ( query.data === undefined ) 
-        return <ReactMarkdown>'# Nepodarilo sa načítať pravidlá.'</ReactMarkdown>
+        return <ReactMarkdown># Nepodarilo sa načítať pravidlá.</ReactMarkdown>
 
     
     
@@ -21,10 +22,8 @@ export default function Rules() {
         <article id="markdown" className="section">
             <div className='empty-header'></div>
             <br/><br/>
-            <div className='header-with-time section-heading fade-in-out-border'>
-                <h2>Pravidlá</h2>
-                <span>{`Posledná úprava: ${query.data.modifiedAt}`}</span>
-            </div>
+            <SectionHeading sectionHeading withTime time={`Posledná úprava: ${query.data.modifiedAt}`}>Pravidlá</SectionHeading>
+     
             <ReactMarkdown children={query.data.rules} remarkPlugins={[remarkGfm]} />
         </article>
     )

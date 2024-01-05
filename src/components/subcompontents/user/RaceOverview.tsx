@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { RED } from '../../../constants';
 import Loader from '../../reusableCompontents/Loader';
+import SectionHeading from '../../reusableCompontents/SectionHeading';
 
 
 
@@ -31,29 +32,29 @@ export default function RaceOverview() {
     return(
         <>
 
-            <h2 className='section-heading fade-in-out-border'>
-                Súpiska
-            </h2>
-            {
-                query.data?.teams.map((t, i) => 
-                    <div className='team-members fade-in-out-border content-fade-in'  key={t.teamName} style={{color: t.color}}>
-                        <img style={{animationDelay: `${50*i}ms`}} src={`${URI}/media/${t.logo}/`} alt={t.teamName} className='team-logo' loading='lazy'/>
-                        <div style={{animationDelay: `${50*i}ms` ,display: 'inline-grid', placeContent: 'center flex-start', rowGap: '1rem', fontSize: '1.2rem', minWidth: '160px'}}>
-                            <b style={{whiteSpace: 'nowrap'}}>
-                                {
-                                    t.drivers.length >= 1 ? <b>{t.drivers[0].driverName}</b> : null
-                                } 
-                            </b>
-                            
-                            <b style={{whiteSpace: 'nowrap'}}> 
-                                {
-                                    t.drivers.length === 2 ? <b>{t.drivers[1].driverName}</b> : null
-                                } 
-                            </b>       
-                        </div>
-                    </div>    
-                )
-            }
+            <SectionHeading sectionHeading>Súpiska</SectionHeading>
+            <div className='team-members-grid'>
+                {
+                    query.data?.teams.map((t, i) => 
+                        <div className='team-members fade-in-out-border content-fade-in'  key={t.teamName} style={{color: t.color}}>
+                            <img style={{animationDelay: `${50*i}ms`}} src={`${URI}/media/${t.logo}/`} alt={t.teamName} className='team-logo' loading='lazy'/>
+                            <div style={{animationDelay: `${50*i}ms`, display: 'inline-grid', placeContent: 'center flex-start', rowGap: '1rem', fontSize: '1.2rem', minWidth: '160px'}}>
+                                <b style={{whiteSpace: 'nowrap'}}>
+                                    {
+                                        t.drivers.length >= 1 ? <b>{t.drivers[0].driverName}</b> : null
+                                    } 
+                                </b>
+                                
+                                <b style={{whiteSpace: 'nowrap'}}> 
+                                    {
+                                        t.drivers.length === 2 ? <b>{t.drivers[1].driverName}</b> : null
+                                    } 
+                                </b>       
+                            </div>
+                        </div>    
+                    )
+                }
+            </div>
         </>
     )
 }

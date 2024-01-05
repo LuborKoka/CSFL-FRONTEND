@@ -1,15 +1,14 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import React, { useState, useRef} from "react";
 import { URI, generateRandomString, insertTokenIntoHeader } from "../../../../App";
 import CreateRace from "./CreateRace";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLightbulb } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import ExistingRace from "./ExistingRace";
 import useConfirmation from "../../../../hooks/useConfirmation";
 import useUserContext from "../../../../hooks/useUserContext";
 import useErrorMessage from "../../../../hooks/useErrorMessage";
+import UserTip from "../../../reusableCompontents/UserTip";
 
 
 export type Race = {
@@ -120,15 +119,15 @@ export default function Schedule() {
 
 
     return(
-        <div>
-            <div className='user-tip'>
-                <FontAwesomeIcon icon={faLightbulb} />
-                <span>Preteky, ktoré majú dátum v minulosti (oproti terajšku), sa už nedajú upraviť ani vymazať. Dávaj si pozor na to, aký dátum im nastavíš.<br/>
-                    Nezabudni si zaškrtnúť šprinty. Defaultne ich veľká cena nemá.
-                </span>
-                <FontAwesomeIcon icon={faLightbulb} />
-            </div>
-            <br/><br/><br/>
+        <>
+            <UserTip style={{marginBottom: '1.5rem', top: '0'}}>
+                Preteky, ktoré majú dátum v minulosti (oproti terajšku), sa už nedajú upraviť ani vymazať. Dávaj si pozor na to, aký dátum im nastavíš.
+            </UserTip>
+
+            <UserTip style={{marginBottom: '3rem'}}>
+                Nezabudni si zaškrtnúť šprinty. Defaultne ich veľká cena nemá.
+            </UserTip>
+            
 
             {createTrackForms.map(f => f.element)}
             <br/>
@@ -154,7 +153,7 @@ export default function Schedule() {
 
             { confirmation }
             { message }
-        </div>
+        </>
     )
 }
 

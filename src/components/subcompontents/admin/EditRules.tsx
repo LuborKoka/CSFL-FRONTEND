@@ -5,6 +5,8 @@ import { useEffect, useState } from "react"
 import useConfirmation from "../../../hooks/useConfirmation"
 import useErrorMessage from "../../../hooks/useErrorMessage"
 import useUserContext from "../../../hooks/useUserContext"
+import SectionHeading from "../../reusableCompontents/SectionHeading"
+import ClickableButton from "../../reusableCompontents/ClickableButton"
 
 
 export default function EditRules() {
@@ -95,14 +97,14 @@ export default function EditRules() {
         <textarea className="rules-input" value={content} onChange={updateValue} spellCheck={false} onKeyDown={save} />
 
         <div className="submit-button-container single-row">
-            <button className='clickable-button' onClick={cancel}>Zrušiť</button>
-            <button type="submit" className={`clickable-button ${isPending && 'button-disabled'}`}>Uložiť</button>
+            <ClickableButton onClick={cancel}>Zrušiť</ClickableButton>
+            <ClickableButton type='submit' disabled={isPending}>Uložiť</ClickableButton>
         </div>
     </form>
 
     return(
         <>
-            <h2 className='section-heading fade-in-out-border'>Upraviť pravidlá</h2>
+            <SectionHeading sectionHeading>Upraviť pravidlá</SectionHeading>
 
             <div className="two-columns">
                 <label className={`clickable-button ${isUploading ? 'button-disabled' : ''}`} id='custom-input' style={{fontSize: '20px', textAlign: 'center', display: 'block'}}>
@@ -110,7 +112,7 @@ export default function EditRules() {
                     <span>{ isUploading ? 'Posiela sa na server' : 'Poslať .md súbor'}</span>
                 </label>
 
-                <button className='clickable-button' onClick={() => setIsEditorOpen(p => !p)}>{`${isEditorOpen ? 'Skryť' : 'Zobraziť'} editor`}</button>
+                <ClickableButton onClick={() => setIsEditorOpen(p => !p)}>{`${isEditorOpen ? 'Skryť' : 'Zobraziť'} editor`}</ClickableButton>
             </div>
 
 

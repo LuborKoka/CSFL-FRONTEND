@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios"
+import axios from "axios"
 import { URI } from "../../../App"
 import { useRef, useState } from "react"
 import useUserContext from "../../../hooks/useUserContext"
@@ -6,6 +6,8 @@ import useConfirmation from "../../../hooks/useConfirmation"
 import useErrorMessage from "../../../hooks/useErrorMessage"
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import SectionHeading from "../../reusableCompontents/SectionHeading"
+import ClickableButton from "../../reusableCompontents/ClickableButton"
 
 
 export default function PasswordChange() {
@@ -53,7 +55,7 @@ export default function PasswordChange() {
 
     return(
         <>
-            <h2 className='section-heading fade-in-out-border'>Zmena Hesla</h2>
+            <SectionHeading sectionHeading>Zmena hesla</SectionHeading>
             <form name="Form Password-Change" onSubmit={handlePasswordChange}>
                 <div className='labeled-input'>
                     <input name='old-password' className='form-input' ref={oldPassword} required type="password" />
@@ -72,9 +74,8 @@ export default function PasswordChange() {
                     <FontAwesomeIcon className='center-right' icon={isVisibleConfirm ? faEye : faEyeSlash} onClick={() => setIsVisibleConfirm(p => !p)} style={{position: 'absolute'}} />
                 </div>
                 <br/>
-                <div className='submit-button-container'>
-                    <button className={`clickable-button ${isPending && 'button-disabled'}`} disabled={isPending} type="submit">Zmeniť heslo</button>
-                </div>
+
+                <ClickableButton withContainer type='submit' disabled={isPending}>Zmeniť heslo</ClickableButton>
             </form>
 
             { confirmation }
