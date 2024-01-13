@@ -951,6 +951,7 @@
 .section-navigation ul {
   display: flex;
   flex-direction: column;
+  padding: 0;
 }
 .section-navigation ul .clickable-button {
   margin: 0.25rem 0;

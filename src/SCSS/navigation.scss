@@ -122,6 +122,7 @@
 
     ul {
         @include flexColumn();
+        padding: 0;
 
         .clickable-button {
             margin: .25rem 0;
@@ -242,10 +243,10 @@
 
     .nav-active {
         transform: translateX(0);
-        box-shadow: 0 2px 15px rgba($white, .3); //can i nest it here? if supports then box-shadow else set background color to $darkblue
+        box-shadow: 0 2px 15px rgba($white, .3);
     
         @supports not (box-shadow: 0 2px 15px rgba(255, 255, 255, .3)) {
-            background-color: $darkblue; // here you can use SCSS variable because it's not in the condition
+            background-color: $darkblue;
         }
     }
 

@@ -54,7 +54,7 @@ export default function Signup({ swap }: Props) {
     const {
         register,
         handleSubmit,
-        formState: { errors, isLoading },
+        formState: { errors },
       } = useForm({
         resolver: zodResolver(schema),
       });

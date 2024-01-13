@@ -33,6 +33,6 @@ nav ~ div {
   box-sizing: border-box;
 }
 
-.main-navigation *, .content-container *, .season-with-race-cards * {
+.main-navigation ul {
   padding: 0;
 }

@@ -89,7 +89,7 @@ export default function Standings() {
                                         r.hasBeenRaced ?
                                         
                                         <td key={`${d.driverID}, race${i}`}>
-                                            <div className="switcher-visible">
+                                            <div className={`switcher-visible ${r.hasFastestLap && 'fl-indicator'}`}>
                                                 <div style={{color: getTextColor(r.rank)}} className={`switcher-container ${ !isPoints && 'switcher-container-rank'}`}>
                                                     <div className={`switcher-item-${isPoints ? 'active' : 'inactive'} ${typeof r.rank === 'number' && r.rank < 4 ? 'underlined' : ''}`}>{r.points}</div>
                                                     <div className={`switcher-item-${isPoints ? 'inactive' : 'active'} ${typeof r.rank === 'number' && r.rank < 4 ? 'underlined' : ''}`}>{r.rank}</div>
@@ -147,7 +147,7 @@ export default function Standings() {
                             <th className="empty-header-item"></th>
                             <th style={{textAlign: 'left', paddingLeft: '8px'}}>Meno</th>
                             {
-                                query.data?.data.races.map((r, i) => 
+                                query.data?.data.races.map((r) => 
                                 <th key={r.id} >
                                     <div className='flag-box'>
                                         <img alt='' style={{objectFit: 'cover', width: '100%', height: '100%', borderRadius: '2px'}}   src={`${URI}/media/${r.flag}/`} />                                   

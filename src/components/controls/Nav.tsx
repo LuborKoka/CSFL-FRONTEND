@@ -69,7 +69,7 @@ export default function Nav() {
                         </NavLink>
                         {
                             seasons.data?.seasons.map(s =>
-                                <NavLink style={{position: 'relative', textDecoration: 'none'}} onClick={closeNavbar} to={`/seasons/${s.id}`} key={s.id}>
+                                <NavLink style={{position: 'relative', textDecoration: 'none'}} onClick={closeNavbar} to={`/seasons/${encodeURIComponent(s.name)}`} key={s.id}>
                                     <div className='clickable-button'>
                                         {s.name}
                                     </div>

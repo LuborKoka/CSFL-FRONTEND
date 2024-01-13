@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom"
 import useUserContext from "../../../../hooks/useUserContext"
 import '../../../../styles/loader.css'
-import axios, { AxiosError } from "axios"
+import axios from "axios"
 import { URI, insertTokenIntoHeader } from "../../../../App"
 import useConfirmation from "../../../../hooks/useConfirmation"
 import useErrorMessage from "../../../../hooks/useErrorMessage"

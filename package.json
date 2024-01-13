@@ -1,7 +1,14 @@
 {
-  "name": "frontend",
-  "version": "0.1.0",
+  "name": "my-vite-app",
   "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
@@ -9,65 +16,47 @@
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@hookform/resolvers": "^3.1.1",
-    "@mantine/core": "^6.0.17",
-    "@mantine/dates": "^6.0.17",
-    "@mantine/hooks": "^6.0.17",
-    "@mantine/modals": "^6.0.17",
     "@tanstack/react-query": "^4.29.19",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/getenv": "^1.0.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.38",
-    "@types/react": "^18.2.14",
-    "@types/react-dom": "^18.2.6",
     "axios": "^1.4.0",
     "dayjs": "^1.11.9",
     "hamburgers": "^1.2.1",
     "jwt-decode": "^3.1.2",
     "react": "^18.2.0",
-    "react-datetime-picker": "^5.3.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.45.2",
     "react-markdown": "^8.0.7",
     "react-router-dom": "^6.14.1",
-    "react-scripts": "5.0.1",
     "react-secure-storage": "^1.2.2",
     "react-select": "^5.7.3",
     "react-swipeable": "^7.0.1",
     "react-switch": "^7.0.0",
     "remark-gfm": "^3.0.1",
-    "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4",
+    "workbox-background-sync": "^7.0.0",
+    "workbox-broadcast-update": "^7.0.0",
+    "workbox-cacheable-response": "^7.0.0",
+    "workbox-core": "^7.0.0",
+    "workbox-expiration": "^7.0.0",
+    "workbox-google-analytics": "^7.0.0",
+    "workbox-navigation-preload": "^7.0.0",
+    "workbox-precaching": "^7.0.0",
+    "workbox-range-requests": "^7.0.0",
+    "workbox-routing": "^7.0.0",
+    "workbox-strategies": "^7.0.0",
+    "workbox-streams": "^7.0.0",
     "zod": "^3.21.4"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@types/crypto-js": "^4.1.1"
+    "@types/getenv": "^1.0.0",
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "eslint": "^8.55.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "typescript": "^4.9.5",
+    "vite": "^5.0.8",
+    "vite-plugin-pwa": "^0.17.4"
   }
 }

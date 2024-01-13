@@ -67,6 +67,19 @@
 .standings-table .switcher-visible {
   overflow: hidden;
   width: 40px;
+  position: relative;
+}
+.standings-table .fl-indicator::before {
+  content: "";
+  position: absolute;
+  background-color: purple;
+  inset: 0 calc(100% - 10px) calc(100% - 1px) 0;
+}
+.standings-table .fl-indicator::after {
+  content: "";
+  position: absolute;
+  background-color: purple;
+  inset: 0 calc(100% - 1px) calc(100% - 10px) 0;
 }
 
 .team-standings-table thead th {

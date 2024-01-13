@@ -87,8 +87,28 @@
     .switcher-visible {
         overflow: hidden;
         width: 40px;
+        position: relative;
+    }
+
+    .fl-indicator {
+        $indicatorWidth: 1px;
+        $indicatorLength: 10px;
+        &::before {
+            content: '';
+            position: absolute;
+            background-color: purple;
+            inset: 0 calc(100% - $indicatorLength) calc(100% - $indicatorWidth) 0;
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            background-color: purple;
+            inset: 0 calc(100% - $indicatorWidth) calc(100% - $indicatorLength) 0;
+        }
     }
 }
+
 
 .team-standings-table {
     thead th {

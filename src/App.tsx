@@ -35,7 +35,7 @@ import Roles from './components/subcompontents/admin/Roles';
 import WifeBeater from './components/subcompontents/admin/wife_btear/WifeBeater';
 import useErrorMessage from './hooks/useErrorMessage';
 
-export const URI =  'http://192.168.100.22:8000/api' //`https://ciernacicina69.pythonanywhere.com/api`
+export const URI = 'http://192.168.100.22:8000/api'  //`https://ciernacicina69.pythonanywhere.com/api`
 
 export const randomURIkey = generateRandomString(10)
 
