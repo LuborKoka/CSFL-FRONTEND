@@ -60,10 +60,6 @@
     .league-options {
         overflow-y: auto;
         padding: 0 1rem;
-
-        & ul > *:not(:first-child) {
-            margin-top: .5rem;
-        }
     }
     
 
@@ -73,7 +69,8 @@
 
     ul {
         list-style-type: none;
-        @include flexColumn();
+        display: grid;
+        gap: .5rem;
     }
 }
 
@@ -83,21 +80,33 @@
     top: 20px;
     right: -60px;
     display: none;
-    background-color: $darkblue;
+    //background-color: $darkblue;
 
     button {
         background-color: transparent;
         outline: none;
         border: none;
         
-        .hamburger-inner {
-            background-color: $white;
+        .hamburger-inner.dark {
+            background-color: $LIGHT;
             
             &::before, &::after {
-                background-color: $white;
+                background-color: $LIGHT;
+            }
+        }
+
+        .hamburger-inner.light {
+            background-color: $DARK;
+            &::before, &::after {
+                background-color: $DARK;
             }
         }
     }
+}
+
+
+.section-navigation button, .main-navigation button {
+    width: 95%;
 }
 
 
@@ -116,7 +125,6 @@
     position: relative;
     white-space: nowrap;
     padding: 3rem 2rem;
-    box-shadow: 0 0 10px rgba($white, .3);
     margin-left: .5rem;
     min-width: 225px;
 
@@ -131,9 +139,24 @@
         }
     }
 
-    .active {
-        background-color: $white;
-        color: $darkblue;
+    .active .clickable-button.light-text {
+        background-color: $LIGHT;
+        color: $DARK !important;
+        border-color: transparent;
+    }
+
+    .active .clickable-button.dark-text {
+        background-color: $DARK;
+        color: $LIGHT !important;
+        border-color: transparent;
+    }
+
+    &.dark {
+        box-shadow: 0 0 10px rgba($LIGHT, .3);
+    }
+
+    &.light {
+        box-shadow: 0 0 10px rgba($DARK, .3);
     }
 }
 
@@ -150,7 +173,6 @@
     &-link {
         display: grid;
         place-content: center center;
-        color: $white;
         text-decoration: none;
         border-radius: 5px;
         padding: 5px 10px;
@@ -164,7 +186,7 @@
 
     .active {
         //border-color: $white;
-        box-shadow: 0 0 5px $white;
+        box-shadow: 0 0 5px currentColor;
     }
 }
 
@@ -192,7 +214,6 @@
 
         .link {
             display: inline-block;
-            color: $white;
             font-size: 1rem;
             white-space: nowrap;
             margin-right: 5px;
@@ -215,8 +236,13 @@
 
 @media screen and (min-width: 1001px) {
     .main-navigation {
-        box-shadow: 0 2px 15px rgba($white, .3);
+        &.dark {
+            box-shadow: 0 2px 15px rgba($LIGHT, .3);
+        }
 
+        &.light {
+            box-shadow: 0 2px 15px rgba($DARK, .3);
+        }
     }
 
     .swipeable {

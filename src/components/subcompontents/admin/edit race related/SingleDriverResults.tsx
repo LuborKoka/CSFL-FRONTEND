@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import useThemeContext from "../../../../hooks/useThemeContext"
 
 type Props = {
     driverID: string,
@@ -12,6 +13,8 @@ type Props = {
 export default function SingleDriverResult({ driverID, driverName, color, time, isDisabled, saveResult}: Props) {
     const [resultTime, setResultTime] = useState(time || '')
     const [plusLaps, setPlusLaps] = useState(0)
+
+    const [isDarkTheme] = useThemeContext()
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
             setResultTime(e.target.value)        
@@ -29,19 +32,19 @@ export default function SingleDriverResult({ driverID, driverName, color, time, 
     return(
         <div>
             <br/>
-            <div className='labeled-input single-row' style={{marginTop: '10px'}}>
+            <div className='labeled-input' style={{marginTop: '15px'}}>
                 <input name={driverName} className='form-input' type="text" required value={isDisabled ? '' : resultTime} readOnly={isDisabled}
                 style={{color: color, boxShadow: `0 0 10px 5px ${color}`}}  onChange={handleChange} />
             
-                <label style={{color: color}} htmlFor={driverName}>{driverName}</label>
+                <label className={isDarkTheme ? 'dark-bg' : 'light-bg'} style={{color: color}} htmlFor={driverName}>{driverName}</label>
             </div>
 
             <br/>
-            <div className='labeled-input' style={{marginTop: '10px'}}>
+            <div className='labeled-input' style={{marginTop: '15px'}}>
                 <input type='number' name={`${driverName}plus-laps`} className='form-input' min={0} readOnly={isDisabled}
-                style={{color: color, boxShadow: `0 0 10px 5px ${color}`}} value={plusLaps} onChange={handlePlusLapsChange}  />
+                style={{color: color, boxShadow: `0 0 10px 5px ${color}`}} value={isDisabled ? '' : plusLaps} onChange={handlePlusLapsChange}  />
 
-                <label style={{color: color}} htmlFor={`${driverName}plus-laps`}>Kolá pozadu</label>
+                <label className={isDarkTheme ? 'dark-bg' : 'light-bg'} style={{color: color}} htmlFor={`${driverName}plus-laps`}>Kolá pozadu</label>
             </div>
         </div> 
     )

@@ -6,25 +6,27 @@ import { useQuery } from "@tanstack/react-query";
 import '../../styles/rules.css'
 import Loader from "../reusableCompontents/Loader";
 import SectionHeading from "../reusableCompontents/SectionHeading";
+import useThemeContext from "../../hooks/useThemeContext";
 
 
 export default function Rules() { 
-    const query = useQuery(['rules'], fetchRules, { staleTime: Infinity })
+    const { data, isLoading} = useQuery(['rules'], fetchRules, { staleTime: Infinity })
+    const [isDarkTheme] = useThemeContext()
 
-    if ( query.isLoading ) return <Loader type='rules' />
+    if ( isLoading ) return <Loader type='rules' />
 
-    if ( query.data === undefined ) 
+    if ( data === undefined ) 
         return <ReactMarkdown># Nepodarilo sa načítať pravidlá.</ReactMarkdown>
 
     
     
     return(
-        <article id="markdown" className="section">
-            <div className='empty-header'></div>
+        <article id="markdown" className={`section ${isDarkTheme ? 'dark' : 'light'}-rules`}>
+            <div className={`empty-header ${isDarkTheme ? 'dark' : 'light'}-bg`}></div>
             <br/><br/>
-            <SectionHeading sectionHeading withTime time={`Posledná úprava: ${query.data.modifiedAt}`}>Pravidlá</SectionHeading>
+            <SectionHeading sectionHeading withTime time={`Posledná úprava: ${data.modifiedAt}`}>Pravidlá</SectionHeading>
      
-            <ReactMarkdown children={query.data.rules} remarkPlugins={[remarkGfm]} />
+            <ReactMarkdown children={data.rules} remarkPlugins={[remarkGfm]} />
         </article>
     )
 }

@@ -6,6 +6,9 @@ import { useParams } from "react-router-dom";
 import Select, { MultiValue } from 'react-select'
 import { selectMultiValueStyles } from "../../user/AddReport";
 import useConfirmation from "../../../../hooks/useConfirmation";
+import SectionHeading from "../../../reusableCompontents/SectionHeading";
+import useThemeContext from "../../../../hooks/useThemeContext";
+import ClickableButton from "../../../reusableCompontents/ClickableButton";
 
 
 
@@ -21,6 +24,7 @@ export default function AddReserves() {
     ))
 
     const [confirmation, showConfirmation] = useConfirmation()
+    const [isDarkTheme] = useThemeContext()
 
     function handleChange(v: MultiValue<{label: string, value: string}>) {
         if ( v === null )
@@ -46,29 +50,29 @@ export default function AddReserves() {
                 Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
             }
         })
-        .then(r => {
+        .then(() => {
             showConfirmation(confirm)
         })
-        .catch(e => {
+        .catch(() => {
 
         })
     }
 
     return(
         <>
-            <h2 className='section-heading fade-in-out-border'>
+            <SectionHeading sectionHeading>
                 Pridať nové rezervy
-            </h2>
+            </SectionHeading>
 
             <form onSubmit={submit}>
                 <Select 
                     isMulti options={query.data === undefined ? [] : query.data.drivers.map(d => {return {value: d.driverID, label: d.driverName}})} 
-                    styles={selectMultiValueStyles()}  onChange={handleChange} required value={reserves}
+                    styles={selectMultiValueStyles(isDarkTheme)}  onChange={handleChange} required value={reserves}
                 />
 
-                <div className='submit-button-container'>
-                    <button type="submit" className='clickable-button'>Uložiť</button>
-                </div>
+                <ClickableButton withContainer>
+                    Uložiť
+                </ClickableButton>
             </form>
 
             { confirmation }

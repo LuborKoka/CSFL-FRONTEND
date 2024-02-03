@@ -7,6 +7,8 @@ import useSeasonDataContext from "../../hooks/useSeasonDataContext"
 import { fetchDrivers } from "../subcompontents/user/RaceOverview"
 import { useQuery } from "@tanstack/react-query"
 import { fetchSeasonDrivers } from "../screens/Season"
+import ClickableButton from "../reusableCompontents/ClickableButton"
+import useThemeContext from "../../hooks/useThemeContext"
 
 
 
@@ -17,6 +19,7 @@ export default function RaceNav() {
 
     const context = useSeasonDataContext()
     const user = useUserContext()[0]
+    const [isDarkTheme] = useThemeContext()
 
     const query = useQuery([`race_${raceID}_drivers_overview`], () => fetchDrivers(raceID))
     const drivers = useQuery([`season-drivers-user-${seasonID}`], () => fetchSeasonDrivers(seasonID))
@@ -32,28 +35,48 @@ export default function RaceNav() {
                     <Outlet context={context} />
                 </div>
             </div>
-            <aside className='section-navigation'>
+            <aside className={`section-navigation ${isDarkTheme ? 'dark' : 'light'}`}>
                 {/*ten prvy link moze ist asi do pici, to bude v tej breadcrumbs navigacii*/}
                 <ul>
-                    <NavLink className='clickable-button' to={`${raceID}/overview`}>Prehľad</NavLink>
-                    <NavLink className='clickable-button' to={`${raceID}/results`}>Výsledky</NavLink>
-                    <NavLink className='clickable-button' to={`${raceID}/standings`}>Tabuľka</NavLink>
+                    <NavLink to={`${raceID}/overview`}>
+                       <ClickableButton>
+                            Prehľad
+                       </ClickableButton>
+                    </NavLink>
+                    <NavLink to={`${raceID}/results`}>
+                        <ClickableButton>
+                            Výsledky
+                        </ClickableButton>
+                    </NavLink>
+                    <NavLink to={`${raceID}/standings`}>
+                        <ClickableButton>
+                            Tabuľka
+                        </ClickableButton>
+                    </NavLink>
                     {
                         user?.isLoggedIn && !drivers.data?.isEmptyLineUp && (
                             drivers.data?.teams.some(t => t.drivers.some(d => d.id === user.driverID)) ||
                             drivers.data?.reserves.some(r => r.id === user.driverID) ||
                             user.roles.some(r => r === `${context[0].seasonName}fia`)
                         ) &&
-                        <NavLink className='clickable-button' to={`${raceID}/reports`}>Reporty</NavLink>
+                        <NavLink to={`${raceID}/reports`}>
+                            <ClickableButton>
+                                Reporty
+                            </ClickableButton>
+                        </NavLink>
                     }
                     {
                         query.data?.teams.some(t => t.drivers.some(d => d.driverID === user?.driverID)) &&
-                        <NavLink className='clickable-button' to={`${raceID}/new-report`}>Pridať report</NavLink>
+                        <NavLink to={`${raceID}/new-report`}>
+                            <ClickableButton>
+                                Pridať report
+                            </ClickableButton>
+                        </NavLink>
                     }
                     
                     {
                         user?.roles.includes(`${context[0].seasonName}fia`) &&
-                        <button onClick={openFiaForm} className='clickable-button single-row'>Kancelária FIA</button>
+                        <ClickableButton onClick={openFiaForm}>Kancelária FIA</ClickableButton>
                     }
                 </ul>
             </aside>

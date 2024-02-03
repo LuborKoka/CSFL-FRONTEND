@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { AdminOutletContext, OutletSeason } from '../../controls/AdminNav';
 import { useContext, Context} from 'react'
 import CreateSeason from './edit season related/CreateSeason';
+import TiltableCard from '../../reusableCompontents/TiltableCard';
 
 
 export default function AdminSeasons() {
@@ -37,13 +38,11 @@ type LinkProps = {
 
 function SeasonLink({ id, name, setSeason }: LinkProps) {
     return(
-        <Link className='tiltable-card link' to={`/${randomURIkey}/admin/season/${encodeURIComponent(name)}`} style={{margin: '2rem', width: 'min(200px, 100%)'}} onClick={() => setSeason(p => {return {...p, seasonName: name}})}>
-            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-            
-            <div className='content' style={{padding: '1rem 2rem'}} >{name}</div>
-        </Link>
+        <TiltableCard to={`/${randomURIkey}/admin/season/${encodeURIComponent(name)}`} isLink style={{margin: '2rem', width: 'min(200px, 100%)'}} onClick={() => setSeason(p => {return {...p, seasonName: name}})}>
+            {name}
+        </TiltableCard>
+
+
     )
 }
 

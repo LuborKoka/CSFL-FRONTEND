@@ -11,10 +11,6 @@
 }
 
 .text-content {
-    box-shadow: 0 0 10px rgba($white, .4);
-    @supports not (box-shadow: 0 0 10px rgba($white, .4)) {
-        border: 1px solid $white;
-    }
     min-height: 7.5rem;
     padding: 1rem;
     font-size: 16px;
@@ -24,6 +20,20 @@
          left: .5rem;
          font-weight: bold;
      }
+
+    &.dark {
+        box-shadow: 0 0 10px rgba($LIGHT, .4);
+        @supports not (box-shadow: 0 0 10px rgba($LIGHT, .4)) {
+            border: 1px solid $LIGHT;
+        }
+    }
+
+    &.light {
+        box-shadow: 0 0 10px rgba($DARK, .4);
+        @supports not (box-shadow: 0 0 10px rgba($DARK, .4)) {
+            border: 1px solid $DARK;
+        }
+    }
  }
 
 
@@ -49,6 +59,10 @@
     align-items: center;
 }
 
+.report-card .single-row {
+    column-gap: 5px;
+}
+
 
 .response-count {
     position: absolute;
@@ -69,15 +83,19 @@
 
 .hoverable-icon {
     border-radius: 5px;
-    background-color: rgba($white, .1);
-    color: $white;
     position: absolute;
     top: 5px;
     right: 5px;
     cursor: pointer;
     padding: 5px 10px;
+    transition: opacity;
 }
 
+@media (hover:hover) {
+    .hoverable-icon {
+        opacity: .8;
+    }
+}
 
 
 @media screen and (max-width: 600px) {
@@ -86,7 +104,7 @@
             height: 10px;
         }
 
-        .clickable-button {
+        .lickable-button {
             padding: 4px 8px;
             font-size: 12px;
         }
@@ -94,5 +112,14 @@
 
     .response-count {
         left: 2.5px;
+    }
+}
+
+
+@media screen and (max-width: 800px) {
+    .mobile-single-column {
+        display: flex;
+        flex-direction: column;
+        font-size: 14px !important;
     }
 }

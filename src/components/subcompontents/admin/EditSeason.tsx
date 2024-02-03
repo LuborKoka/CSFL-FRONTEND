@@ -1,10 +1,11 @@
 import axios from 'axios'
 import React, { useContext, Context} from 'react'
-import { Link, useOutletContext, useParams } from 'react-router-dom'
+import { useOutletContext, useParams } from 'react-router-dom'
 import { URI, UserContext, UserTypes, insertTokenIntoHeader } from '../../../App'
 import { useQuery } from '@tanstack/react-query'
 import { AdminOutletContext, OutletSeason } from '../../controls/AdminNav'
 import { timestampToDateTime } from '../user/Report'
+import TiltableCard from '../../reusableCompontents/TiltableCard'
 
 type RaceProps = {
     id: string,
@@ -46,17 +47,11 @@ function RaceBox({ id, raceName, date, isSprint, setSeason}: RaceProps) {
     }
 
     return(
-        <Link className='tiltable-card link' style={{width: 'calc(min(350px, 100%) - 3rem)', margin: '2rem 1.5rem'}} to={`race/${id}`} onClick={setBreadcrumbs}>
-            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-            
-            <div className='content'>
-                <h5>{`${isSprint ? 'Sprint: ' : ''}${raceName}`}</h5>
-                <h5>{timestampToDateTime(date)}</h5>
-                <i>Upraviť</i>
-            </div>
-        </Link>
+        <TiltableCard isLink to={`race/${id}`} style={{width: 'calc(min(350px, 100%) - 3rem)', margin: '2rem 1.5rem'}} onClick={setBreadcrumbs}>
+            <h5>{`${isSprint ? 'Sprint: ' : ''}${raceName}`}</h5>
+            <h5>{timestampToDateTime(date)}</h5>
+            <i>Upraviť</i>
+        </TiltableCard>
     )
 }
 

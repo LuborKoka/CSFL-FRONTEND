@@ -9,6 +9,7 @@ import useConfirmation from "../../../hooks/useConfirmation"
 import useErrorMessage from "../../../hooks/useErrorMessage"
 import SectionHeading from "../../reusableCompontents/SectionHeading"
 import ClickableButton from "../../reusableCompontents/ClickableButton"
+import useThemeContext from "../../../hooks/useThemeContext"
 
 export default function Roles() {
     const [value, setValue] = useState<{label: string, value: string} | null>(null)
@@ -17,6 +18,7 @@ export default function Roles() {
     const [isPendingDel, setIsPendingDel] = useState(false)
 
     const user = useUserContext()[0]
+    const [isDarkTheme] = useThemeContext()
 
     const query = useQuery([`users`], () => fetchUsers(user?.token))
     const queryClient = useQueryClient()
@@ -92,7 +94,7 @@ export default function Roles() {
         <>
         <SectionHeading sectionHeading>Pridať rolu F1 Admina</SectionHeading>
         <form onSubmit={submitNewAdmin}>
-            <Select value={value} required onChange={handleNewAdminChange} styles={selectSingleValueStyles()}
+            <Select value={value} required onChange={handleNewAdminChange} styles={selectSingleValueStyles(isDarkTheme)}
             options={
                 query.data?.data.users.filter(u => !u.roles.some(r => roles.includes(r.role_name)) ).map(u => {
                     return {value: u.user_id, label: u.driver_name}
@@ -107,7 +109,7 @@ export default function Roles() {
 
         <SectionHeading sectionHeading>Odobrať rolu F1 Admina</SectionHeading>
         <form onSubmit={submitDelAdmin}>
-            <Select value={delValue} required styles={selectSingleValueStyles()} onChange={handleDelAdminChange} 
+            <Select value={delValue} required styles={selectSingleValueStyles(isDarkTheme)} onChange={handleDelAdminChange} 
             options={
                 query.data?.data.users.filter(u => u.roles.some(r => r.role_name === 'F1 Admin') ).map(u => {
                     return {value: u.user_id, label: u.driver_name}

@@ -7,6 +7,8 @@ import useErrorMessage from "../../../hooks/useErrorMessage"
 import useUserContext from "../../../hooks/useUserContext"
 import SectionHeading from "../../reusableCompontents/SectionHeading"
 import ClickableButton from "../../reusableCompontents/ClickableButton"
+import useThemeContext from "../../../hooks/useThemeContext"
+import { DARK, LIGHT } from "../../../constants"
 
 
 export default function EditRules() {
@@ -15,12 +17,13 @@ export default function EditRules() {
     const [isPending, setIsPending] = useState(false)
     const [content, setContent] = useState('')
  
-    const query = useQuery(['rules'], fetchRules)
+    const { data } = useQuery(['rules'], fetchRules)
 
     const [confirmation, showConfirmation] = useConfirmation()
     const [message, showMessage] = useErrorMessage()
 
     const user = useUserContext()[0]
+    const [isDarkTheme] = useThemeContext()
 
     function updateValue(e: React.ChangeEvent<HTMLTextAreaElement>) {
         setContent(e.target.value)
@@ -41,7 +44,7 @@ export default function EditRules() {
                 "Content-Type": 'multipart/form-data'
             }
         })
-        .then(r => showConfirmation(() => e.target.files = null))
+        .then(() => showConfirmation(() => e.target.files = null))
         .catch((e: unknown) => {
             if ( e instanceof AxiosError && e.response?.data.error !== undefined ) {
                 showMessage(e.response.data.error) 
@@ -83,18 +86,18 @@ export default function EditRules() {
 
     function cancel() {
         setIsEditorOpen(false)
-        if ( query.data?.rules ) setContent(query.data.rules)
+        if ( data?.rules ) setContent(data.rules)
     }
 
 
     useEffect(() => {
-        if ( !query.data ) return
-        setContent(query.data.rules)
-    }, [query.data])
+        if ( !data ) return
+        setContent(data.rules)
+    }, [data])
 
     const editor =
     <form onSubmit={patchRules}>
-        <textarea className="rules-input" value={content} onChange={updateValue} spellCheck={false} onKeyDown={save} />
+        <textarea className="rules-input" style={{color: isDarkTheme ? LIGHT : DARK}} value={content} onChange={updateValue} spellCheck={false} onKeyDown={save} />
 
         <div className="submit-button-container single-row">
             <ClickableButton onClick={cancel}>Zrušiť</ClickableButton>
@@ -112,7 +115,7 @@ export default function EditRules() {
                     <span>{ isUploading ? 'Posiela sa na server' : 'Poslať .md súbor'}</span>
                 </label>
 
-                <ClickableButton onClick={() => setIsEditorOpen(p => !p)}>{`${isEditorOpen ? 'Skryť' : 'Zobraziť'} editor`}</ClickableButton>
+                <ClickableButton onClick={() => setIsEditorOpen(p => !p)} align="center">{`${isEditorOpen ? 'Skryť' : 'Zobraziť'} editor`}</ClickableButton>
             </div>
 
 

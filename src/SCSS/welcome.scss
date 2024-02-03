@@ -5,14 +5,13 @@
 .invitation-card {
     display: inline-block;
     position: relative;
-    color: $white;
     border-radius: 15px;
     padding: .8rem 1.6rem;
     text-align: center;
     width: min(100%, 300px);
     margin: 0 0 2rem 2rem;
 
-    box-shadow: 0 0 8px rgba($white, .3);
+    box-shadow: 0 0 8px color-mix(in srgb, currentColor 60%, transparent);
 
     
     //background-color: #0B1212; 

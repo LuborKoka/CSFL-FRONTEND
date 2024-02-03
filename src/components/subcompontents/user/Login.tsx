@@ -51,6 +51,7 @@ export default function Login({ swap }: Props) {
       });
 
     function handleLogin(data: LoginCredentials) {
+        (document.activeElement as HTMLInputElement | null)?.blur()
         setIsPending(true)
 
         axios.post(`${URI}/login/`, {

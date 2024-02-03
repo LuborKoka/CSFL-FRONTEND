@@ -5,7 +5,6 @@
   align-items: center;
   justify-content: space-evenly;
   width: 100%;
-  color: $white;
 
   form {
     @include flexColumn();
@@ -31,7 +30,7 @@
       content: '';
       width: calc(100% + 4px);
       height: 1px;
-      background-color: $white;
+      background-color: currentColor;
       bottom: 0;
       left: -2px;
     }

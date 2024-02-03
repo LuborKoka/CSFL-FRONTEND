@@ -9,28 +9,33 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUpRightFromSquare, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { RED } from "../../constants";
 import Loader from "../reusableCompontents/Loader";
+import useThemeContext from "../../hooks/useThemeContext";
+import SectionHeading from "../reusableCompontents/SectionHeading";
+import ClickableButton from "../reusableCompontents/ClickableButton";
 
 
 export default function Season() {
     const { seasonID } = useParams()
+    const [isDark] = useThemeContext()
 
     const query = useQuery([`scheduled-races-${seasonID}`], () => fetchData(seasonID), {staleTime: Infinity})
     const drivers = useQuery([`season-drivers-user-${seasonID}`], () => fetchSeasonDrivers(seasonID), { staleTime: Infinity })
 
     if ( query.isLoading || drivers.isLoading ) return <Loader type='season' />
     
+
+    const tableLink = 
+        <Link className='link-in-header' to={`/seasons/${seasonID}/standings`}>
+            <ClickableButton>
+                Tabuľka <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+            </ClickableButton>
+        </Link>
+
     const calendar = 
     <>
-        <div className='section-heading fade-in-out-border header-with-time'>
-            <h2>Kalendár</h2>
-            <Link className='link-in-header' to={`/seasons/${seasonID}/standings`}>
-                <h2 className='clickable-button'>
-                    Tabuľka
-                    <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
-                </h2>
-                
-            </Link>
-        </div>
+        <SectionHeading sectionHeading withTime time={tableLink}>
+            Kalendár           
+        </SectionHeading>
         
 
         {
@@ -53,15 +58,16 @@ export default function Season() {
 
     const lineUp = 
     <>
-        <h2 className="section-heading fade-in-out-border" style={{marginTop: '2rem'}}>
+        <SectionHeading sectionHeading style={{marginTop: '2rem'}}>
             Súpiska
-        </h2>
+        </SectionHeading>
 
         <div className='team-members-grid'>
             {
                 drivers.data?.teams.map((t, i) => 
                     <div className='team-members fade-in-out-border content-fade-in'  key={t.id} style={{color: t.color}}>
-                        <img style={{animationDelay: `${50*i}ms`}} src={`${URI}/media/${t.image}/`} alt={t.name} className='team-logo' loading="lazy"/>
+                        <img style={{animationDelay: `${50*i}ms`}} alt={t.name} className='team-logo' loading="lazy" id={t.image.includes('aston') ? 'aston' : ''}
+                            src={`${URI}/media/${t.image.replace('.svg', `_${isDark ? 'dark' : 'light'}_mode.svg`)}/`} />
                         <div style={{animationDelay: `${50*i}ms`, display: 'inline-grid', placeContent: 'center flex-start', rowGap: '1rem', fontSize: '1.2rem', minWidth: '160px'}}>
 
                             <b style={{whiteSpace: 'nowrap'}}>

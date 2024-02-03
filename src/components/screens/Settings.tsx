@@ -1,4 +1,5 @@
 import useUserContext from "../../hooks/useUserContext";
+import SectionHeading from "../reusableCompontents/SectionHeading";
 import NameChange from "../subcompontents/user/NameChange";
 import PasswordChange from "../subcompontents/user/PasswordChange";
 import DiscordAccount from "../subcompontents/user/discord/DiscordAccount";
@@ -12,10 +13,10 @@ export default function Settings() {
         <div className='section'>
             <div className='empty-header'></div>
             <br/><br/>
-            <h2 className='section-heading fade-in-out-border'>Účet</h2>
+            <SectionHeading sectionHeading>Účet</SectionHeading>
             <ul>
-                <li>Prihlasovacie meno: {user?.username}</li>
-                <li>Verejné meno: {user?.driverName}</li>
+                <li>Prihlasovacie meno: <b>{user?.username}</b></li>
+                <li>Verejné meno: <b>{user?.driverName}</b></li>
             </ul>
             <br/><br/>
               

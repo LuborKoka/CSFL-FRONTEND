@@ -9,6 +9,7 @@ import useConfirmation from "../../../../hooks/useConfirmation";
 import useUserContext from "../../../../hooks/useUserContext";
 import useErrorMessage from "../../../../hooks/useErrorMessage";
 import UserTip from "../../../reusableCompontents/UserTip";
+import ClickableButton from "../../../reusableCompontents/ClickableButton";
 
 
 export type Race = {
@@ -60,7 +61,7 @@ export default function Schedule() {
                 Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
             }
         })
-        .then(r => {
+        .then(() => {
             queryClient.invalidateQueries([`scheduled-races-${seasonID}`])
             showConfirmation()
         })
@@ -96,8 +97,6 @@ export default function Schedule() {
 
         setIsPendingSchedule(true)
 
-        console.log(races.current)
-
         axios.post(`${URI}/schedule/${seasonID}/`, {
             params: {
                 races: races.current
@@ -131,13 +130,15 @@ export default function Schedule() {
 
             {createTrackForms.map(f => f.element)}
             <br/>
-            <button className='clickable-button' onClick={addTrackForm}>Pridať ďalšiu veľkú cenu</button>
+            <ClickableButton onClick={addTrackForm}>
+                Pridať ďalšiu veľkú cenu
+            </ClickableButton>
             
             {
                 createTrackForms.length === 0 ? null :
-                <div className='submit-button-container'>
-                    <button className={`clickable-button ${isPendingSchedule ? 'button-disabled' : ''}`} disabled={isPendingSchedule} onClick={submitSchedule}>Pridať veľké ceny</button>
-                </div>
+                <ClickableButton withContainer disabled={isPendingSchedule} onClick={submitSchedule}>
+                    Pridať veľké ceny
+                </ClickableButton>
             }
 
             <br/><br/>

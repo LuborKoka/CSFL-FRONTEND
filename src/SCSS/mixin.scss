@@ -9,7 +9,36 @@
     justify-content: center
 }
 
+
+@mixin scrollbar($color) {
+    &::-webkit-scrollbar {
+        width: clamp(3px, 1vw, 8px)
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: $color;
+        border-radius: 20px;
+        border: 4px solid transparent;
+        transition: background-color .2s;
+    }
+
+    &::-webkit-scrollbar-button {
+        display: none;
+    }
+}
+
 $red: #CC1E23;
 $blue: #0A1391;
 $darkblue: #000606; //pozadie
 $white: #EFEFEF;    //vacsina textu
+$DARK: #000A0A;
+$LIGHT: #EFEFEF;
+$table-dark-hover: #244;
+$table-light-hover: #9AA;
+
+
+

@@ -113,7 +113,7 @@ export default function EditRace() {
                 
             </form>
 
-            <h2 className='section-heading fade-in-out-border'>Výsledky pretekov</h2>
+            <SectionHeading sectionHeading>Výsledky pretekov</SectionHeading>
             <SetRaceResults raceID={raceID} />
             
 

@@ -2,15 +2,49 @@
   overflow-y: auto;
 }
 
+.dark-theme-table tbody > tr:nth-child(2n) td:nth-child(2), .dark-theme-table tbody > tr:nth-child(2n) td:nth-child(1) {
+  background-color: #000A0A;
+}
+.dark-theme-table tbody > tr:nth-child(2n+1) td:nth-child(2), .dark-theme-table tbody > tr:nth-child(2n+1) td:nth-child(1) {
+  background-color: #002020;
+}
+.dark-theme-table tbody tr:hover td:nth-child(2), .dark-theme-table tbody tr:hover td:nth-child(1) {
+  background-color: #244 !important;
+}
+.dark-theme-table tbody tr:hover {
+  background-color: #244 !important;
+}
+.dark-theme-table tbody > tr:nth-child(2n+1) {
+  background-color: #002020;
+}
+.dark-theme-table thead th:nth-child(1), .dark-theme-table thead th:nth-child(2) {
+  background-color: #000A0A;
+}
+
+.light-theme-table tbody > tr:nth-child(2n) td:nth-child(2), .light-theme-table tbody > tr:nth-child(2n) td:nth-child(1) {
+  background-color: #EFEFEF;
+}
+.light-theme-table tbody > tr:nth-child(2n+1) td:nth-child(2), .light-theme-table tbody > tr:nth-child(2n+1) td:nth-child(1) {
+  background-color: #CFCFCF;
+}
+.light-theme-table tbody tr:hover td:nth-child(2), .light-theme-table tbody tr:hover td:nth-child(1) {
+  background-color: #9AA !important;
+}
+.light-theme-table tbody tr:hover {
+  background-color: #9AA !important;
+}
+.light-theme-table tbody > tr:nth-child(2n+1) {
+  background-color: #CFCFCF;
+}
+.light-theme-table thead th:nth-child(1), .light-theme-table thead th:nth-child(2) {
+  background-color: #EFEFEF;
+}
+
 .table {
   border-collapse: collapse;
 }
 .table tbody tr {
-  transition: background-color 0.2s !important;
   position: relative;
-}
-.table tbody tr:hover {
-  background-color: #244 !important;
 }
 .table thead {
   margin-bottom: 5px;
@@ -18,25 +52,16 @@
 .table tr td {
   padding: 0.5rem 0;
 }
-.table tbody > tr:nth-child(2n+1) {
-  background-color: #002020;
-}
 
 .standings-table thead th:nth-child(1) {
   z-index: 1;
   position: sticky;
   left: -5px;
-  background-color: #000606;
-  border-top: 2px solid #000606;
 }
 .standings-table thead th:nth-child(2) {
-  background-color: #000606;
   z-index: 1;
   position: sticky;
   left: 27px;
-}
-.standings-table tbody tr:hover td:nth-child(2), .standings-table tbody tr:hover td:nth-child(1) {
-  background-color: #244 !important;
 }
 .standings-table tbody tr {
   text-align: center;
@@ -55,13 +80,9 @@
   left: 27px;
 }
 .standings-table tbody > tr:nth-child(2n) td:nth-child(2), .standings-table tbody > tr:nth-child(2n) td:nth-child(1) {
-  background-color: #000606;
-  transition: background-color 0.2s;
   z-index: 1;
 }
 .standings-table tbody > tr:nth-child(2n+1) td:nth-child(2), .standings-table tbody > tr:nth-child(2n+1) td:nth-child(1) {
-  background-color: #002020;
-  transition: background-color 0.2s;
   z-index: 1;
 }
 .standings-table .switcher-visible {
@@ -100,7 +121,7 @@
   position: absolute;
   content: "";
   inset: -2px 0 0 0;
-  background-color: #000606;
+  background-color: currentColor;
 }
 
 .team-border {
@@ -126,7 +147,6 @@
 .switcher-container div {
   width: 40px;
   transition: opacity 1s ease-in;
-  font-weight: bold;
 }
 
 .switch-container {
@@ -136,17 +156,13 @@
 .switch-container .box {
   font-weight: bold;
   width: 50%;
-  color: #000606;
   border-radius: 5px;
   padding: 8px 0;
   cursor: pointer;
   transition: box-shadow 0.2s;
 }
-.switch-container .active {
-  background-color: #EFEFEF;
-}
 .switch-container .inactive {
-  background-color: rgba(239, 239, 239, 0.7);
+  opacity: 0.7;
 }
 
 .switch {
@@ -248,28 +264,48 @@ input:checked + .slider:before {
   overflow-x: auto;
 }
 
-#race-results > tr:first-child {
-  color: gold;
+.race-results > tr:nth-child(1) {
+  font-weight: 1000;
 }
-#race-results > tr:nth-child(2) {
-  color: silver;
+.race-results > tr:nth-child(2) {
+  font-weight: 1000;
 }
-#race-results > tr:nth-child(3) {
-  color: coral;
+.race-results > tr:nth-child(3) {
+  font-weight: 1000;
 }
-#race-results tr > td:last-child {
+.race-results tr > td:last-child {
   text-align: left;
   padding: 0.5rem 0.5rem 0.5rem 0.5rem;
 }
-#race-results tr > td:first-child {
+.race-results tr > td:first-child {
   padding: 0 0.5rem;
 }
-#race-results tr > td:nth-child(2) {
+.race-results tr > td:nth-child(2) {
   padding-right: 0.5rem;
 }
-#race-results tr > td:nth-last-child(2) {
+.race-results tr > td:nth-last-child(2) {
   text-align: right;
   padding-left: 5px;
+}
+
+.race-results.dark > tr:first-child {
+  color: gold;
+}
+.race-results.dark > tr:nth-child(2) {
+  color: silver;
+}
+.race-results.dark > tr:nth-child(3) {
+  color: coral;
+}
+
+.race-results.light > tr:first-child {
+  color: rgb(193, 164, 0);
+}
+.race-results.light > tr:nth-child(2) {
+  color: grey;
+}
+.race-results.light > tr:nth-child(3) {
+  color: rgb(235, 107, 60);
 }
 
 .purple {
@@ -287,8 +323,11 @@ input:checked + .slider:before {
 }
 
 @media (hover: hover) {
-  .switch-container .box:hover {
-    box-shadow: 0 0 2px 1px inset rgba(0, 6, 6, 0.8);
+  .switch-container .dark-bg:hover {
+    box-shadow: 0 0 2px 1px inset rgba(239, 239, 239, 0.7);
+  }
+  .switch-container .light-bg:hover {
+    box-shadow: 0 0 2px 1px inset rgba(0, 10, 10, 0.7);
   }
 }
 

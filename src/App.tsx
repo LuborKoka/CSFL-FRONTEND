@@ -23,7 +23,7 @@ import AssignDriversTeams from './components/subcompontents/admin/edit season re
 import AddReserves from './components/subcompontents/admin/edit season related/AddReserves';
 import ManageFIA from './components/subcompontents/admin/edit season related/ManageFIA';
 import jwtDecode from 'jwt-decode';
-import { storageKeyName } from './constants';
+import { DARK, LIGHT, storageKeyName } from './constants';
 import { Forbidden, NotFound } from './components/controls/BadReq';
 import RaceOverview from './components/subcompontents/user/RaceOverview';
 import axios, { AxiosError } from 'axios';
@@ -35,7 +35,7 @@ import Roles from './components/subcompontents/admin/Roles';
 import WifeBeater from './components/subcompontents/admin/wife_btear/WifeBeater';
 import useErrorMessage from './hooks/useErrorMessage';
 
-export const URI = 'http://192.168.100.22:8000/api'  //`https://ciernacicina69.pythonanywhere.com/api`
+export const URI = `https://ciernacicina69.pythonanywhere.com/api`
 
 export const randomURIkey = generateRandomString(10)
 
@@ -54,95 +54,115 @@ export type UserTypes = {
   setUser: React.Dispatch<React.SetStateAction<User | null>>
 }
 
+export type ThemeTypes = {
+    isDark: boolean,
+    setIsDark: React.Dispatch<React.SetStateAction<boolean>>
+}
+
 const queryClient = new QueryClient()
 
 export const UserContext = createContext<UserTypes | null>(null)
+export const ThemeContext = createContext<ThemeTypes | null>(null)
+
 
 function App() {
-  const [user, setUser] = useState<User | null>(null)
+    const [user, setUser] = useState<User | null>(null)
+    const [isDark, setIsDark] = useState<boolean>(false)
 
-  const [message, showMessage] = useErrorMessage()
+    const [message, showMessage] = useErrorMessage()
 
-  useEffect(() => {
-    const token = secureLocalStorage.getItem(storageKeyName) as string | null
+    useEffect(() => {
+        const token = secureLocalStorage.getItem(storageKeyName) as string | null
 
-    async function getUserData() {
-      if (token !== null) {
-        const data = jwtDecode(token) as { username: string, id: string, driverID: string, driverName: string }
+        async function getUserData() {
+        if (token !== null) {
+            const data = jwtDecode(token) as { username: string, id: string, driverID: string, driverName: string }
 
-        try {
-          const rolesRes = await axios.get(`${URI}/roles/${data.id}/`, {
-            headers: {
-              Authorization: `Bearer ${token}`
+            try {
+            const rolesRes = await axios.get(`${URI}/roles/${data.id}/`, {
+                headers: {
+                Authorization: `Bearer ${token}`
+                }
+            })
+
+            setUser({...data, token: token, roles: rolesRes.data.roles, isLoggedIn: true})
+
+            } catch(e: unknown) {
+            if ( e instanceof AxiosError && e.code === '403' ) {
+                showMessage(e)
+                return
             }
-          })
-
-          setUser({...data, token: token, roles: rolesRes.data.roles, isLoggedIn: true})
-
-        } catch(e: unknown) {
-          if ( e instanceof AxiosError && e.code === '403' ) {
-            showMessage(e)
-            return
-          }
-          setUser({ ...data, token: token, roles: [], isLoggedIn: false })
+            setUser({ ...data, token: token, roles: [], isLoggedIn: false })
+            }
         }
-      }
-    }
+        }
+
+        
+        getUserData()
+        //eslint-disable-next-line
+    }, [setUser])
+
+
+    useEffect(() => {
+        document.body.style.backgroundColor = isDark ? DARK : LIGHT
+        document.body.className = `${isDark ? 'dark' : 'light'}-theme-scrollbar`
+    }, [isDark])
 
     
-    getUserData()
-    //eslint-disable-next-line
-  }, [setUser])
 
-  return (
-    <UserContext.Provider value={{ user, setUser }}>
-      <QueryClientProvider client={queryClient}>
-        <Router>
-          <Nav />
-          <Routes>
-            <Route path='/' element={<Welcome />} />
-            <Route path='/auth' element={<Auth />} />
-            <Route path='/rules' element={<Rules />} />
-            <Route path='/settings' element={<Settings />} />
-            <Route path='/verify-user' element={<DiscordVerification />} />
-            <Route path='/seasons' element={<SeasonNav />} >
-              <Route path=':seasonID' element={<Season />} />
-              <Route path=':seasonID/standings' element={<Standings />} />
-              <Route path=':seasonID/race' element={<RaceNav />}>
-                <Route path=':raceID/overview' element={<RaceOverview />} />
-                <Route path=':raceID/standings' element={<Standings />} />
-                <Route path=':raceID/reports' element={<Reports />} />
-                <Route path=':raceID/results' element={<RaceResults />} />
-                <Route path=':raceID/new-report' element={<AddReport />} />
+    return (
+        <ThemeContext.Provider value={{ isDark, setIsDark }}>
+            <UserContext.Provider value={{ user, setUser }}>
+                <QueryClientProvider client={queryClient}>
+                    <div className={`${isDark ? 'dark-bg light-text' : 'light-bg dark-text'}`} id='layout'>
+                        <Router>
+                            <Nav />
+                            <Routes>
+                                <Route path='/' element={<Welcome />} />
+                                <Route path='/auth' element={<Auth />} />
+                                <Route path='/rules' element={<Rules />} />
+                                <Route path='/settings' element={<Settings />} />
+                                <Route path='/verify-user' element={<DiscordVerification />} />
+                                <Route path='/seasons' element={<SeasonNav />} >
+                                <Route path=':seasonID' element={<Season />} />
+                                <Route path=':seasonID/standings' element={<Standings />} />
+                                <Route path=':seasonID/race' element={<RaceNav />}>
+                                    <Route path=':raceID/overview' element={<RaceOverview />} />
+                                    <Route path=':raceID/standings' element={<Standings />} />
+                                    <Route path=':raceID/reports' element={<Reports />} />
+                                    <Route path=':raceID/results' element={<RaceResults />} />
+                                    <Route path=':raceID/new-report' element={<AddReport />} />
 
-              </Route>
-            </Route>
+                                </Route>
+                                </Route>
 
-            <Route path={`/${randomURIkey}/admin`} element={<AdminNav />}>
-              <Route path='seasons' element={<AdminUI />} />
-              <Route path='roles' element={<Roles />} />
-              <Route path='rules' element={<EditRules />} />
-              <Route path='season/:seasonID' element={<EditSeason />} />
-              <Route path='season/:seasonID/drivers' element={<AssignDriversTeams />} />
-              <Route path='season/:seasonID/schedule' element={<CreateSchedule />} />
-              <Route path='season/:seasonID/reserves' element={<AddReserves />} />
-              <Route path='season/:seasonID/fia' element={<ManageFIA />} />
+                                <Route path={`/${randomURIkey}/admin`} element={<AdminNav />}>
+                                <Route path='seasons' element={<AdminUI />} />
+                                <Route path='roles' element={<Roles />} />
+                                <Route path='rules' element={<EditRules />} />
+                                <Route path='season/:seasonID' element={<EditSeason />} />
+                                <Route path='season/:seasonID/drivers' element={<AssignDriversTeams />} />
+                                <Route path='season/:seasonID/schedule' element={<CreateSchedule />} />
+                                <Route path='season/:seasonID/reserves' element={<AddReserves />} />
+                                <Route path='season/:seasonID/fia' element={<ManageFIA />} />
 
-              <Route path='season/:seasonID/race/:raceID' element={<EditRace />} />
-            </Route>
+                                <Route path='season/:seasonID/race/:raceID' element={<EditRace />} />
+                                </Route>
 
-            <Route path={`/${randomURIkey}/wife-beater`} element={<WifeBeater />} />
+                                <Route path={`/${randomURIkey}/wife-beater`} element={<WifeBeater />} />
 
-            <Route path='*' element={<NotFound />} />
-            <Route path='/forbidden' element={<Forbidden />} />
-          </Routes>
-        </Router>
-      </QueryClientProvider>
-      {
-        message
-      }
-    </UserContext.Provider>
-  )
+                                <Route path='*' element={<NotFound />} />
+                                <Route path='/forbidden' element={<Forbidden />} />
+                            </Routes>
+                        </Router>
+                    </div>
+                </QueryClientProvider>
+                {
+                    message
+                }
+            </UserContext.Provider>
+        </ThemeContext.Provider>
+    )
 }
 
 export default App;

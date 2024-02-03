@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Select, { MultiValue } from 'react-select' 
 import { selectMultiValueStyles } from '../../user/AddReport'
+import useThemeContext from '../../../../hooks/useThemeContext'
 
 //potom na editovanie existujuceho driver lineup pre preteky (aj sezonu) spravit is_set column v db a podla neho vratit komponent pre 
 // vytvorenie noveho alebo update existujuceho zlozenia, tak to bude najjedoduchsie a asi aj najprehladnejsie nakodit
@@ -29,6 +30,8 @@ export default function DriversSelect({ teamID, teamName, drivers, allOptions, s
     const [value, setValue] = useState<{value: string, label: string}[]>([])
     const [options, setOptions] = useState<{value: string, label: string}[]>([])
 
+    const [isDarkTheme] = useThemeContext()
+
     function updateValue(val: MultiValue<{value: string, label: string}>) {
         if ( val.length > 2 ) return
         setValue(val.map(v => v))
@@ -54,7 +57,7 @@ export default function DriversSelect({ teamID, teamName, drivers, allOptions, s
     return(
         <div style={{padding: '1.5rem 0'}}>
             <div className='labeled-input' key={teamID}>
-                <Select isDisabled={isDisabled} name={teamName} value={value} isMulti styles={selectMultiValueStyles(color)} placeholder={null} options={options} onChange={updateValue} />
+                <Select isDisabled={isDisabled} name={teamName} value={value} isMulti styles={selectMultiValueStyles(isDarkTheme, color)} placeholder={null} options={options} onChange={updateValue} />
                 <label htmlFor={teamName} style={{color: color, transform: 'translate(-2%, -120%) scale(.9)', padding: '2px 5px'}}>
                     {teamName}
                 </label>

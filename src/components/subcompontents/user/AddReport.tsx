@@ -1,17 +1,20 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
 import { URI, generateRandomString, insertTokenIntoHeader } from "../../../App";
-import Select, { MultiValue, StylesConfig, ActionMeta } from 'react-select';
+import Select, { MultiValue, StylesConfig } from 'react-select';
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperclip, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import { DARKBLUE, RED, WHITE } from "../../../constants";
+import { DARK, LIGHT, RED, WHITE } from "../../../constants";
 import useConfirmation from "../../../hooks/useConfirmation";
 import useErrorMessage from "../../../hooks/useErrorMessage";
 import useUserContext from "../../../hooks/useUserContext";
 import UserTip from "../../reusableCompontents/UserTip";
 import SectionHeading from "../../reusableCompontents/SectionHeading";
+import useThemeContext from "../../../hooks/useThemeContext";
+import ClickableButton from "../../reusableCompontents/ClickableButton";
+import LabeledInput from "../../reusableCompontents/LabeledInput";
 
 type Driver = {
     name: string,
@@ -38,6 +41,8 @@ export default function AddReport() {
 
     const [confirmation, showConfirmation] = useConfirmation()
     const [message, showMessage] = useErrorMessage()
+
+    const [isDarkTheme] = useThemeContext()
 
     function handleFileInput(e: React.ChangeEvent<HTMLInputElement>) {
         const files = Array.prototype.slice.call(e.target.files) as File[]
@@ -68,7 +73,7 @@ export default function AddReport() {
         setFiles(p => p.filter(f => f.id !== id))
     }
 
-    function handleDriversChange(d: MultiValue<{value: string, label: string} | undefined>,  actionMeta: ActionMeta<{value: string, label: string}>) {
+    function handleDriversChange(d: MultiValue<{value: string, label: string} | undefined>) {
         if ( d === undefined || d === null ) return
         setIsEmptyTarget(false)
         report.current = {...report.current, targets: d.map(d => d!.value)}
@@ -136,18 +141,18 @@ export default function AddReport() {
             <div id='addReport'>
                 <h1 className='section-heading fade-in-out-border'>Nový Report</h1>
                 <div className='labeled-input perma-active'>
-                    <input name='raceName' className='form-input' type="text" readOnly value={`${query.data?.raceName}`} />
-                    <label htmlFor='raceName'>Preteky</label>
+                    <input name='raceName' className={`form-input ${isDarkTheme ? 'light' : 'dark'}-text`} type="text" readOnly value={`${query.data?.raceName}`} />
+                    <label className={`${isDarkTheme ? 'dark' : 'light'}-bg`} htmlFor='raceName'>Preteky</label>
                 </div>
                 <div className="labeled-input perma-active" >
-                    <Select name="reported-drivers" options={[{value: 'hra', label: 'Hra'}, ...driversFromQuery(query.data, user?.id)]} isMulti onChange={handleDriversChange} styles={selectMultiValueStyles()} placeholder='Hľadať' />
-                    <label htmlFor="reported-driver">Nahlásení hráči</label>
+                    <Select name="reported-drivers" options={[{value: 'hra', label: 'Hra'}, ...driversFromQuery(query.data, user?.id)]} isMulti onChange={handleDriversChange} styles={selectMultiValueStyles(isDarkTheme)} placeholder='Hľadať' />
+                    <label className={`${isDarkTheme ? 'dark' : 'light'}-bg`} htmlFor="reported-driver">Nahlásení hráči</label>
                     { isEmptyTarget && <p className='input-error'>Musíš nahlásiť aspoň jedného hráča alebo hru.</p>}
                 </div>
 
                 <div className='inchident labeled-input ' >
-                    <textarea name='inchident' onChange={handleDescChange} spellCheck={false} />
-                    <label htmlFor='inchident'>Popis inchidentu</label>
+                    <textarea name='inchident' className={`${isDarkTheme ? 'light' : 'dark'}-text`} onChange={handleDescChange} spellCheck={false} />
+                    <label className={`${isDarkTheme ? 'dark' : 'light'}-bg`} htmlFor='inchident'>Popis inchidentu</label>
                     { isEmptyText && <p className='input-error'>Popis inchidentu musí mať aspoň 20 znakov.</p>}
                 </div>
 
@@ -161,7 +166,7 @@ export default function AddReport() {
                     Na videá odporúčam použiť online platformy (youtube, streamable etc.). Všetkým (aj sebe) tým ušetríš kus dát.
                 </UserTip>
                 
-                <div className='two-columns fade-in-out-border'>
+                <div className='two-columns'>
                     <div >
                         <div className="attachments-container">
                             {
@@ -190,17 +195,14 @@ export default function AddReport() {
                         </div>
 
                         <div className='video-submit'>
-                            <div className='labeled-input'>
-                                <input className='form-input' required name='video' type="url" style={{width: '95%'}} onChange={handleVideoInput} />
-                                <label htmlFor='video'>Pridaj link na video</label>
-                            </div>
+                            <LabeledInput required label="Pridaj link na video" htmlFor="video" name="video" type="url" style={{width: '95%'}} onChange={handleVideoInput} />
                         </div>
                     </div>
                 </div>
 
-                <div className='submit-button-container'>
-                    <button className={`clickable-button ${isPending ? 'button-disabled' : ''}`} type="submit" onClick={handleReportSubmit} disabled={isPending}>Odoslať report</button>
-                </div>
+                <ClickableButton withContainer onClick={handleReportSubmit} disabled={isPending}>
+                    Odoslať report
+                </ClickableButton>
             </div>
 
             { confirmation }
@@ -250,10 +252,12 @@ type LinkProps = {
 }
 
 export function AddedLink({ url, id, deleteVideo}: LinkProps) {
+    const [isDarkTheme] = useThemeContext()
+
     return(
         <div className='form-input' style={{paddingRight: '2.5rem'}}>
-            <Link style={{color: WHITE, fontSize: '16px'}} target="_blank" to={url}>{url}</Link>
-            <FontAwesomeIcon icon={faTrashAlt} onClick={() => deleteVideo(id)}  className="icon-delete top-right" style={{top: '.5rem'}} />
+            <Link style={{color: isDarkTheme ? WHITE : DARK, fontSize: '16px'}} target="_blank" to={url}>{url}</Link>
+            <FontAwesomeIcon icon={faTrashAlt} onClick={() => deleteVideo(id)}  className={`icon-delete top-right ${isDarkTheme ? 'light' : 'dark'}-text`} style={{top: '.5rem'}} />
         </div>
     )
 }
@@ -265,10 +269,11 @@ type VideoProps = {
 }
 
 export function AddedVideo({ name, id, deleteVideo}: VideoProps) {
+    const [isDarkTheme] = useThemeContext()
     return(
         <div className='form-input' style={{paddingRight: '1.5rem'}}>
-            <span style={{color: WHITE, fontSize: '16px'}}>{name}</span>
-            <FontAwesomeIcon icon={faTrashAlt} onClick={() => deleteVideo(id)} className='icon-delete top-right' style={{top: '.5rem'}}/>
+            <span style={{color: isDarkTheme ? LIGHT: DARK, fontSize: '16px'}}>{name}</span>
+            <FontAwesomeIcon icon={faTrashAlt} onClick={() => deleteVideo(id)} className={`icon-delete top-right ${isDarkTheme ? 'light' : 'dark'}-text`} style={{top: '.5rem'}}/>
         </div>
     )
 }
@@ -277,9 +282,11 @@ export function AddedVideo({ name, id, deleteVideo}: VideoProps) {
 
 type OptionType = { value: string, label: string };
 
-export function selectMultiValueStyles(color = 'rgba(239, 239, 239, .4)') {
-    const underLineColor = color === 'rgba(239, 239, 239, .4)' ? WHITE : color
-    const boxShadow = color === 'rgba(239, 239, 239, .4)' ? `0 0 10px ${color}` : `0 0 10px 5px ${color}`
+export function selectMultiValueStyles(isDarkTheme: boolean, color?: string | undefined) {
+    const defaultTextColor = isDarkTheme ? LIGHT : DARK
+    const defaultBgColor = isDarkTheme ? DARK : LIGHT
+    const underLineColor = color || defaultTextColor
+    const boxShadow = color === undefined ?  `0 0 10px ${hexToRgba(defaultTextColor, .4)}` :`0 0 10px 5px${color}`
 
     const selectMultiValueStyles: StylesConfig<OptionType, true> = {
         control: (styles) => {
@@ -296,26 +303,20 @@ export function selectMultiValueStyles(color = 'rgba(239, 239, 239, .4)') {
         placeholder: styles => {
             return {
                 ...styles,
-                color: WHITE,
+                //color: defaultTextColor,
                 opacity: '.7'
-            }
-        },
-        input: styles => {
-            return {
-                ...styles,
-                color: WHITE
             }
         },
         option: (styles) => {
             return {
                 ...styles,
-                backgroundColor: WHITE,
-                color: DARKBLUE,
+                backgroundColor: defaultTextColor,
+                color: defaultBgColor,
                 transition: 'all .2s',
                 cursor: 'pointer',
                 ':hover': {
-                    color: WHITE,
-                    backgroundColor: DARKBLUE
+                    color: defaultTextColor,
+                    backgroundColor: defaultBgColor
                 }
             }
         },
@@ -323,8 +324,7 @@ export function selectMultiValueStyles(color = 'rgba(239, 239, 239, .4)') {
             return {
                 ...styles,
                 backgroundColor: 'transparent',
-                color: WHITE,
-                
+                //color: WHITE,
             }
         },
         multiValueLabel: styles => {
@@ -362,7 +362,7 @@ export function selectMultiValueStyles(color = 'rgba(239, 239, 239, .4)') {
             return {
                 ...styles,
                 cursor: 'pointer',
-                color: WHITE,
+                color: defaultTextColor,
                 opacity: .8,
                 ':hover': {
                     opacity: 1
@@ -387,4 +387,20 @@ export function selectMultiValueStyles(color = 'rgba(239, 239, 239, .4)') {
         // Add other property handlers as necessary...
     };
     return selectMultiValueStyles
+}
+
+
+
+export function hexToRgba(hex: string, alpha: string | number = 1) {
+    hex = hex.replace(/^#/, '')
+
+    const bigint = parseInt(hex, 16)
+    const r = (bigint >> 16) & 255
+    const g = (bigint >> 8) & 255
+    const b = bigint & 255
+
+    // Ensure alpha is within the valid range (0 to 1)
+    alpha = Math.min(1, Math.max(0, Number(alpha)))
+    // Return the RGBA values as an object
+    return `rgba( ${r}, ${g}, ${b}, ${alpha})`
 }

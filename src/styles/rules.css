@@ -18,20 +18,31 @@
   text-transform: capitalize;
   margin: 1rem 0;
 }
-#markdown table thead {
-  background-color: #022;
-}
 #markdown table thead th {
   padding: 0.3rem 0.3rem 0.3rem 0.5rem;
 }
-#markdown table tbody tr {
-  transition: 0.3s;
-}
-#markdown table tbody tr:hover {
-  background-color: #244;
-}
 #markdown table tbody td {
   padding: 0.1rem 0.5rem;
+}
+
+.dark-rules table thead {
+  background-color: #022;
+}
+.dark-rules tbody tr {
+  transition: 0.3s;
+}
+.dark-rules tbody tr:hover {
+  background-color: #244;
+}
+
+.light-rules table thead {
+  background-color: #9AA;
+}
+.light-rules tbody tr {
+  transition: 0.3s;
+}
+.light-rules tbody tr:hover {
+  background-color: #ABB;
 }
 
 .rules-input {
@@ -40,7 +51,6 @@
   max-width: 100%;
   padding: 0.5rem 1rem;
   background-color: transparent;
-  color: #EFEFEF;
 }
 
 @media (hover: none) {

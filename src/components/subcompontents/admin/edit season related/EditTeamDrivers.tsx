@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom'
 import axios from 'axios'
 import { URI, UserContext, UserTypes, insertTokenIntoHeader } from '../../../../App'
 import { useQueryClient } from '@tanstack/react-query'
+import useThemeContext from '../../../../hooks/useThemeContext'
 
 
 type Props = {
@@ -37,6 +38,8 @@ export default function EditTeamDrivers({ color, id, name, signed, options }: Pr
     const { user } = useContext(UserContext as Context<UserTypes>)
 
     const [confirmation, showConfirmation] = useConfirmation()
+
+    const [isDarkTheme] = useThemeContext()
 
     function handleChange(v: MultiValue<{value: string, label: string}>) {
         if ( v.length > 2 ) return
@@ -69,10 +72,10 @@ export default function EditTeamDrivers({ color, id, name, signed, options }: Pr
                 Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
             }
         })
-        .then(r => {
+        .then(() => {
             showConfirmation(resetAfterSubmit)
         })
-        .catch(e => {
+        .catch(() => {
 
         })
         .finally(() => setIsPending(false))
@@ -86,16 +89,16 @@ export default function EditTeamDrivers({ color, id, name, signed, options }: Pr
 
     const buttons =
     <div className='submit-button-container' style={{columnGap: '3rem'}}>
-        <button className='clickable-button' onClick={cancel}>Zrušiť</button>
-        <button className={`clickable-button ${isPending ? 'button-disabled' : ''}`} onClick={submit}>Uložiť</button>
+        <button className={`clickable-button ${isDarkTheme ? 'light' : 'dark'}-text`} onClick={cancel}>Zrušiť</button>
+        <button className={`clickable-button ${isPending && 'button-disabled'} ${isDarkTheme ? 'light' : 'dark'}-text`} onClick={submit}>Uložiť</button>
     </div>
 
     return(
         <div>
             <div className='labeled-input'>
-                <Select name={name} isDisabled={isDisabled} isMulti value={values} styles={selectMultiValueStyles(color)} 
+                <Select name={name} isDisabled={isDisabled} isMulti value={values} styles={selectMultiValueStyles(isDarkTheme, color)} 
                 onChange={handleChange} options={[...signed.map(d => {return {value: d.id, label: d.name}}), ...options]} closeMenuOnSelect={false} placeholder={isDisabled ? '' : 'Select...'} />
-                <label htmlFor={name} style={{color: color, transform: 'translate(-2%, -120%) scale(.9)', padding: '2px 5px'}}>
+                <label className={`${isDarkTheme ? 'dark' : 'light'}-bg`} htmlFor={name} style={{color: color, transform: 'translate(-2%, -120%) scale(.9)', padding: '2px 5px'}}>
                     {name}
                 </label>
                 { isDisabled ? icons : null}

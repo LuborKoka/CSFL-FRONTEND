@@ -8,36 +8,41 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { RED, WHITE } from '../../../constants';
 import Loader from '../../reusableCompontents/Loader';
 import SectionHeading from '../../reusableCompontents/SectionHeading';
+import useThemeContext from '../../../hooks/useThemeContext';
 
 export default function RaceResults() {
     const [leaderTime, setLeaderTime] = useState(0)
 
     const { raceID } = useParams()
 
-    const query = useQuery([`race-results_${raceID}`], () => fetchResults(raceID))
+    const { data, isLoading } = useQuery([`race-results_${raceID}`], () => fetchResults(raceID))
+
+    const [isDarkTheme] = useThemeContext()
 
     useEffect(() => {
-        if ( !query || !query.data || query.data.results.length === 0 ) return
-        setLeaderTime(query.data.results[0].time)
-    }, [query])
+        if ( !data || data.results.length === 0 ) return
+        setLeaderTime(data.results[0].time)
+    }, [data])
 
-    if ( query.isLoading ) return(
+    if ( isLoading ) return(
         <>
-            <h2 className='section-heading fade-in-out-border'>Výsledky pretekov</h2>
+            <SectionHeading sectionHeading>Výsledky pretekov</SectionHeading>
 
             <Loader type='results' />
         </>
     )   
 
-    if ( query.data?.results.length === 0 || query.data?.has_been_raced === false ) {
+    if ( data?.results.length === 0 || data?.has_been_raced === false ) {
         return(
             <>
                 <br/><br/>
-                <h2 className='section-heading fade-in-out-border' style={{textAlign: 'center'}}> 
+                <SectionHeading style={{textAlign: 'center'}}>
                     <FontAwesomeIcon icon={faExclamationTriangle} style={{color: RED, margin: '0 2rem'}} />
-                    Výsledky tu budú do 3 hodín od začiatku pretekov.
+                        Výsledky tu budú do 3 hodín od začiatku pretekov.
                     <FontAwesomeIcon icon={faExclamationTriangle} style={{color: RED, margin: '0 2rem'}} />
-                </h2>
+                </SectionHeading>
+ 
+                    
             </>
         )
    }
@@ -45,7 +50,7 @@ export default function RaceResults() {
     return(
         <div style={{display: 'grid'}}>
             <SectionHeading sectionHeading>Výsledky pretekov</SectionHeading>
-            <table className='table content-fade-in' id='race-results-table'>
+            <table className={`table content-fade-in ${isDarkTheme ? 'dark' : 'light'}-theme-table`} id='race-results-table'>
                 <thead className='table-header'>
                     <tr>
                         <th></th>
@@ -55,10 +60,10 @@ export default function RaceResults() {
                         <th>Body</th>
                     </tr>
                 </thead>
-                <tbody id='race-results'>
+                <tbody className={`race-results ${isDarkTheme ? 'dark' : 'light'}`}>
                 {
                     //SELECT NOW() < race.date AS race_took_place a mam vyriesene tie nuly
-                    query?.data?.results.map((d, i) => {
+                    data?.results.map((d, i) => {
                         return(
                             <tr key={d.driverID} style={{animationDelay: `${25*i}ms`}}>
                                 <td>{d.rank}.</td>

@@ -7,11 +7,14 @@ import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { RED } from '../../../constants';
 import Loader from '../../reusableCompontents/Loader';
 import SectionHeading from '../../reusableCompontents/SectionHeading';
+import useThemeContext from '../../../hooks/useThemeContext';
 
 
 
 export default function RaceOverview() {
     const { raceID } = useParams()
+
+    const [isDark] = useThemeContext()
 
     const query = useQuery([`race_${raceID}_drivers_overview`], () => fetchDrivers(raceID))
 
@@ -37,7 +40,8 @@ export default function RaceOverview() {
                 {
                     query.data?.teams.map((t, i) => 
                         <div className='team-members fade-in-out-border content-fade-in'  key={t.teamName} style={{color: t.color}}>
-                            <img style={{animationDelay: `${50*i}ms`}} src={`${URI}/media/${t.logo}/`} alt={t.teamName} className='team-logo' loading='lazy'/>
+                            <img style={{animationDelay: `${50*i}ms`}} alt={t.teamName} className='team-logo' loading="lazy" id={t.logo.includes('aston') ? 'aston' : ''}
+                                src={`${URI}/media/${t.logo.replace('.svg', `_${isDark ? 'dark' : 'light'}_mode.svg`)}/`} />
                             <div style={{animationDelay: `${50*i}ms`, display: 'inline-grid', placeContent: 'center flex-start', rowGap: '1rem', fontSize: '1.2rem', minWidth: '160px'}}>
                                 <b style={{whiteSpace: 'nowrap'}}>
                                     {

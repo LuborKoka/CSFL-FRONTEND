@@ -2,7 +2,6 @@
 
 
 .content-container {
-    color: $white;
     position: relative;
     max-height: 100lvh; 
     display: grid;
@@ -37,7 +36,6 @@
 .season-with-race-cards {
     display: block;
     position: relative;
-    color: $white;
 }
 
 
@@ -60,6 +58,12 @@
 
 .team-logo {
     width: clamp(150px, 25vw, 300px);
+    aspect-ratio: 15/7;
+    object-fit: contain;
+}
+
+#aston {
+    object-fit: cover;
 }
 
 .team-members {
@@ -67,6 +71,7 @@
     display: grid;
     grid-template-columns: auto auto;
     padding-bottom: .5rem;
+    gap: 10px;
 
     &::after {
         height: 1px
@@ -96,7 +101,6 @@
         position: sticky;
         top: 0;
         z-index: 2;
-        background-color: $darkblue;
 
         h3 {
             font-size: 30px;

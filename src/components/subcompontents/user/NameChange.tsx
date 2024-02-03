@@ -1,5 +1,3 @@
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import axios, { AxiosResponse } from "axios"
 import { useRef, useState } from "react"
 import { URI, insertTokenIntoHeader } from "../../../App"
@@ -8,12 +6,12 @@ import useConfirmation from "../../../hooks/useConfirmation"
 import useErrorMessage from "../../../hooks/useErrorMessage"
 import SectionHeading from "../../reusableCompontents/SectionHeading"
 import ClickableButton from "../../reusableCompontents/ClickableButton"
+import LabeledInput from "../../reusableCompontents/LabeledInput"
 
 
 
 export default function NameChange() {
     const [isPending, setIsPending] = useState(false)
-    const [isVisible, setIsVisible] = useState(false)
 
     const name = useRef<HTMLInputElement>(null)
     const password = useRef<HTMLInputElement>(null)
@@ -65,18 +63,12 @@ export default function NameChange() {
             <SectionHeading sectionHeading>Zmena Verejného Mena</SectionHeading>
 
             <form onSubmit={submit} name="name change">
-                <div className="labeled-input">
-                    <input name='new-name' className="form-input" required minLength={5} ref={name} type="text" />
-                    <label htmlFor="new-name">Nové meno</label>
-                </div>
+                <LabeledInput name="new-name" required minLength={5} ref={name} label="Nové meno" htmlFor="new-name" />
                 <br/>
-                <div className="labeled-input" style={{marginTop: '5px'}}>
-                    <input name="password" className="form-input" type={isVisible ? 'text' : "password"} required minLength={8} ref={password} />
-                    <label htmlFor="passwrd">Heslo</label>
-                    <FontAwesomeIcon className='center-right' icon={isVisible ? faEye : faEyeSlash} onClick={() => setIsVisible(p => !p)} style={{position: 'absolute'}} />
+                <div style={{marginTop: '5px'}}>
+                    <LabeledInput htmlFor="password" name="password" label="Heslo" minLength={8} required ref={password} withToggleVisible />
                 </div>
-
-
+            
                 <ClickableButton withContainer disabled={isPending} type='submit'>Uložiť</ClickableButton>
 
             </form>

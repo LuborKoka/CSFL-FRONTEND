@@ -10,8 +10,13 @@ import { faCaretDown, faRightLong, faSquareCheck, faTriangleExclamation } from "
 import useConfirmation from "../../../hooks/useConfirmation";
 import useErrorMessage from "../../../hooks/useErrorMessage";
 import ReactSwitch from 'react-switch'
-import { DARKBLUE } from "../../../constants";
+import { DARK, LIGHT } from "../../../constants";
 import UserTip from "../../reusableCompontents/UserTip";
+import SectionHeading from "../../reusableCompontents/SectionHeading";
+import ContentPopUp from "../../reusableCompontents/ContentPopUp";
+import useThemeContext from "../../../hooks/useThemeContext";
+import LabeledInput from "../../reusableCompontents/LabeledInput";
+import ClickableButton from "../../reusableCompontents/ClickableButton";
 
 type Props = {
     setIsAddingVerdict: React.Dispatch<React.SetStateAction<boolean>>
@@ -22,33 +27,31 @@ export default function Verdict({ setIsAddingVerdict }: Props) {
 
     const query = useQuery([`race_reports_FIA_${raceID}`], () => fetchReports(raceID), {staleTime: Infinity})
 
+    const [isDarkTheme] = useThemeContext()
+
 
     function closeWindow() {
         setIsAddingVerdict(false)
     }
 
     return(
-        <div className='pop-up-bg' onClick={closeWindow}>
-            <div className='pop-up-content' onClick={(e) => e.stopPropagation()}>
-                <div className='sticky-heading'>
-                    <h2 className='section-heading header-with-time fade-in-out-border'>
-                        {'FIA: '}{query.data?.raceName}
-                        <FontAwesomeIcon onClick={closeWindow} className='close-icon' icon={faRectangleXmark} />
-                    </h2>
-                </div>
-
-                <UserTip style={{marginBottom: '1.5rem'}}>
-                    Keď už raz odošleš rozhodnutie reportu, nebude sa dať zmeniť.<br/>Keď potrebuješ odstrániť penalizáciu (napríklad za traťové limity), naklikaj tam záporné hodnoty.
-                </UserTip>
-
-                {
-                    query.data?.reports.map(r => 
-                        <ReportSection rank={r.rank} from={r.fromDriver} targets={r.targets} key={r.reportID} reportID={r.reportID} />
-                    )
-                }
-
+        <ContentPopUp closePopUp={closeWindow}>
+            <div className={`sticky-heading ${isDarkTheme ? 'dark' : 'light'}-bg `}>
+                <SectionHeading sectionHeading withTime time={<FontAwesomeIcon onClick={closeWindow} className='close-icon' icon={faRectangleXmark} />}>
+                    {'FIA: '}{query.data?.raceName}
+                </SectionHeading>
             </div>
-        </div>
+
+            <UserTip style={{marginBottom: '1.5rem'}}>
+                Keď už raz odošleš rozhodnutie reportu, nebude sa dať zmeniť.<br/>Keď potrebuješ odstrániť penalizáciu (napríklad za traťové limity), naklikaj tam záporné hodnoty.
+            </UserTip>
+
+            {
+                query.data?.reports.map(r => 
+                    <ReportSection rank={r.rank} from={r.fromDriver} targets={r.targets} key={r.reportID} reportID={r.reportID} />
+                )
+            }
+        </ContentPopUp>
     )
 }
 
@@ -72,6 +75,8 @@ function ReportSection({ rank, from, targets, reportID }: RSProps) {
     const [isSubmitted, setIsSubmitted] = useState(false)
     const [isPending, setIsPending] = useState(false)
     const [height, setHeight] = useState('0px')
+
+    const [isDarkTheme] = useThemeContext()
 
     const container = useRef<HTMLDivElement>(null)
     const penalties = useRef<{time: number, penaltyPoints: number, driverID: string, isDSQ: boolean}[]>([])
@@ -168,8 +173,8 @@ function ReportSection({ rank, from, targets, reportID }: RSProps) {
             <form className='expand-verdict-container' style={{maxHeight: isExpanded ? height : '0px'}} onSubmit={submit}>
                 <div ref={container} className='verdict-container'>
                     <div className='inchident labeled-input'>
-                        <textarea ref={content} name='verdict' required readOnly={isSubmitted} />
-                        <label htmlFor='verdict'>Rozhodnutie FIA</label>
+                        <textarea className={`${isDarkTheme ? 'light' : 'dark'}-text`} ref={content} name='verdict' required readOnly={isSubmitted} />
+                        <label className={`${isDarkTheme ? 'dark' : 'light'}-bg`} htmlFor='verdict'>Rozhodnutie FIA</label>
                     </div>
 
                     <div className={`verdict-drivers-container`}>
@@ -185,11 +190,9 @@ function ReportSection({ rank, from, targets, reportID }: RSProps) {
                     </div>
                     
                     { /* isSubmitted namiesto is pending, aby sa nedalo znova odoslat report, !nemazat! */}
-                    <div className='submit-button-container'>
-                        <button type="submit" className={`clickable-button ${( isSubmitted || isPending ) ? 'button-disabled' : ''}`} disabled={isSubmitted} >
-                            Odoslať
-                        </button>
-                    </div>
+                    <ClickableButton withContainer type="submit" disabled={isSubmitted || isPending}>
+                        Odoslať
+                    </ClickableButton>
                 </div>                
             </form>
 
@@ -210,6 +213,8 @@ type PenaltyProps = {
 
 function Penalty({ driverID, driverName, setPenalty, isSubmitted }: PenaltyProps) {
     const [data, setData] = useState({points: 0, time: 0, isDSQ: false})
+
+    const [isDarkTheme] = useThemeContext()
 
     function setTime(e: React.ChangeEvent<HTMLInputElement>) {
         setData(p => {return {...p, time: e.target.valueAsNumber}})
@@ -233,19 +238,15 @@ function Penalty({ driverID, driverName, setPenalty, isSubmitted }: PenaltyProps
         <div className='verdict-driver-item' >
             <span><b>{driverName}</b></span>
 
-            <div className='labeled-input'>
-                <input name="time-penalty" value={data.time} className='form-input' type="number" onChange={setTime} readOnly={isSubmitted} />
-                <label htmlFor="time-penalty">Časová penalizácia</label>
-            </div>
-            <div className='labeled-input'>
-                <input name="penalty-points" value={data.points} className='form-input' type="number" min={0} onChange={setPoints} readOnly={isSubmitted} />
-                <label htmlFor="penalty-points">Trestné body</label>
-            </div>    
+            <LabeledInput name="time-penalty" label="Časová penalizácia" value={isSubmitted ? '' : data.time} type="number" onChange={setTime}
+                readOnly={isSubmitted} htmlFor="time-penalty" />
+            <LabeledInput name="penalty-points" label="Trestné body" type="number" min={0} onChange={setPoints}
+                readOnly={isSubmitted} htmlFor="penalty-points" />    
             <label className='center clickable-button' style={{columnGap: '2rem', transition: 'opacity .2s', opacity: data.isDSQ ? '1' : '.5', cursor: isSubmitted ? 'default' : 'pointer'}}>
                 <b style={{fontSize: '20px'}}>
                     Diskvalifikácia
                 </b>
-                <ReactSwitch onChange={setIsDsq} checked={data.isDSQ} offColor={DARKBLUE} />
+                <ReactSwitch onChange={setIsDsq} checked={data.isDSQ} offColor={isDarkTheme ? DARK : LIGHT} />
             </label>
         </div>
     )

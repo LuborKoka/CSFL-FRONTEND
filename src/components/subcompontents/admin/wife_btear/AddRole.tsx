@@ -7,6 +7,7 @@ import { selectSingleValueStyles } from "../edit season related/CreateRace"
 import { useState } from "react"
 import useConfirmation from "../../../../hooks/useConfirmation"
 import useErrorMessage from "../../../../hooks/useErrorMessage"
+import useThemeContext from "../../../../hooks/useThemeContext"
 
 
 
@@ -19,6 +20,7 @@ export default function AddRole() {
     const [message, showMessage] = useErrorMessage()
 
     const user = useUserContext()[0]
+    const [isDarkTheme] = useThemeContext()
 
     const query = useQuery(['all-users'], () => fetchUsers(user?.token))
     const queryClient = useQueryClient()
@@ -58,12 +60,12 @@ export default function AddRole() {
         <>
             <h2 className='section-heading fade-in-out-border'>Pridať rolu</h2>
             <form onSubmit={submit}>
-                <Select styles={selectSingleValueStyles()} value={value} onChange={handleChange} required
+                <Select styles={selectSingleValueStyles(isDarkTheme)} value={value} onChange={handleChange} required
                 options={query.data?.users.map(u => ({label: `${u.driver_name}, ${u.username}`, value: u.user_id}))} />
 
                 <br/>
 
-                <Select styles={selectSingleValueStyles()} value={roleValue} onChange={handleRoleChange} required
+                <Select styles={selectSingleValueStyles(isDarkTheme)} value={roleValue} onChange={handleRoleChange} required
                 options={query.data?.roles.map(r => ({value: r.role_id, label: r.role_name}))}
                 />
                     

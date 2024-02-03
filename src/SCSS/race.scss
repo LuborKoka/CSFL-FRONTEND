@@ -5,16 +5,74 @@
 }
 
 
+.dark-theme-table {
+    tbody > tr:nth-child(2n) td:nth-child(2), & tbody > tr:nth-child(2n) td:nth-child(1) {
+        background-color: $DARK;
+    }
+
+    tbody > tr:nth-child(2n + 1) td:nth-child(2), & tbody > tr:nth-child(2n + 1) td:nth-child(1) {
+        background-color: #002020;
+    }
+
+    tbody tr {
+        &:hover td:nth-child(2), &:hover td:nth-child(1) {
+            background-color: $table-dark-hover !important;
+        }
+
+        &:hover {
+            background-color: $table-dark-hover !important;
+        }
+    }
+
+    tbody > tr:nth-child(2n + 1) {
+        background-color: #002020;
+    }
+
+    thead {
+        th:nth-child(1), th:nth-child(2) {
+            background-color: $DARK;
+        }
+    }
+}
+
+.light-theme-table {
+    tbody > tr:nth-child(2n) td:nth-child(2), & tbody > tr:nth-child(2n) td:nth-child(1) {
+        background-color: $LIGHT;
+    }
+
+    tbody > tr:nth-child(2n + 1) td:nth-child(2), & tbody > tr:nth-child(2n + 1) td:nth-child(1) {
+        background-color: #CFCFCF;
+    }
+
+    tbody tr {
+        &:hover td:nth-child(2), &:hover td:nth-child(1) {
+            background-color: $table-light-hover !important;
+        }
+
+        &:hover {
+            background-color: $table-light-hover !important;
+        }
+    }
+
+    tbody > tr:nth-child(2n + 1) {
+        background-color: #CFCFCF;
+    }
+
+    thead {
+        th:nth-child(1), th:nth-child(2) {
+            background-color: $LIGHT;
+        }
+    }
+}
+
 .table {
     border-collapse: collapse;
 
     tbody tr {
-        transition: background-color .2s !important;
+        //transition: background-color .2s;
         position: relative;
 
-        &:hover {
-            background-color: #244 !important;
-        }
+        
     }
 
     thead {
@@ -24,10 +82,6 @@
     tr td {
         padding: .5rem 0;
     }
-
-    & tbody > tr:nth-child(2n + 1) {
-        background-color: #002020;
-    }
 }
 
 
@@ -36,20 +90,16 @@
         z-index: 1;
         position: sticky;
         left: -5px;
-        background-color: $darkblue;
-        border-top: 2px solid $darkblue;
+        //border-top: 2px solid $darkblue;
     }
 
     thead th:nth-child(2) {
-        background-color: $darkblue;
         z-index: 1;
         position: sticky;
         left: 27px;
     }
 
-    tbody tr:hover td:nth-child(2), tbody tr:hover td:nth-child(1) {
-        background-color: #244 !important;
-    }
+    
     
 
     tbody tr {
@@ -73,14 +123,14 @@
     }
 
     & tbody > tr:nth-child(2n) td:nth-child(2), & tbody > tr:nth-child(2n) td:nth-child(1) {
-        background-color: $darkblue;
-        transition: background-color .2s;
+        //background-color: $darkblue;
+        //transition: background-color .2s;
         z-index: 1;
     }
 
     & tbody > tr:nth-child(2n + 1) td:nth-child(2), & tbody > tr:nth-child(2n + 1) td:nth-child(1) {
-        background-color: #002020;
-        transition: background-color .2s;
+        //background-color: #002020;
+        //transition: background-color .2s;
         z-index: 1;
     }
 
@@ -134,7 +184,7 @@
         position: absolute;
         content: '';
         inset: -2px 0 0 0;
-        background-color: $darkblue;
+        background-color: currentColor;
     }
 }
 
@@ -162,7 +212,6 @@
     div {
         width: 40px;
         transition: opacity 1s ease-in;
-        font-weight: bold;
     }
 }
 
@@ -172,19 +221,14 @@
     .box {
         font-weight: bold;
         width: 50%;
-        color: $darkblue;
         border-radius: 5px;
         padding: 8px 0;
         cursor: pointer;
         transition: box-shadow .2s;
     }
 
-    .active {
-        background-color: $white;
-    }
-
     .inactive {
-        background-color: rgba($white, .7);
+        opacity: .7;
     }
 }
 
@@ -297,17 +341,17 @@ input:checked + .slider:before {
     overflow-x: auto;
 }
 
-#race-results {
-    & > tr:first-child  {
-        color: gold;
+.race-results {
+    & > tr:nth-child(1) {
+        font-weight: 1000;
     }
-
+    
     & > tr:nth-child(2) {
-        color: silver;
+        font-weight: 1000;
     }
 
     & > tr:nth-child(3) {
-        color: coral;
+        font-weight: 1000;
     }
 
     tr {
@@ -331,6 +375,35 @@ input:checked + .slider:before {
     }
 }
 
+.race-results.dark {
+    & > tr:first-child  {
+        color: gold;
+    }
+
+    & > tr:nth-child(2) {
+        color: silver;
+    }
+
+    & > tr:nth-child(3) {
+        color: coral;
+    }
+}
+
+.race-results.light {
+    & > tr:first-child  {
+        color: rgb(193, 164, 0);
+    }
+
+    & > tr:nth-child(2) {
+        color: grey;
+    }
+    
+    & > tr:nth-child(3) {
+        color: rgb(235, 107, 60);
+    }
+    
+}
+
 
 .purple {
     color: purple;
@@ -350,7 +423,11 @@ input:checked + .slider:before {
 
 
 @media (hover:hover) {
-    .switch-container .box:hover {
-        box-shadow: 0 0 2px 1px inset rgba($darkblue, .8);
+    .switch-container .dark-bg:hover {
+        box-shadow: 0 0 2px 1px inset rgba($LIGHT, .7);
+    }
+
+    .switch-container .light-bg:hover {
+        box-shadow: 0 0 2px 1px inset rgba($DARK, .7);
     }
 }

@@ -1,7 +1,8 @@
 import React from "react";
 import '../../../styles/race.css';
-import { Link, useOutletContext } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import { RaceContext } from "../../controls/SeasonNav";
+import TiltableCard from "../../reusableCompontents/TiltableCard";
 import { URI } from "../../../App";
 
 
@@ -24,18 +25,11 @@ export default function Race({ id, isSprint, raceName, date, image }: Props) {
     }
 
     return(
-
-        <Link className='tiltable-card card' onClick={setRace} to={`race/${id}/overview`} >
-            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-
-            <div className='content'>
-                <b>{`${isSprint ? 'Sprint: ' : ''}${raceName}`}</b>
+        <TiltableCard to={`race/${id}/overview`} onClick={setRace}>
+            <b>{`${isSprint ? 'Sprint: ' : ''}${raceName}`}</b>
                 <img src={`${URI}/media/${image}/`} style={{objectFit: 'cover'}} alt={raceName} width='200px' height='100px' />
-                <p>{convertTimeStamp(date)}</p>
-            </div>
-        </Link>
+            <p>{convertTimeStamp(date)}</p>
+        </TiltableCard>
     )
 }
 

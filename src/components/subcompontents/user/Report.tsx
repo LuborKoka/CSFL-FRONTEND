@@ -1,13 +1,16 @@
-import React, { useState, forwardRef, ForwardedRef } from "react";
+import React, { useState, forwardRef, ForwardedRef, useEffect } from "react";
 import { ReportResponseProps, ReportType } from "../../screens/Reports";
 import ReportVideo from "./ReportVideo";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMessage, faPaperclip, faReply, faRightLong, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { faRectangleXmark } from '@fortawesome/free-regular-svg-icons'
-import FIA from '../../../images/logo_Fia.svg' 
 import ReportVerdict from "./ReportVerdict";
 import useRaceContext from "../../../hooks/useRaceContext";
 import SectionHeading from "../../reusableCompontents/SectionHeading";
+import { URI } from "../../../App";
+import useThemeContext from "../../../hooks/useThemeContext";
+import ContentPopUp from "../../reusableCompontents/ContentPopUp";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 type Props = {
     setResponseData: React.Dispatch<React.SetStateAction<{isActive: boolean, rank: number, from: string, targets: {name: string, id: string}[]}>>,
@@ -18,13 +21,24 @@ function Report({ rank, verdict, penalties, reportID, videos, content, createdAt
     const [isViewingResponses, setIsViewingResponses] = useState(false)
     const [isViewingVerdict, setIsViewingVerdict] = useState(false)
 
+    const setSearchParams = useSearchParams()[1]
+
+    const [isDarkTheme] = useThemeContext()
+
     function openResponseForm() {
         setResponseData({rank: rank, isActive: true, from: from.name, targets: targets})
         setRaceContext(p => {return {...p, reportID: reportID}})
+        setSearchParams(`new_r=${rank}`)
+        }
+
+    function openResponses() {
+        setIsViewingResponses(true)
+        setSearchParams(`r=${rank}`)
     }
 
     function openVerdict() {
         setIsViewingVerdict(true)
+        setSearchParams(`v=${rank}`)
     }
 
     return( 
@@ -51,8 +65,8 @@ function Report({ rank, verdict, penalties, reportID, videos, content, createdAt
                 }
             </div>
             <div className='labeled-input' style={{marginTop: '3rem'}}>
-                <p className='text-content'>{content}</p>
-                <label>Inchident</label>
+                <p className={`text-content ${isDarkTheme ? 'dark' : 'light'}`}>{content}</p>
+                <label className={`${isDarkTheme ? 'dark' : 'light'}-bg`}>Inchident</label>
             </div>
 
             <br/><br/>
@@ -77,22 +91,22 @@ function Report({ rank, verdict, penalties, reportID, videos, content, createdAt
             <br/>
 
             <div className="single-row" style={{justifyContent: 'space-evenly', whiteSpace:  'nowrap'}}>
-                <span className='clickable-button' onClick={openResponseForm}>
+                <span className='clickable-button mobile-single-column' onClick={openResponseForm}>
                     <FontAwesomeIcon icon={faReply} /> Odpovedať
                 </span>
 
-                <span className='clickable-button' onClick={() => setIsViewingResponses(true)}>
-                    <span className="single-row" style={{columnGap: '5px'}}>
+                <span className='clickable-button' onClick={openResponses}>
+                    <span className="single-row mobile-single-column" style={{columnGap: '5px'}}>
                         <div style={{position: 'relative'}}>
                             <FontAwesomeIcon style={{transform: 'translateY(10%)'}} icon={faMessage} />
-                            <p className="response-count" >{responses.length}</p>
+                            <p className={`response-count ${isDarkTheme ? 'dark-text' : 'light-text'}`} >{responses.length}</p>
                         </div>
-                         Zobraziť odpovede
+                        Odpovede
                     </span>
                 </span>
 
-                <span className='clickable-button' onClick={openVerdict}>
-                    <img src={FIA} alt="FIA" className="fia-logo" /> Rozhodnutie FIA
+                <span className='clickable-button mobile-single-column' onClick={openVerdict}>
+                    <img src={`${URI}/media/images/logo_Fia_${isDarkTheme ? 'dark' : 'light'}_mode.svg`} alt="FIA" className="fia-logo" /> Rozhodnutie FIA
                 </span>
             </div>
 
@@ -121,52 +135,67 @@ type ResListProps = {
 }
 
 function ResponseList({ responses, setOpen, rank }: ResListProps) {
+    const [isDarkTheme] = useThemeContext()
+    const navigate = useNavigate()
+    
     function closeWindow() {
         setOpen(false)
+        navigate(-1)
     }
 
+    useEffect(() => {
+        const originalPopstateListener = window.onpopstate
+
+        const handlePopstate = () => {
+            setOpen(false)
+        }
+    
+        window.addEventListener('popstate', handlePopstate)
+    
+        return () => {
+          window.removeEventListener('popstate', handlePopstate)
+          window.onpopstate = originalPopstateListener
+        }
+      }, [setOpen])
+
     if ( responses.length === 0 ) return(
-        <div className='pop-up-bg'>
-            <div className='pop-up-content'>
-                <div className='sticky-heading'>
-                    <h2 className='section-heading header-with-time fade-in-out-border'>
-                        {`Odpovede k reportu #${rank}`}
-                        <FontAwesomeIcon onClick={closeWindow} className='close-icon' icon={faRectangleXmark} />
-                    </h2>
-                </div>
-
-
-                <br/><br/>
-
-                <h2 className='section-heading' style={{textAlign: 'center'}}>
-                    Zatiaľ tu nič nie je.
-                </h2>
+        <ContentPopUp closePopUp={closeWindow}>
+            <div className={`sticky-heading ${isDarkTheme ? 'dark' : 'light'}-bg`}>
+                <SectionHeading sectionHeading withTime time={<FontAwesomeIcon onClick={closeWindow} className='close-icon' icon={faRectangleXmark} />}>
+                    {`Odpovede k reportu #${rank}`}
+                    
+                </SectionHeading>
             </div>
-        </div>
+
+
+            <br/><br/>
+
+            <SectionHeading sectionHeading style={{textAlign: 'center'}}>
+                Zatiaľ tu nič nie je.
+            </SectionHeading>
+        </ContentPopUp>
     )
 
     return(
-        <div className='pop-up-bg' onPointerDown={closeWindow}>
-            <div className='pop-up-content' onPointerDown={(e) => e.stopPropagation()}>
-                <div className='sticky-heading'>
-                    <h2 className='section-heading header-with-time fade-in-out-border'>
-                        {`Odpovede k reportu #${rank}`}
-                        <FontAwesomeIcon onClick={closeWindow} className='close-icon' icon={faRectangleXmark} />
-                    </h2>
-                    
-                </div>
-
-                {
-                    responses.map(r => <Response {...r} key={r.id} />)
-                }
+        <ContentPopUp closePopUp={closeWindow}>
+            <div className={`sticky-heading ${isDarkTheme ? 'dark' : 'light'}-bg`}>
+                <SectionHeading sectionHeading withTime time={<FontAwesomeIcon onClick={closeWindow} className='close-icon' icon={faRectangleXmark} />}>
+                    {`Odpovede k reportu #${rank}`}
+                </SectionHeading>
+                
             </div>
-        </div>
+
+            {
+                responses.map(r => <Response {...r} key={r.id} />)
+            }
+        </ContentPopUp>
     )
 }
 
 
 
 function Response({ driverName, id, videos, content, createdAt }: ReportResponseProps) {
+    const [isDarkTheme] = useThemeContext()
 
     return(
         <div className='fade-in-out-border' style={{padding: '0 1rem', position: 'relative', paddingBottom: '2rem', marginBottom: '2rem'}}>
@@ -174,7 +203,7 @@ function Response({ driverName, id, videos, content, createdAt }: ReportResponse
             <br/>
             <div className='labeled-input'>
                 <p className='text-content'>{content}</p>
-                <label>Inchident</label>
+                <label className={`${isDarkTheme ? 'dark' : 'light'}-bg`}>Inchident</label>
             </div>
 
             <br/><br/>

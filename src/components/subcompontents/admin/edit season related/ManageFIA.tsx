@@ -8,6 +8,7 @@ import { selectMultiValueStyles } from '../../user/AddReport'
 import useConfirmation from '../../../../hooks/useConfirmation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
+import useThemeContext from '../../../../hooks/useThemeContext'
 
 
 export default function ManageFIA() {
@@ -17,6 +18,7 @@ export default function ManageFIA() {
     const { seasonID } = useParams()
 
     const { user } = useContext(UserContext as Context<UserTypes>)
+    const [isDarkTheme] = useThemeContext()
 
     const query = useQuery([`fia-candidates-${seasonID}`], () => fetchFiaCandidates(seasonID, user?.token), { staleTime: Infinity })
     const queryClient = useQueryClient()
@@ -65,10 +67,10 @@ export default function ManageFIA() {
                 Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
             }
         })
-        .then(r => {
+        .then(() => {
             showConfirmation(confirm)
         })
-        .catch(e => {
+        .catch(() => {
 
         })
     }
@@ -99,7 +101,7 @@ export default function ManageFIA() {
 
                 <form onSubmit={submit}>
                     <div className='labeled-input'>
-                        <Select name='fia-options' styles={selectMultiValueStyles()} onChange={handleChange} value={values} isMulti
+                        <Select name='fia-options' styles={selectMultiValueStyles(isDarkTheme)} onChange={handleChange} value={values} isMulti
                         options={options} closeMenuOnSelect={false} isDisabled={isDisabled}  />
 
                         { isDisabled ? icons : null}

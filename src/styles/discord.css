@@ -3,15 +3,21 @@
 }
 .discord-account-info img {
   margin-left: 50px;
+  position: relative;
+  z-index: 1;
 }
 .discord-account-info .account {
   position: relative;
   border-radius: 15px;
-  background-color: #101616;
   margin-top: -2.5rem;
   padding: 3rem 0 2rem calc(50px + 2rem);
   text-align: left;
-  z-index: -1;
+}
+.discord-account-info .account.dark {
+  background-color: #101616;
+}
+.discord-account-info .account.light {
+  background-color: #CFCFCF;
 }
 
 .discord-account-grid {

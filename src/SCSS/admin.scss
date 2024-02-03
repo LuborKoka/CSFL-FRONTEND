@@ -13,16 +13,18 @@
 }
 
 .input-date {
-    color: $white;
-    background-color: $darkblue;
-    box-shadow: 0 0 10px rgba($white, .4);
+    box-shadow: 0 0 10px color-mix(in srgb, currentColor 40%, transparent);
     border: none;
     width: 100%;
     padding: 5px 10px;
     height: 100%;
 
     &::-webkit-calendar-picker-indicator {
-        color: $white
+        opacity: 0;
+    }
+
+    &::-moz-calendar-picker-indicator {
+        opacity: 0;
     }
 }
 

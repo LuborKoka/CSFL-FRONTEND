@@ -1,10 +1,12 @@
 import React, { useRef, useState } from 'react';
-import Select, { SingleValue, StylesConfig, ActionMeta } from 'react-select';
+import Select, { SingleValue, StylesConfig } from 'react-select';
 import { Race } from './Schedule';
-import { DARKBLUE, RED, WHITE } from "../../../../constants";
+import { DARK, DARKBLUE, LIGHT, RED } from "../../../../constants";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import ReactSwitch from 'react-switch';
+import useThemeContext from '../../../../hooks/useThemeContext';
+import { hexToRgba } from '../../user/AddReport';
 
 type Props = {
     options: {
@@ -25,12 +27,14 @@ export default function CreateRace({ options, racesList, elementID, deleteForm }
     const data = useRef<Race>({trackID: '', timestamp: '', id: elementID, hasSprint: false})
     const [isChecked, setIsChecked] = useState(false)
 
+    const [isDarkTheme] = useThemeContext()
+
     function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
         data.current = {...data.current, timestamp: e.target.value}
         submitForm()
     }
 
-    function handleRaceInput(v: SingleValue<Option>, m: ActionMeta<Option>) {
+    function handleRaceInput(v: SingleValue<Option>) {
         if ( v === null ) return
         data.current = {...data.current, trackID: v.value}
         submitForm()
@@ -60,7 +64,7 @@ export default function CreateRace({ options, racesList, elementID, deleteForm }
     return(
         <div className='new-race fade-in-out-border'>
 
-            <Select onChange={handleRaceInput} isMulti={false} options={options} styles={selectSingleValueStyles()} placeholder='Vyber veľkú cenu' />
+            <Select onChange={handleRaceInput} isMulti={false} options={options} styles={selectSingleValueStyles(isDarkTheme)} placeholder='Vyber veľkú cenu' />
                 
             <div className='two-columns' style={{marginTop: '2rem'}}>
                <div className='center'>
@@ -75,7 +79,7 @@ export default function CreateRace({ options, racesList, elementID, deleteForm }
                </div>
 
                 <div className='date-time-picker'>
-                    <input onChange={handleInput} className='input-date' type='datetime-local'/>
+                    <input onChange={handleInput} className={`input-date ${isDarkTheme ? 'dark-bg light-text' : 'light-bg dark-text'}`} type='datetime-local'/>
                     <FontAwesomeIcon icon={faCaretDown} />
                 </div>
             </div>
@@ -88,7 +92,11 @@ export default function CreateRace({ options, racesList, elementID, deleteForm }
 
 
 
-export function selectSingleValueStyles(boxShadowColor = 'rgba(239, 239, 239, 0.4)') {
+export function selectSingleValueStyles(isDarkTheme: boolean, boxShadowColor?: string) {
+    const defaultTextColor = isDarkTheme ? LIGHT : DARK
+    const defaultBgColor = isDarkTheme ? DARK : LIGHT
+    const shadowColor = boxShadowColor || hexToRgba(defaultTextColor, .4)
+
     const selectSingleValueStyles: StylesConfig<Option, false> = {
         control: (styles) => {
             return {
@@ -96,7 +104,7 @@ export function selectSingleValueStyles(boxShadowColor = 'rgba(239, 239, 239, 0.
                 cursor: 'text',
                 backgroundColor: 'transparent',
                 border: 'none',
-                boxShadow: `0px 0px 8px ${boxShadowColor}`,
+                boxShadow: `0px 0px 8px ${shadowColor}`,
                 padding: '3px 10px',
                 fontSize: '20px',
                 minWidth: '320px'
@@ -105,26 +113,26 @@ export function selectSingleValueStyles(boxShadowColor = 'rgba(239, 239, 239, 0.
         placeholder: styles => {
             return {
                 ...styles,
-                color: WHITE,
+                color: defaultTextColor,
                 opacity: '.7'
             }
         },
         input: styles => {
             return {
                 ...styles,
-                color: WHITE
+                color: defaultTextColor
             }
         },
         option: (styles) => {
             return {
                 ...styles,
-                backgroundColor: WHITE,
-                color: DARKBLUE,
-                transition: 'all .2s',
+                backgroundColor: defaultTextColor,
+                color: defaultBgColor,
+            transition: 'all .2s',
                 cursor: 'pointer',
                 ':hover': {
-                    color: WHITE,
-                    backgroundColor: DARKBLUE
+                    color: defaultTextColor,
+                    backgroundColor: defaultBgColor
                 }
             }
         },
@@ -132,7 +140,7 @@ export function selectSingleValueStyles(boxShadowColor = 'rgba(239, 239, 239, 0.
             return {
                 ...styles,
                 cursor: 'pointer',
-                color: WHITE,
+                color: defaultTextColor,
                 opacity: .8,
                 ':hover': {
                     opacity: 1
@@ -157,10 +165,9 @@ export function selectSingleValueStyles(boxShadowColor = 'rgba(239, 239, 239, 0.
         singleValue: styles => {
             return {
                 ...styles,
-                color: WHITE
+                color: defaultTextColor
             }
         }
-        // Add other property handlers as necessary...
     };
 
     return selectSingleValueStyles

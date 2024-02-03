@@ -1,6 +1,6 @@
-import React, { useState, useRef, useContext, Context, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import axios from 'axios'
-import { URI, UserContext, UserTypes, insertTokenIntoHeader } from '../../../../App'
+import { URI, insertTokenIntoHeader } from '../../../../App'
 import { useQuery } from '@tanstack/react-query'
 import Select, { SingleValue } from 'react-select'
 import { selectSingleValueStyles } from '../edit season related/CreateRace'
@@ -10,6 +10,9 @@ import useConfirmation from '../../../../hooks/useConfirmation'
 import SingleDriverResult from './SingleDriverResults'
 import useErrorMessage from '../../../../hooks/useErrorMessage'
 import UserTip from '../../../reusableCompontents/UserTip'
+import ClickableButton from '../../../reusableCompontents/ClickableButton'
+import useThemeContext from '../../../../hooks/useThemeContext'
+import useUserContext from '../../../../hooks/useUserContext'
 
 type Results = {
     results: {
@@ -35,7 +38,8 @@ export default function SetRaceResults({ raceID }: ResultsProps) {
     const [isDisabledEditing, setIsDisabledEditing] = useState(true)
     const [fastestLapDriver, setFastestLapDriver] = useState<{label: string, value: string} | null>(null)
 
-    const { user } = useContext(UserContext as Context<UserTypes>)
+    const [user] = useUserContext()
+    const [isDarkTheme] = useThemeContext()
 
     const query = useQuery([`edit-race-results-${raceID}`], () => fetchRaceResults(raceID, user?.token), {staleTime: Infinity})
 
@@ -113,8 +117,8 @@ export default function SetRaceResults({ raceID }: ResultsProps) {
 
     const buttons =
     <div className='submit-button-container'>
-        <button className='clickable-button' type='reset' onClick={() => setIsDisabledEditing(true)}>Zrušiť</button>
-        <button className={`clickable-button ${isPending ? 'button-disabled' : ''}`} disabled={isPending} type="submit">Odoslať výsledky</button>
+        <ClickableButton type='reset' onClick={() => setIsDisabledEditing(true)}>Zrušiť</ClickableButton>
+        <ClickableButton disabled={isPending}>Odoslať výsledky</ClickableButton>
     </div>
 
 
@@ -142,7 +146,7 @@ export default function SetRaceResults({ raceID }: ResultsProps) {
                 
                 
                 <div className='labeled-input' style={{padding: '0 1rem', marginTop: '1rem'}}>
-                    <Select required placeholder='Hľadať' styles={selectSingleValueStyles()} onChange={handleFastestLapChange} value={fastestLapDriver} isDisabled={isDisabledEditing}
+                    <Select required placeholder='Hľadať' styles={selectSingleValueStyles(isDarkTheme)} onChange={handleFastestLapChange} value={fastestLapDriver} isDisabled={isDisabledEditing}
                     options={query.data === undefined ? [] : query.data.drivers.map(d => {return {label: d.name, value: d.id}})} name='fl-owner' />
                     <label style={{transform: 'translate(-.2rem, -1.5rem) scale(.8)'}} htmlFor='fl-owner'>Majiteľ najrýchlejšieho kola</label>
                 </div>

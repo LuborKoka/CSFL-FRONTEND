@@ -5,16 +5,25 @@
     max-width: 356px;
     img {
         margin-left: 50px;
+        position: relative;
+        z-index: 1;
     }
 
     .account {
         position: relative;
         border-radius: 15px;
-        background-color: #101616;
         margin-top: -2.5rem;
         padding: 3rem 0 2rem calc(50px + 2rem);
         text-align: left;
-        z-index: -1;
+
+
+        &.dark {
+            background-color: #101616;
+        }
+
+        &.light {
+            background-color: #CFCFCF;
+        }
     }
 }
 

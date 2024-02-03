@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useQuery } from "@tanstack/react-query";
 import { fetchDrivers } from "../subcompontents/user/RaceOverview";
 import { fetchData } from "../screens/Season";
+import useThemeContext from "../../hooks/useThemeContext";
 
 type Data = {
     seasonName: string,
@@ -23,6 +24,8 @@ export default function SeasonNav() {
     const query = useQuery([`race_${raceID}_drivers_overview`], () => fetchDrivers(raceID))
     const season = useQuery([`scheduled-races-${seasonID}`], () => fetchData(seasonID))
 
+    const [isDarkTheme] = useThemeContext()
+
     useEffect(() => {
         setContext(p => {
             return {...p, seasonName: season.data?.seasonName || ''}
@@ -32,18 +35,18 @@ export default function SeasonNav() {
     return(
        //no neda sa nic robit, bude to mat ine classname podal toho, co vrati location.pathname, lebo toto ma v pici cely responzivny design
         <div className={location.pathname.includes('/race') ? 'content-container' : 'season-with-race-cards'}> 
-            <div className='header-navigation'>
+            <div className={`header-navigation ${isDarkTheme ? 'dark' : 'light'}-bg`}>
                 <h3>{season.data?.seasonName}</h3>
                 <div className='breadcrumbs'>
-                    <Link className='link' to={`/seasons/${seasonID}`}>Prehľad ročníka</Link>
+                    <Link className={`link ${isDarkTheme ? 'light' : 'dark'}-text`} to={`/seasons/${seasonID}`}>Prehľad ročníka</Link>
                     {
                         location.pathname.includes('/race') ?
-                        <Link className='link' to={`/seasons/${seasonID}/race/${raceID}/overview`}>{'> '}{query.data?.raceName}</Link>
+                        <Link className={`link ${isDarkTheme ? 'light' : 'dark'}-text`} to={`/seasons/${seasonID}/race/${raceID}/overview`}>{'> '}{query.data?.raceName}</Link>
                         :
                         null
                     }
                     {
-                        lastLink(location.pathname)
+                        lastLink(location.pathname, isDarkTheme)
                     }
                 </div>
             </div>
@@ -56,14 +59,14 @@ export default function SeasonNav() {
 
 
 
-function lastLink(pathname: string): JSX.Element | null {
-    if ( pathname.includes('/new-report') ) return <Link className='link' to={pathname}>{'>'} Pridať report</Link>
+function lastLink(pathname: string, isDarkTheme: boolean): JSX.Element | null {
+    if ( pathname.includes('/new-report') ) return <Link className={`link ${isDarkTheme ? 'light' : 'dark'}-text`} to={pathname}>{'>'} Pridať report</Link>
 
-    if ( pathname.includes('/reports')) return <Link className='link' to={pathname}>{'>'} Reporty</Link>
+    if ( pathname.includes('/reports')) return <Link className={`link ${isDarkTheme ? 'light' : 'dark'}-text`} to={pathname}>{'>'} Reporty</Link>
 
-    if ( pathname.includes('/results') ) return <Link className='link' to={pathname}>{'>'} Výsledky</Link>
+    if ( pathname.includes('/results') ) return <Link className={`link ${isDarkTheme ? 'light' : 'dark'}-text`} to={pathname}>{'>'} Výsledky</Link>
 
-    if ( pathname.includes('/standings') ) return <Link className='link' to={pathname}>{'>'} Tabuľka</Link>
+    if ( pathname.includes('/standings') ) return <Link className={`link ${isDarkTheme ? 'light' : 'dark'}-text`} to={pathname}>{'>'} Tabuľka</Link>
 
     
 

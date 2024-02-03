@@ -3,11 +3,12 @@ import { useLocation, useParams } from "react-router-dom"
 import { URI } from "../../../App"
 import { useQuery } from "@tanstack/react-query"
 import { useState, useTransition } from 'react'
-import { RED, WHITE } from "../../../constants"
+import { DARK, LIGHT, RED } from "../../../constants"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons"
 import Loader from "../../reusableCompontents/Loader"
 import SectionHeading from "../../reusableCompontents/SectionHeading"
+import useThemeContext from "../../../hooks/useThemeContext"
 
 
 
@@ -16,8 +17,9 @@ export default function Standings() {
     const { seasonID } = useParams()
     const [isChecked, setIsChecked] = useState(false)
     const [isPoints, setIsPoints] = useState(false)
+    const [isDarkTheme] = useThemeContext()
 
-    const query = useQuery([`season_standings_${seasonID}`], () => fetchStandings(seasonID))
+    const { data, isLoading } = useQuery([`season_standings_${seasonID}`], () => fetchStandings(seasonID))
 
     const location = useLocation()
 
@@ -30,15 +32,20 @@ export default function Standings() {
         })
     }
 
-    if ( query.isLoading ) return(
-        <>
-            <SectionHeading>Tabuľka priebežného poradia</SectionHeading>
-            <Loader type='standings' />
-        </>
+    if ( isLoading ) return location.pathname.includes('race') 
+        ?
+            <>
+                <SectionHeading sectionHeading>Tabuľka priebežného poradia</SectionHeading>
+                <Loader type='standings' />
+            </> 
+        :
+            <div className="section">
+                <SectionHeading sectionHeading>Tabuľka priebežného poradia</SectionHeading>
+                <Loader type='standings' />
+            </div>
         
-    )
 
-    if ( query.data?.code === 204 ) {
+    if ( data?.code === 204 ) {
         return(
             <>
                 <br/><br/>
@@ -56,18 +63,18 @@ export default function Standings() {
         <div className={ `${!location.pathname.includes('/race') ? 'section' : ''}`}>
             <SectionHeading sectionHeading>Tabuľka priebežného poradia jazdcov</SectionHeading>
             <div className="section-heading center switch-container">
-                <span className={`box center ${isChecked ? 'in' : ''}active`} onClick={() => handleChange(false)}>Poradie</span>
-                <span className={`box center ${isChecked ? '' : 'in'}active`} onClick={() => handleChange(true)}>Body</span>
+                <span className={`box center ${isChecked && 'inactive'} ${isDarkTheme ? 'light-bg dark-text' : 'dark-bg light-text'}`} onClick={() => handleChange(false)}>Poradie</span>
+                <span className={`box center ${!isChecked && 'inactive'} ${isDarkTheme ? 'light-bg dark-text' : 'dark-bg light-text'}`} onClick={() => handleChange(true)}>Body</span>
             </div>
 
 
             <div className="overflow-y">
-                <table className="table standings-table content-fade-in">
+                <table className={`table standings-table content-fade-in ${isDarkTheme ? 'dark' : 'light'}-theme-table`}>
                     <thead>
                         <tr>
-                            <th className="empty-header-item"></th><th style={{textAlign: 'left', paddingLeft: '8px'}}>Meno</th>
+                            <th className={`empty-header-item ${isDarkTheme ? 'dark' : 'light'}-text`}></th><th style={{textAlign: 'left', paddingLeft: '8px'}}>Meno</th>
                             {
-                                query.data?.data.races.map(r => 
+                                data?.data.races.map(r => 
                                 <th key={r.id} >
                                     <div className='flag-box'>
                                         <img alt='flag' style={{objectFit: 'cover', width: '100%', height: '100%', borderRadius: '2px'}}   src={`${URI}/media/${r.flag}/`} />                                   
@@ -80,7 +87,7 @@ export default function Standings() {
 
                     <tbody>
                     {
-                        query.data?.data.drivers.map((d, index) => {
+                        data?.data.drivers.map((d, index) => {
                             return(
                                 <tr key={d.driverID} style={{animationDelay: `${25*index}ms`}}>
                                     <td>{index+1}.</td>
@@ -90,9 +97,9 @@ export default function Standings() {
                                         
                                         <td key={`${d.driverID}, race${i}`}>
                                             <div className={`switcher-visible ${r.hasFastestLap && 'fl-indicator'}`}>
-                                                <div style={{color: getTextColor(r.rank)}} className={`switcher-container ${ !isPoints && 'switcher-container-rank'}`}>
-                                                    <div className={`switcher-item-${isPoints ? 'active' : 'inactive'} ${typeof r.rank === 'number' && r.rank < 4 ? 'underlined' : ''}`}>{r.points}</div>
-                                                    <div className={`switcher-item-${isPoints ? 'inactive' : 'active'} ${typeof r.rank === 'number' && r.rank < 4 ? 'underlined' : ''}`}>{r.rank}</div>
+                                                <div style={{color: getTextColor(r.rank, isDarkTheme)}} className={`switcher-container ${ !isPoints && 'switcher-container-rank'}`}>
+                                                    <div className={`switcher-item-${isPoints ? 'active' : 'inactive'} ${typeof r.rank === 'number' && r.rank < 4 ? 'underlined' : ''}`} style={{fontWeight: getFontWeight(r.rank)}}>{r.points}</div>
+                                                    <div className={`switcher-item-${isPoints ? 'inactive' : 'active'} ${typeof r.rank === 'number' && r.rank < 4 ? 'underlined' : ''}`} style={{fontWeight: getFontWeight(r.rank)}}>{r.rank}</div>
                                                 </div>
                                             </div>
                                         </td>
@@ -113,7 +120,7 @@ export default function Standings() {
 
             <br/><br/>
             <SectionHeading sectionHeading>Tabuľka priebežného poradia konštruktérov</SectionHeading>
-            <table className="table team-standings-table content-fade-in">
+            <table className={`table team-standings-table content-fade-in ${isDarkTheme ? 'dark' : 'light'}-theme-table`}>
                 <thead>
                     <tr>
                         <th></th><th>Tím</th><th>Body</th>
@@ -122,11 +129,11 @@ export default function Standings() {
 
                 <tbody>
                     {
-                        query.data?.data.teams.map((r, i) => {
+                        data?.data.teams.map((r, i) => {
                             return(
                                 <tr key={r.id}>
                                     <td>{i + 1}.</td>
-                                    <td><img style={{transform: 'translateY(5px)'}} src={`${URI}/media/${r.icon}/`} alt={r.name} width={'30px'} />{r.name}</td>
+                                    <td><img style={{transform: 'translateY(5px)'}} src={`${URI}/media/${iconName(r.icon, isDarkTheme)}/?v=1`} alt={r.name} width={'30px'} />{r.name}</td>
                                     <td>{r.points}</td>
                                 </tr>
                             )
@@ -141,13 +148,13 @@ export default function Standings() {
             <SectionHeading sectionHeading>Tabuľka trestných bodov</SectionHeading>
 
             <div className="overflow-y">
-                <table className='table standings-table content-fade-in'>
+                <table className={`table standings-table content-fade-in ${isDarkTheme ? 'dark' : 'light'}-theme-table`}>
                     <thead>
                         <tr>
-                            <th className="empty-header-item"></th>
+                            <th className={`empty-header-item ${isDarkTheme ? 'dark' : 'light'}-text`}></th>
                             <th style={{textAlign: 'left', paddingLeft: '8px'}}>Meno</th>
                             {
-                                query.data?.data.races.map((r) => 
+                                data?.data.races.map((r) => 
                                 <th key={r.id} >
                                     <div className='flag-box'>
                                         <img alt='' style={{objectFit: 'cover', width: '100%', height: '100%', borderRadius: '2px'}}   src={`${URI}/media/${r.flag}/`} />                                   
@@ -160,12 +167,12 @@ export default function Standings() {
 
                     <tbody>
                         {
-                            query.data?.data.penaltyPoints.map(p =>
+                            data?.data.penaltyPoints.map(p =>
                                 <tr key={p.id}>
                                     <td>
                                         <div style={{width: '36px'}}>
                                             { 
-                                                p.teamIcon && <img src={`${URI}/media/${p.teamIcon}/`} alt="team-icon" width='25px' />
+                                                p.teamIcon && <img src={`${URI}/media/${iconName(p.teamIcon, isDarkTheme)}/?v=1`} alt="team-icon" width='25px' />
                                             }
                                         </div>
                                     </td>
@@ -181,7 +188,7 @@ export default function Standings() {
                 </table>
             </div>
 
-            <section id='markdown' style={{margin: '2rem 0'}}>
+            <section id='markdown' className={`${isDarkTheme ? 'dark' : 'light'}-rules`} style={{margin: '2rem 0'}}>
                 <table>
                     <thead>
                         <tr>
@@ -255,15 +262,23 @@ async function fetchStandings(id: string | undefined) {
 }
 
 
-function getTextColor(rank: number | string) {
+function getTextColor(rank: number | string, isDarkTheme: boolean) {
     switch (rank) {
         case 1:
-            return 'gold'
+            return isDarkTheme ? 'gold' : 'rgb(193, 164, 0)'
         case 2:
-            return 'silver'
+            return isDarkTheme ? 'silver' : 'grey'
         case 3:
             return 'coral'
         default:
-            return WHITE
+            return isDarkTheme ? LIGHT : DARK
     }
+}
+
+function getFontWeight(rank: number | string) {
+    return Number(rank) <= 3 ? '1000' : 'bold'
+}
+
+function iconName(team: string, isDark: boolean) {
+    return team.includes('alpha_tauri') ? `team_icons/alpha_tauri_${isDark ? 'dark' : 'light'}_mode_icon.svg` : team
 }

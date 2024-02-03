@@ -13,13 +13,11 @@
         position: relative;
         text-align: center;
         border-radius: inherit;
-        background-color: $darkblue;
         grid-row: 1 / -1;
         grid-column: 1 / -1;
         transform-style: preserve-3d;
         transition: transform .2s ease-in-out;
         transform: perspective(1000px) rotateY(var(--rotateX)) rotateX(var(--rotateY));
-        color: $white;
         padding: .5rem 1rem;
 
         b {
@@ -33,7 +31,7 @@
             inset: -1rem;
             border-radius: inherit;
             //background-color: $white;
-            background: linear-gradient(-45deg, #686868, $white, $white, #686868);
+            background: linear-gradient(-45deg, #686868, currentColor, currentColor, #686868);
             transform: translateZ(-20px);
         }
     
@@ -42,7 +40,7 @@
             position: absolute;
             inset: 0;
             border-radius: inherit;
-            background-color: $darkblue;
+            background-color: $white;
             transform: translateZ(-19px);
             filter: blur(5px);
             opacity: .8;
@@ -50,6 +48,17 @@
     }
     
 }
+
+.light-card .content {
+    background-color: $LIGHT;
+    color: $DARK;
+}
+
+.dark-card .content {
+    background-color: $DARK;
+    color: $LIGHT
+}
+
 
 .tiltable-card > :not(div:last-child)  {
     z-index: 2;

@@ -6,6 +6,8 @@ import useConfirmation from "../../../../hooks/useConfirmation"
 import useErrorMessage from "../../../../hooks/useErrorMessage"
 import AddRole from "./AddRole"
 import DeleteRole from "./DeleteRole"
+import useThemeContext from "../../../../hooks/useThemeContext"
+import ClickableButton from "../../../reusableCompontents/ClickableButton"
 
 
 export default function WifeBeater() {
@@ -14,6 +16,7 @@ export default function WifeBeater() {
     const name = useRef<HTMLInputElement>(null)
 
     const user = useUserContext()[0]
+    const [isDarkTheme] = useThemeContext()
 
     const [confirmation, showConfirmation] = useConfirmation()
     const [message, showMessage] = useErrorMessage()
@@ -47,15 +50,13 @@ export default function WifeBeater() {
 
             <form onSubmit={submit}>
                 <div className="labeled-input">
-                    <input name='driver-name' type="text" className="form-input" required ref={name} />
+                    <input name='driver-name' type="text" className={`form-input ${isDarkTheme ? 'light' : 'dark'}-text`} required ref={name} />
                     <label htmlFor="driver-name">Driver name</label>
                 </div>
 
-                <div className="submit-button-container">
-                    <button type="submit" className={`clickable-button ${isPending && 'button-disabled'}`}>
-                        Odoslať
-                    </button>
-                </div>
+                <ClickableButton withContainer disabled={isPending}>
+                    Odoslať
+                </ClickableButton>
             </form>
 
             <AddRole />

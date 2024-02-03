@@ -6,6 +6,7 @@ import useConfirmation from "../../../../hooks/useConfirmation";
 import { useQueryClient } from "@tanstack/react-query";
 import SectionHeading from "../../../reusableCompontents/SectionHeading";
 import ClickableButton from "../../../reusableCompontents/ClickableButton";
+import LabeledInput from "../../../reusableCompontents/LabeledInput";
 
 export default function CreateSeason() {
     const [isPending, setIsPending] = useState(false)
@@ -54,11 +55,7 @@ export default function CreateSeason() {
             <SectionHeading sectionHeading>Vytvorenie novej sezóny</SectionHeading>
 
             <form onSubmit={submitNewSeason}>
-                <div className='labeled-input'>
-                    <input name='season-name' className='form-input' ref={name} type="text" required />
-                    <label htmlFor="season-name">Meno novej sezóny</label>
-                </div>
-
+                <LabeledInput ref={name} label="Meno novej sezóny" htmlFor="season-name" name="season-name" required />
                 <ClickableButton withContainer disabled={isPending} type="submit">Vytvoriť sezónu</ClickableButton>
             </form>
 

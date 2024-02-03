@@ -24,25 +24,41 @@
     table {
         text-transform: capitalize;
         margin: 1rem 0;
-        thead {
-            background-color: #022;
-            
-            th {
-                padding: 0.3rem .3rem .3rem .5rem;
-            }
+        thead th {
+            padding: 0.3rem .3rem .3rem .5rem;
         }
 
-        tbody {
-            tr {
-                transition: .3s;
-                &:hover {
-                    background-color: #244;
-                  }
-            }
-            td {
-              padding: .1rem .5rem;  
-            }
+        tbody td {
+            padding: .1rem .5rem;  
         }
+    }
+}
+
+.dark-rules {
+    table thead {
+        background-color: #022;
+    }
+
+    tbody tr {
+        transition: .3s;
+        &:hover {
+            background-color: #244;
+        }
+        
+    }
+}
+
+.light-rules {
+    table thead {
+        background-color: #9AA;
+    }
+
+    tbody tr {
+        transition: .3s;
+        &:hover {
+            background-color: #ABB;
+        }
+        
     }
 }
 
@@ -53,7 +69,6 @@
     max-width: 100%;
     padding: .5rem 1rem;
     background-color: transparent;
-    color: $white;
 }
 
 

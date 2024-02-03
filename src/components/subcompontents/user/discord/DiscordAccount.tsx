@@ -1,28 +1,33 @@
 import { faArrowUpRightFromSquare, faFaceSmileWink, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
-import Discord from '../../../../images/discord.svg'
+import DiscordDark from '../../../../images/discord_dark_mode.svg'
+import DiscordLight from '../../../../images/discord_light_mode.svg'
 import useUserContext from "../../../../hooks/useUserContext";
 import axios from "axios";
 import { URI, insertTokenIntoHeader } from "../../../../App";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { WHITE } from "../../../../constants";
+import { DARK, LIGHT } from "../../../../constants";
 import '../../../../styles/discord.css'
 import useConfirmation from "../../../../hooks/useConfirmation";
 import useErrorMessage from "../../../../hooks/useErrorMessage";
 import { useState } from "react";
+import SectionHeading from "../../../reusableCompontents/SectionHeading";
+import useThemeContext from "../../../../hooks/useThemeContext";
+import ClickableButton from "../../../reusableCompontents/ClickableButton";
 
 export default function DiscordAccount() {
     const [isPending, setIsPending] = useState(false)
     const user = useUserContext()[0]
 
-    const query = useQuery([`user-discord-${user?.id}`], () => fetchUserDiscord(user?.id))
+    const query = useQuery([`user-discord-${user?.id}`], () => fetchUserDiscord(user?.id), {staleTime: Infinity})
     const queryClient = useQueryClient()
 
     const [confirmation, showConfirmation] = useConfirmation()
     const [message, showMessage] = useErrorMessage()
+    const [isDarkTheme] = useThemeContext()
 
-
+    const textColor = isDarkTheme ? LIGHT : DARK
 
     function deleteDiscordAccount() {
         setIsPending(true)
@@ -31,7 +36,7 @@ export default function DiscordAccount() {
                 Authorization: `Bearer ${insertTokenIntoHeader(user?.token)}`
             }
         })
-        .then(r => showConfirmation(() => queryClient.invalidateQueries([`user-discord-${user?.id}`])) )
+        .then(() => showConfirmation(() => queryClient.invalidateQueries([`user-discord-${user?.id}`])) )
         .catch((e: unknown) => {
             showMessage(e)
         })
@@ -40,9 +45,9 @@ export default function DiscordAccount() {
 
     const connect = 
     <>
-        <h2 className="section-heading fade-in-out-border">
+        <SectionHeading sectionHeading>
             Prepojiť účet s Discordom
-        </h2>
+        </SectionHeading>
 
         <b>Prečo by si to vôbec mal chcieť?</b>
         <br/>
@@ -63,16 +68,15 @@ export default function DiscordAccount() {
         <br/>
 
         <p>Nič z toho však nebude fungovať, ak nebudeš 
-            <Link style={{color: WHITE, textDecoration: 'none', paddingLeft: '5px', borderBottom: `1px solid ${WHITE}`}} to='https://discord.gg/rDd2YB5bbg' target="_blank">
+            <Link style={{color: textColor, textDecoration: 'none', paddingLeft: '5px', borderBottom: `1px solid ${textColor}`}} to='https://discord.gg/rDd2YB5bbg' target="_blank">
                 na našom serveri <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
             </Link>
         </p>
 
         <br/><br/>
 
-
-        <Link className='clickable-button' to={'https://discord.com/api/oauth2/authorize?client_id=1140670852166328411&redirect_uri=https%3A%2F%2Fcsfl.cz%2Fverify-user&response_type=code&scope=identify%20guilds%20guilds.members.read'}>
-            Prepojiť účet a Discord <img src={Discord} height='16px' alt="discord icon" style={{transform: 'translate(3px, 2px)'}} />
+        <Link className={`clickable-button ${isDarkTheme ? 'light' : 'dark'}-text`} to={'https://discord.com/api/oauth2/authorize?client_id=1140670852166328411&redirect_uri=https%3A%2F%2Fcsfl.cz%2Fverify-user&response_type=code&scope=identify%20guilds%20guilds.members.read'}>
+            Prepojiť účet a Discord <img src={isDarkTheme ? DiscordDark : DiscordLight} height='16px' alt="discord icon" style={{transform: 'translate(3px, 2px)'}} />
         </Link>
 
         <br/><br/>
@@ -82,12 +86,14 @@ export default function DiscordAccount() {
 
     return(
         <>
-            <h2 className='section-heading fade-in-out-border'>Môj Discord Účet</h2>
+            <SectionHeading sectionHeading>
+                Môj Discord Účet
+            </SectionHeading>
 
             <div className='discord-account-info'>            
-                <img width='256px' style={{borderRadius: '10px'}} src={ query.data?.data.avatar ? `https://cdn.discordapp.com/avatars/${query.data.data.discord_id}/${query.data.data.avatar}?size=256` : Discord} alt='discord avatar' />
+                <img width='256px' style={{borderRadius: '10px'}} src={ query.data?.data.avatar ? `https://cdn.discordapp.com/avatars/${query.data.data.discord_id}/${query.data.data.avatar}?size=256` : isDarkTheme ? DiscordDark : DiscordLight} alt='discord avatar' />
                 
-                <div className='account'>
+                <div className={`account ${isDarkTheme ? 'dark' : 'light'}`}>
                     <p><FontAwesomeIcon style={{paddingRight: '5px'}} icon={faUser} /> {query.data?.data.discord_username}</p>
                     <p><FontAwesomeIcon style={{paddingRight: '5px'}} icon={faUser} /> {query.data?.data.discord_global_name}</p>
                     <p>Prémium: {premiumType(query.data?.data.premium_type)}</p>
@@ -97,9 +103,9 @@ export default function DiscordAccount() {
 
             <br/><br/>
 
-            <button className={`clickable-button ${isPending && 'button-disabled'}`} disabled={isPending} onClick={deleteDiscordAccount}>
+            <ClickableButton disabled={isPending} onClick={deleteDiscordAccount} >
                 Vymazať Discord účet
-            </button>
+            </ClickableButton>
 
             <br/><br/><br/>
 

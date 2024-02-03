@@ -1,0 +1,28 @@
+.theme-toggle {
+  position: absolute;
+  inset: 0 10px auto 10px;
+  display: grid;
+  font-size: 10px;
+  justify-content: space-evenly;
+  grid-template-columns: 1fr auto;
+}
+.theme-toggle .theme-icon {
+  cursor: pointer;
+  padding: 5px 10px;
+}
+.theme-toggle .theme-text {
+  padding: 5px 10px;
+  text-align: left;
+}
+.theme-toggle .theme-icons-animated {
+  height: 2px;
+  width: 100%;
+  max-width: 33.3333333333%;
+  background-color: #CC1E23;
+  position: absolute;
+  top: 110%;
+  left: 0;
+  transition: transform 0.3s ease-in-out;
+}
+
+/*# sourceMappingURL=themeToggle.css.map */

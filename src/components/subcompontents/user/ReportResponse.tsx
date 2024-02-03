@@ -1,7 +1,7 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { URI, generateRandomString, insertTokenIntoHeader } from '../../../App'
 import axios from 'axios'
-import { useOutletContext } from 'react-router-dom'
+import { useNavigate, useOutletContext } from 'react-router-dom'
 import { RaceContext } from '../../controls/SeasonNav'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperclip, faRightLong, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons'
@@ -13,6 +13,10 @@ import useErrorMessage from '../../../hooks/useErrorMessage'
 import useUserContext from '../../../hooks/useUserContext'
 import SectionHeading from '../../reusableCompontents/SectionHeading'
 import UserTip from '../../reusableCompontents/UserTip'
+import useThemeContext from '../../../hooks/useThemeContext'
+import ClickableButton from '../../reusableCompontents/ClickableButton'
+import ContentPopUp from '../../reusableCompontents/ContentPopUp'
+import LabeledInput from '../../reusableCompontents/LabeledInput'
 
 type Props = {
     responseData: {
@@ -39,11 +43,33 @@ export default function ReportResponse({ responseData, setResponseData, raceID }
 
     const queryClient = useQueryClient()
 
+    const navigate = useNavigate()
+
+    const [isDarkTheme] = useThemeContext()
+
     const [confirmation, showConfirmation] = useConfirmation()
     const [message, showMessage] = useErrorMessage()
 
+    //navigation for mobile users so they dont have to reach for that ugly ass close icon
+    useEffect(() => {
+        const originalPopstateListener = window.onpopstate
+
+        const handlePopstate = () => {
+            setResponseData(p => {return {...p, isActive: false}})
+        }
+    
+        window.addEventListener('popstate', handlePopstate)
+    
+        return () => {
+          window.removeEventListener('popstate', handlePopstate)
+          window.onpopstate = originalPopstateListener
+        }
+      }, [setResponseData])
+
+
     function closeWindow() {
         setResponseData(p => {return {...p, isActive: false}})
+        navigate(-1)
     }
 
     function deleteLink(id: string) {
@@ -89,7 +115,7 @@ export default function ReportResponse({ responseData, setResponseData, raceID }
         }
 
         const report = {
-            from_driver: user?.id!,
+            from_driver: user.id,
             inchident: content.current!.value,
             video: links.map(l => l.url)
         }
@@ -116,87 +142,81 @@ export default function ReportResponse({ responseData, setResponseData, raceID }
     }
 
     const form = 
-    <div className='pop-up-bg' onPointerDown={closeWindow} >
-        <div className='pop-up-content' onPointerDown={(e) => e.stopPropagation()}>
-            <div>
-                <div className='sticky-heading'>
-                    <h2 className='header-with-time section-heading fade-in-out-border'>
-                        {`Odpovedať na report #${responseData.rank}`}
-                        <FontAwesomeIcon onClick={closeWindow} className='close-icon' icon={faRectangleXmark} />    
-                    </h2>
-                </div>
-
-                <span className='single-row' style={{columnGap: '15px'}}>
-                    {responseData.from}
-                    <FontAwesomeIcon style={{transform: 'translateY(10%)'}} icon={faRightLong} />
-                    {
-                        responseData.targets.map( (t, i) => //zvazit este nejaky marker pre nahlasenych
-                            <span key={`reported_player${i}`} className='reported-player'><FontAwesomeIcon icon={faTriangleExclamation} /> {t.name}</span>
-                        )
-                    }
-                </span> 
-                <br/>
-
-
-                <div className='inchident labeled-input'>
-                    <textarea name='inchident' ref={content}/>
-                    <label htmlFor='inchident' style={{left: '.5rem'}}>Tvoja odpoveď</label>
-                </div>
-                
-                <SectionHeading sectionHeading>
-                    <FontAwesomeIcon icon={faPaperclip} /> Prílohy
+    <ContentPopUp closePopUp={closeWindow}>
+        <div>
+            <div className={`sticky-heading ${isDarkTheme ? 'dark' : 'light'}-bg`}>
+                <SectionHeading withTime sectionHeading time={<FontAwesomeIcon onClick={closeWindow} className='close-icon' icon={faRectangleXmark} />}>
+                    {`Odpovedať na report #${responseData.rank}`}
                 </SectionHeading>
-
-                
-                <UserTip style={{marginBottom: '1.5rem'}}>
-                    Na videá odporúčam použiť online platformy (youtube, streamable etc.). Všetkým (aj sebe) tým ušetríš kus dát.
-                </UserTip>
-
-                <div className='two-columns '>
-                    <div >
-                        <div className="attachments-container">
-                            {
-                                files.map(f => {
-                                    return <AddedVideo name={f.file.name} id={f.id} deleteVideo={deleteVideo} key={f.id} />
-                                })
-                            }
-                        </div>
-                        
-                        <div className='center'>
-                        <label className='clickable-button' id='custom-input'>
-                            <input type="file" multiple disabled={isPending} style={{display: 'none'}}
-                            accept="image/jpeg, image/png, video/mp4, video/x-matroska, video/webm"  onChange={handleFileInput} />
-                            <span>Vyber video alebo obrázok</span>
-                        </label>
-                        </div>
-                    </div>
-                        
-                    <div>
-                        <div className="attachments-container">
-                            {
-                                links.map(l => {
-                                    return <AddedLink url={l.url} id={l.id} deleteVideo={deleteLink} key={l.id} />
-                                })
-                            }
-                        </div>
-
-                        <div className='video-submit'>
-                            <div className='labeled-input'>
-                                <input className='form-input' required name='video' type="url" style={{width: '95%'}} onChange={handleVideoInput}/>
-                                <label htmlFor='video'>Pridaj link na video</label>
-                            </div>
-                        </div>
-                    </div>
-                        
-                </div>                       
-
-
             </div>
-            <div className='submit-button-container'>
-                    <button className={`clickable-button ${isPending && 'button-disabled'}`} onClick={submitReportResponse}>Odpovedať</button>
+
+            <span className='single-row' style={{columnGap: '15px'}}>
+                {responseData.from}
+                <FontAwesomeIcon style={{transform: 'translateY(10%)'}} icon={faRightLong} />
+                {
+                    responseData.targets.map( (t, i) => //zvazit este nejaky marker pre nahlasenych
+                        <span key={`reported_player${i}`} className='reported-player'><FontAwesomeIcon icon={faTriangleExclamation} /> {t.name}</span>
+                    )
+                }
+            </span> 
+            <br/>
+
+
+            <div className='inchident labeled-input'>
+                <textarea className={`${isDarkTheme ? 'light' : 'dark'}-text`} name='inchident' ref={content}/>
+                <label className={`${isDarkTheme ? 'dark' : 'light'}-bg`} htmlFor='inchident' style={{left: '.5rem'}}>Tvoja odpoveď</label>
+            </div>
+            
+            <SectionHeading sectionHeading>
+                <FontAwesomeIcon icon={faPaperclip} /> Prílohy
+            </SectionHeading>
+
+            
+            <UserTip style={{marginBottom: '1.5rem'}}>
+                Na videá odporúčam použiť online platformy (youtube, streamable etc.). Všetkým (aj sebe) tým ušetríš kus dát.
+            </UserTip>
+
+            <div className='two-columns '>
+                <div >
+                    <div className="attachments-container">
+                        {
+                            files.map(f => {
+                                return <AddedVideo name={f.file.name} id={f.id} deleteVideo={deleteVideo} key={f.id} />
+                            })
+                        }
+                    </div>
+                    
+                    <div className='center'>
+                    <label className='clickable-button' id='custom-input'>
+                        <input type="file" multiple disabled={isPending} style={{display: 'none'}}
+                        accept="image/jpeg, image/png, video/mp4, video/x-matroska, video/webm"  onChange={handleFileInput} />
+                        <span>Vyber video alebo obrázok</span>
+                    </label>
+                    </div>
                 </div>
+                    
+                <div>
+                    <div className="attachments-container">
+                        {
+                            links.map(l => {
+                                return <AddedLink url={l.url} id={l.id} deleteVideo={deleteLink} key={l.id} />
+                            })
+                        }
+                    </div>
+
+                    <div className='video-submit'>
+                        <LabeledInput required name='video' htmlFor='video' type="url" style={{width: '95%'}} onChange={handleVideoInput} label='Pridaj link na video' />
+                    </div>
+                </div>
+                    
+            </div>                       
+
+
         </div>
-    </div>
+        <ClickableButton withContainer onClick={submitReportResponse} disabled={isPending}>
+            Odpovedať
+        </ClickableButton>
+    </ContentPopUp>
 
     return(
         <>

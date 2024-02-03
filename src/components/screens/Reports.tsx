@@ -26,10 +26,10 @@ export default function Reports() {
     const params = new URLSearchParams(useLocation().search)
     const hash = useLocation().hash
 
-    const query = useQuery([`race_${raceID}_reports`], () => fetchReports(raceID))
+    const { data, isLoading } = useQuery([`race_${raceID}_reports`], () => fetchReports(raceID))
 
-    if ( query.data && query.data.reports.length !== reportRefs.current.length) {
-        reportRefs.current = Array(query.data?.reports.length).fill(null).map((_, i) => reportRefs.current[i] || createRef<HTMLDivElement>())
+    if ( data && data.reports.length !== reportRefs.current.length) {
+        reportRefs.current = Array(data?.reports.length).fill(null).map((_, i) => reportRefs.current[i] || createRef<HTMLDivElement>())
     }
 
     
@@ -54,14 +54,14 @@ export default function Reports() {
     }, [params, reportRefs.current, hash])
 
 
-    if ( query.isLoading) return(
+    if ( isLoading ) return(
         <>
             <SectionHeading sectionHeading>Reporty</SectionHeading>
             <Loader type='reports' />
         </>
     )
 
-    if ( query.data?.reports.length === 0 ) {
+    if ( data?.reports.length === 0 ) {
         return(
             <>
                 <br/><br/>
@@ -78,7 +78,7 @@ export default function Reports() {
         <>
             <SectionHeading sectionHeading>Reporty</SectionHeading>
             {
-                query.data?.reports.slice().reverse().map((r, i) =>/* toten setter musi ist dovnutra komponentu, tam uz mam aj tak kontext na reportID, ktory treba nastavit */                    
+                data?.reports.slice().reverse().map((r, i) =>/* toten setter musi ist dovnutra komponentu, tam uz mam aj tak kontext na reportID, ktory treba nastavit */                    
                     <Report key={r.reportID} {...r} setResponseData={setResponseData} ref={reportRefs.current[i]} />
                 )
             }

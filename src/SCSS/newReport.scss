@@ -32,7 +32,7 @@
         }
     
         .form-input {
-            box-shadow: 0 0 10px rgba($white, .4);
+            box-shadow: 0 0 10px color-mix(in srgb, currentColor 40%, transparent);
             opacity: .8;
             cursor: not-allowed;
         }
@@ -50,9 +50,8 @@
         outline: none;
         border: none;
         border-radius: 3px;
-        color: $white;
         width: 100%;
-        box-shadow: 0 0 10px rgba($white, .4);
+        box-shadow: 0 0 10px color-mix(in srgb, currentColor 40%, transparent);
         min-height: 5rem;
         padding: 1rem;
         max-width: 100%;
@@ -90,10 +89,6 @@
     display: flex;
     column-gap: 10px;
     align-items: center;
-
-    input {
-        box-shadow: 0 0 10px rgba($white, .4);
-    }
 }
 
 #custom-input {

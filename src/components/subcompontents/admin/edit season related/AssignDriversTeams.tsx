@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLightbulb } from '@fortawesome/free-solid-svg-icons';
 import { useParams } from 'react-router-dom';
 import { Forbidden } from '../../../controls/BadReq';
+import SectionHeading from '../../../reusableCompontents/SectionHeading';
 
 // potom upravit tu logiku pre ligy s uz priradenymi jazdcami do timov
 // 2 select komponenty, jeden na vytvorenie, jeden na update
@@ -49,7 +50,7 @@ export default function AssignDriversTeams() {
             </div>
             <br/><br/>
 
-            <h2 className='section-heading fade-in-out-border'>Vytvorenie tímových dvojíc</h2>
+            <SectionHeading sectionHeading>Vytvorenie tímových dvojíc</SectionHeading>
 
             {
                     query.data?.data.teams.map(t => 

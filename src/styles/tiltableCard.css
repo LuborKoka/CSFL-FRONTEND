@@ -10,13 +10,11 @@
   position: relative;
   text-align: center;
   border-radius: inherit;
-  background-color: #000606;
   grid-row: 1/-1;
   grid-column: 1/-1;
   transform-style: preserve-3d;
   transition: transform 0.2s ease-in-out;
   transform: perspective(1000px) rotateY(var(--rotateX)) rotateX(var(--rotateY));
-  color: #EFEFEF;
   padding: 0.5rem 1rem;
 }
 .tiltable-card .content b {
@@ -28,7 +26,7 @@
   position: absolute;
   inset: -1rem;
   border-radius: inherit;
-  background: linear-gradient(-45deg, #686868, #EFEFEF, #EFEFEF, #686868);
+  background: linear-gradient(-45deg, #686868, currentColor, currentColor, #686868);
   transform: translateZ(-20px);
 }
 .tiltable-card .content::after {
@@ -36,10 +34,20 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background-color: #000606;
+  background-color: #EFEFEF;
   transform: translateZ(-19px);
   filter: blur(5px);
   opacity: 0.8;
+}
+
+.light-card .content {
+  background-color: #EFEFEF;
+  color: #000A0A;
+}
+
+.dark-card .content {
+  background-color: #000A0A;
+  color: #EFEFEF;
 }
 
 .tiltable-card > :not(div:last-child) {

@@ -7,20 +7,30 @@
 }
 
 .text-content {
-  box-shadow: 0 0 10px rgba(239, 239, 239, 0.4);
   min-height: 7.5rem;
   padding: 1rem;
   font-size: 16px;
-}
-@supports not (box-shadow: 0 0 10px rgba(239, 239, 239, 0.4)) {
-  .text-content {
-    border: 1px solid #EFEFEF;
-  }
 }
 .text-content + label {
   transform: scale(0.8) translateY(-2rem);
   left: 0.5rem;
   font-weight: bold;
+}
+.text-content.dark {
+  box-shadow: 0 0 10px rgba(239, 239, 239, 0.4);
+}
+@supports not (box-shadow: 0 0 10px rgba(239, 239, 239, 0.4)) {
+  .text-content.dark {
+    border: 1px solid #EFEFEF;
+  }
+}
+.text-content.light {
+  box-shadow: 0 0 10px rgba(0, 10, 10, 0.4);
+}
+@supports not (box-shadow: 0 0 10px rgba(0, 10, 10, 0.4)) {
+  .text-content.light {
+    border: 1px solid #000A0A;
+  }
 }
 
 .reported-player {
@@ -44,6 +54,10 @@
   align-items: center;
 }
 
+.report-card .single-row {
+  column-gap: 5px;
+}
+
 .response-count {
   position: absolute;
   transform: scale(0.8);
@@ -62,25 +76,36 @@
 
 .hoverable-icon {
   border-radius: 5px;
-  background-color: rgba(239, 239, 239, 0.1);
-  color: #EFEFEF;
   position: absolute;
   top: 5px;
   right: 5px;
   cursor: pointer;
   padding: 5px 10px;
+  transition: opacity;
 }
 
+@media (hover: hover) {
+  .hoverable-icon {
+    opacity: 0.8;
+  }
+}
 @media screen and (max-width: 600px) {
   .report-card .fia-logo {
     height: 10px;
   }
-  .report-card .clickable-button {
+  .report-card .lickable-button {
     padding: 4px 8px;
     font-size: 12px;
   }
   .response-count {
     left: 2.5px;
+  }
+}
+@media screen and (max-width: 800px) {
+  .mobile-single-column {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px !important;
   }
 }
 

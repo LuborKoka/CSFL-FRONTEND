@@ -1,4 +1,5 @@
 import { HTMLAttributes, ReactNode } from "react"
+import useThemeContext from "../../hooks/useThemeContext"
 
 
 
@@ -19,14 +20,17 @@ type Props = {
  * @returns null if no children prop is passed or heading is with time and no time is passed
  */
 
-export default function SectionHeading({ text, children, withoutFade = false, sectionHeading = false, withTime, time, ...props }: Props) {
+export default function SectionHeading({ text, children, withoutFade = false, sectionHeading = false, withTime, time, ...props }: Props) {   
+    
     if ( !text && !children ) return null
 
     if ( withTime ) {
         if ( !time ) return null
 
+        const className = `${sectionHeading && 'section-heading'} header-with-time ${withoutFade || 'fade-in-out-border'}`
+
         return(
-            <div className={`${sectionHeading && 'section-heading'} header-with-time ${withoutFade || 'fade-in-out-border'}`}>
+            <div className={className}>
                 <h2 {...props}>{text || children}</h2>
                 {
                     typeof time === 'string' ? <span>{time}</span> : time
@@ -35,5 +39,6 @@ export default function SectionHeading({ text, children, withoutFade = false, se
             </div>
         )
     }
-    return <h2 className={`${sectionHeading && 'section-heading'} ${withoutFade || 'fade-in-out-border'}`} {...props}>{text || children}</h2>
+    const className = `${sectionHeading && 'section-heading'} ${withoutFade || 'fade-in-out-border'}`
+    return <h2 className={className} {...props}>{text || children}</h2>
 }

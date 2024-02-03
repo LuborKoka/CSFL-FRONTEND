@@ -8,6 +8,7 @@ import { selectSingleValueStyles } from "../edit season related/CreateRace"
 import Select, { SingleValue } from 'react-select'
 import { URI, insertTokenIntoHeader } from "../../../../App"
 import axios from "axios"
+import useThemeContext from "../../../../hooks/useThemeContext"
 
 
 export default function DeleteRole() {
@@ -19,6 +20,7 @@ export default function DeleteRole() {
     const [message, showMessage] = useErrorMessage()
 
     const user = useUserContext()[0]
+    const [isDarkTheme] = useThemeContext()
 
     const query = useQuery(['all-users'], () => fetchUsers(user?.token))
     const queryClient = useQueryClient()
@@ -60,12 +62,12 @@ export default function DeleteRole() {
         <>
             <h2 className='section-heading fade-in-out-border'>Vymazať rolu</h2>
             <form onSubmit={submit}>
-                <Select styles={selectSingleValueStyles()} value={value} onChange={handleChange} required 
+                <Select styles={selectSingleValueStyles(isDarkTheme)} value={value} onChange={handleChange} required 
                 options={query.data?.users.map(u => ({label: `Driver name: ${u.driver_name}, User name: ${u.username}`, value: u.user_id}))} />
 
                 <br/>
 
-                <Select styles={selectSingleValueStyles()} value={roleValue} onChange={handleRoleChange} required
+                <Select styles={selectSingleValueStyles(isDarkTheme)} value={roleValue} onChange={handleRoleChange} required
                 options={query.data?.users.find(u => value?.value === u.user_id)?.roles.map(r => ({value: r.role_id, label: r.role_name}))}
                 />
 

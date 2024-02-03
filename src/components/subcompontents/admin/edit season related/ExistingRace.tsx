@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretDown, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import Select, { SingleValue } from 'react-select'
 import { selectSingleValueStyles } from './CreateRace'
+import useThemeContext from '../../../../hooks/useThemeContext'
+import ClickableButton from '../../../reusableCompontents/ClickableButton'
 
 type Props = {
     id: string,
@@ -23,6 +25,8 @@ export default function ExistingRace({ id, date, raceName, patchRace, deleteRace
     const [isChanging, setIsChanging] = useState(false)
     const [track, setTrack] = useState({value: trackID, label: raceName})
     const [newDate, setNewDate] = useState(date)
+
+    const [isDarkTheme] = useThemeContext()
 
     function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
         setNewDate(e.target.value)
@@ -54,7 +58,7 @@ export default function ExistingRace({ id, date, raceName, patchRace, deleteRace
     <>
         <h3 style={{paddingLeft: '20px'}}>{new Date(date).toLocaleString()}</h3>
         <br/>
-        <input className='form-input disabled-input' type='text' value={`${isSprint ? 'Sprint: ' : ''}${raceName}`} readOnly />
+        <input className={`form-input disabled-input ${isDarkTheme ? 'light' : 'dark'}-text`} type='text' value={`${isSprint ? 'Sprint: ' : ''}${raceName}`} readOnly />
         {
             new Date() > new Date(date) ? null : icons
         }
@@ -63,17 +67,17 @@ export default function ExistingRace({ id, date, raceName, patchRace, deleteRace
     const updateRace = 
     <>
         <div className='new-race'>  
-            <Select placeholder='Vyber veľkú cenu' styles={selectSingleValueStyles()} options={options} value={track} onChange={handleRaceInput} />
+            <Select placeholder='Vyber veľkú cenu' styles={selectSingleValueStyles(isDarkTheme)} options={options} value={track} onChange={handleRaceInput} />
             <br/>
             <div className='date-time-picker' style={{height: '50px'}}>
-                <input onChange={handleInput} className='input-date' type='datetime-local' value={newDate} />
+                <input onChange={handleInput} className={`input-date ${isDarkTheme ? 'dark-bg light-text' : 'light-bg dark-text'}`} type='datetime-local' value={newDate} />
                 <FontAwesomeIcon icon={faCaretDown} />
             </div>
 
         </div>
         <div className='submit-button-container' style={{justifyContent: 'space-evenly'}}>
-            <button className='clickable-button' onClick={cancel}>Zrušiť</button>
-            <button className='clickable-button' onClick={update}>Uložiť</button>
+            <ClickableButton onClick={cancel}>Zrušiť</ClickableButton>
+            <ClickableButton onClick={update}>Uložiť</ClickableButton>
         </div>
     </>
 

@@ -1,0 +1,33 @@
+@import '../../../SCSS/mixin.scss';
+
+
+
+.theme-toggle {
+    position: absolute;
+    inset: 0 10px auto 10px;
+    display: grid;
+    font-size: 10px;
+    justify-content: space-evenly;
+    grid-template-columns: 1fr auto;
+
+    .theme-icon {
+        cursor: pointer;
+        padding: 5px 10px;
+    }
+
+    .theme-text {
+        padding: 5px 10px;
+        text-align: left;
+    }
+
+    .theme-icons-animated {
+        height: 2px;
+        width: 100%;
+        max-width: calc(100% / 3);
+        background-color: $red;
+        position: absolute;
+        top: 110%;
+        left: 0;
+        transition: transform .3s ease-in-out;
+    }
+}

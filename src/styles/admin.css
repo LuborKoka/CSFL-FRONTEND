@@ -8,16 +8,17 @@
 }
 
 .input-date {
-  color: #EFEFEF;
-  background-color: #000606;
-  box-shadow: 0 0 10px rgba(239, 239, 239, 0.4);
+  box-shadow: 0 0 10px color-mix(in srgb, currentColor 40%, transparent);
   border: none;
   width: 100%;
   padding: 5px 10px;
   height: 100%;
 }
 .input-date::-webkit-calendar-picker-indicator {
-  color: #EFEFEF;
+  opacity: 0;
+}
+.input-date::-moz-calendar-picker-indicator {
+  opacity: 0;
 }
 
 .date-time-picker {

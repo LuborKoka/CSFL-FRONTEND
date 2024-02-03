@@ -19,7 +19,7 @@ const schema = z.object({
     }).max(50, {
         message: 'Meno musí mať najviac 50 znakov'
     }),
-    password: z.string().min(7, {
+    password: z.string().min(8, {
         message: 'Heslo musí mať aspoň 8 znakov'
     }),
     confirmPassword: z.string(),
@@ -60,6 +60,7 @@ export default function Signup({ swap }: Props) {
       });
     
     function handleSignUp(data: SignupCredentials) {
+        (document.activeElement as HTMLInputElement | null)?.blur()
         setIsPending(true)
 
         axios.post(`${URI}/signup/`, {
